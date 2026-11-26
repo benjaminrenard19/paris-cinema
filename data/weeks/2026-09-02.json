@@ -1,0 +1,29 @@
+{
+  "week": "2026-09-02",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-09-02", "Trois adieux", "D", "Drama, romance", "Italy", "M", "Isabel Coixet", "Alba Rohrwacher, Elio Germano", "Tre ciotole"],
+    ["2026-09-02", "La Frappe", "D", "Drama", "France", "L", "Julien Gaspar-Oliveri", "Diego Murgia, Bastien Bouillon", null],
+    ["2026-09-02", "Lettres d'amour de ma grand-mère", "D", "Comedy-drama", "China", "L", "Hongchun Lan", null, "Gei A Ma de Qing Shu"],
+    ["2026-09-02", "La Dernière Patiente", "D", "Drama", "France", "L", "Rémi Bassaler", "Anouk Grinberg, Luàna Bajrami", null],
+    ["2026-09-02", "The Good Sister", "D", "Drama", "Germany", "L", "Sarah Miro Fischer", "Marie Bloching, Anton Weil", "Schwesterherz"],
+    ["2026-09-02", "Salvation", "D", "Drama", "Turkey", "L", "Emin Alper", "Caner Cindoruk, Berkay Ateş", "Kurtuluş"],
+    ["2026-09-02", "Amour(s)", "D", "Comedy-drama", "France", "L", "Alice Diop, Claire Maugendre, Héléna Klotz", null, null],
+    ["2026-09-02", "The Holy Boy", "T", "Drama, fantasy", "Italy", "L", "Paolo Strippoli", "Michele Riondino, Giulio Feltri", "La valle dei sorrisi"],
+    ["2026-09-02", "The Opera!", "M", "Musical, fantasy", "Italy", "L", "Davide Livermore, Paolo Gep Cucco", "Valentino Buzza, Mariam Battistelli", null],
+    ["2026-09-02", "Retour avant 15 heures", "V", "Documentary, drama", "France", "L", "Gaël Lépingle", "Serge Renko, Philippe Girard", null],
+    ["2026-09-02", "Gouffres et merveilles", "V", "Documentary", "France", "L", "Jean Boiron Lajous", null, null],
+    ["2026-09-03", "I'm Game", "T", "Action, thriller", "India", "L", "Nahas Hidayath", "Dulquer Salmaan, Antony Varghese", null],
+    ["2026-09-03", "Katy Perry: The Lifetimes Tour – Live from Paris", "E", "Concert", null, "X", "Paul Dugdale", "Katy Perry", null],
+    ["2026-09-04", "Nimrods: A Green Day Comedy", "C", "Comedy, musical", "USA", "L", "Lee Kirk", "Mason Thames", null],
+    ["2026-09-02", "Trainspotting", "R", "Drama, crime", "UK", "L", "Danny Boyle", "Ewan McGregor, Ewen Bremner", "1996"],
+    ["2026-09-02", "Terminator 2 : Le Jugement dernier", "R", "Action, sci-fi", "USA", "L", "James Cameron", "Arnold Schwarzenegger, Linda Hamilton", "1991"],
+    ["2026-09-02", "L'Âme des guerriers", "R", "Drama", "New Zealand", "L", "Lee Tamahori", "Rena Owen", "Once Were Warriors (1994)"],
+    ["2026-09-02", "Le Dernier Survivant", "R", "Drama, sci-fi", "New Zealand", "L", "Geoff Murphy", "Bruno Lawrence", "The Quiet Earth (1985)"],
+    ["2026-09-02", "Utu", "R", "Adventure, war", "New Zealand", "L", "Geoff Murphy", "Anzac Wallace", "1983"],
+    ["2026-09-02", "Smash Palace", "R", "Drama", "New Zealand", "L", "Roger Donaldson", "Bruno Lawrence", "1981"],
+    ["2026-09-02", "A Swedish Love Story", "R", "Drama", "Sweden", "L", "Roy Andersson", "Ann-Sofie Kylin, Rolf Sohlman", "1970"],
+    ["2026-09-02", "Arrebato", "R", "Drama, horror", "Spain", "L", "Iván Zulueta", "Eusebio Poncela, Cecilia Roth", "1979"]
+  ]
+}

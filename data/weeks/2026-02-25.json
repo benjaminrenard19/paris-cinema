@@ -1,0 +1,26 @@
+{
+  "week": "2026-02-25",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-02-25", "Scream 7", "T", "Horror, thriller", "USA", "W", "Kevin Williamson", "Neve Campbell, Courteney Cox", null],
+    ["2026-02-25", "Chers parents", "C", "Comedy", "France", "M", "Emmanuel Patron", "André Dussollier, Miou-Miou", null],
+    ["2026-02-25", "Rue Málaga", "D", "Comedy-drama", "Morocco", "M", "Maryam Touzani", "Carmen Maura, Marta Etura", "Calle Málaga"],
+    ["2026-02-25", "Le Son des souvenirs", "D", "Historical drama, romance", "UK", "M", "Oliver Hermanus", "Josh O'Connor, Paul Mescal", "The History of Sound"],
+    ["2026-02-25", "Is This Thing On?", "D", "Drama", "USA", "M", "Bradley Cooper", "Will Arnett, Laura Dern", null],
+    ["2026-02-25", "Orwell: 2+2=5", "V", "Documentary", null, "M", "Raoul Peck", "Damian Lewis", null],
+    ["2026-02-25", "EPiC: Elvis Presley in Concert", "M", "Documentary, music", "USA", "M", "Baz Luhrmann", "Elvis Presley", null],
+    ["2026-02-25", "Woman and Child", "D", "Drama", "Iran", "L", "Saeed Roustaee", "Parinaz Izadyar, Sinan Mohebi", null],
+    ["2026-02-25", "5 centimètres par seconde", "D", "Drama, romance", "Japan", "L", "Yoshiyuki Okuyama", "Hokuto Matsumura, Mitsuki Takahata", "Byosoku 5 senchimetoru"],
+    ["2026-02-25", "Justa", "D", "Drama", "Portugal", "L", "Teresa Villaverde", "Madalena Cunha, Betty Faria", null],
+    ["2026-02-25", "Tenir debout", "T", "Thriller", "Lithuania", "L", "Romas Zabarauskas", null, "Aktyvistas"],
+    ["2026-02-25", "Quartier libre", "C", "Comedy", "France", "L", "Christophe Delsaux", null, null],
+    ["2026-02-25", "Welcome to Europe", "V", "Documentary", "France", "L", "Thomas Bornot, Cyril Montana", null, null],
+    ["2026-02-25", "Athos – Au cœur de la Patrouille de France", "V", "Documentary", "France", "L", "Mathieu Giombini", null, null],
+    ["2026-02-25", "Lyd", "V", "Documentary, sci-fi", "Palestine", "L", "Sarah Ema Friedland, Rami Younis", null, null],
+    ["2026-02-25", "A Rising Fury", "V", "Documentary", "Ukraine", "L", "Lesya Kalynska, Ruslan Batytskyi", null, null],
+    ["2026-02-25", "Un été à la ferme", "V", "Documentary", "France", "L", "Hugo Willocq", null, null],
+    ["2026-02-26", "Twenty One Pilots: More Than We Ever Imagined", "E", "Concert, documentary", "USA", "X", "Mark C. Eshleman", "Tyler Joseph", null],
+    ["2026-03-01", "Miss Kobayashi's Dragon Maid : Une dragonne en manque d'amour", "A", "Animation, fantasy", "Japan", "X", "Tatsuya Ishihara", null, null]
+  ]
+}

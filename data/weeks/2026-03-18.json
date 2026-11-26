@@ -1,0 +1,32 @@
+{
+  "week": "2026-03-18",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-03-18", "Projet dernière chance", "T", "Action, adventure, sci-fi", "USA", "W", "Phil Lord, Christopher Miller", "Ryan Gosling, Sandra Hüller", "Project Hail Mary"],
+    ["2026-03-18", "Les Rayons et les Ombres", "D", "Historical drama", "France", "W", "Xavier Giannoli", "Jean Dujardin, Nastya Golubeva", null],
+    ["2026-03-18", "Police Flash 80", "C", "Comedy, crime", "France", "M", "Jean-Baptiste Saurel", "François Damiens, Audrey Lamy", null],
+    ["2026-03-18", "La Guerre des prix", "T", "Thriller", "France", "M", "Anthony Dechaux", "Ana Girardot, Olivier Gourmet", null],
+    ["2026-03-18", "Reminders of Him", "D", "Drama, romance", "USA", "M", "Vanessa Caswill", "Maika Monroe, Tyriq Withers", null],
+    ["2026-03-18", "Le Sifflet", "T", "Horror", "USA", "M", "Corin Hardy", "Dafne Keen, Percy Hynes White", "Whistle"],
+    ["2026-03-18", "David", "A", "Animation, biopic, family", "USA", "M", "Brent Dawes, Phil Cunningham", null, null],
+    ["2026-03-18", "La Danse des renards", "D", "Drama", "Belgium", "L", "Valéry Carnoy", "Samuel Kircher, Faycal Anaflous", null],
+    ["2026-03-18", "La Gifle", "C", "Comedy", "Germany", "L", "Frédéric Hambalek", "Laeni Geiseler, Julia Jentsch", "Was Marielle weiß"],
+    ["2026-03-18", "Las corrientes", "D", "Drama", "Argentina", "L", "Milagros Mumenthaler", null, null],
+    ["2026-03-18", "La Princesse, l'ogre et la fourmi", "A", "Animation, family", "Russia", "L", "Eduard Nazarov", "Philippe Katerine", null],
+    ["2026-03-18", "Scènes de nuit", "T", "Thriller", "Brazil", "L", "Filipe Matzembacher, Marcio Reolon", null, "Ato Noturno"],
+    ["2026-03-18", "Dernière soirée", "D", "Drama", "France", "L", "Nicolas Dozol", null, "Last Party"],
+    ["2026-03-18", "Silentium", "D", "Drama, thriller", "Tunisia", "L", "Nidhal Chatta", null, null],
+    ["2026-03-18", "Les Chaillées de l'enfer", "V", "Documentary", "France", "L", "Léo Boudet", null, null],
+    ["2026-03-18", "57 km", "V", "Documentary", "France", "L", "Guillaume Descave, Stéphane Mathelin", null, null],
+    ["2026-03-18", "Précieuse(s)", "V", "Documentary", "France", "L", "Fanny Guiard-Norel", null, null],
+    ["2026-03-18", "Compostelle, le chemin des étoiles", "V", "Documentary", "France", "L", "Laurent Granier", null, null],
+    ["2026-03-18", "Allo la France", "V", "Documentary", "France", "L", "Floriane Devigne", null, null],
+    ["2026-03-18", "Le Pouvoir de l'insignifiant", "V", "Documentary", null, "L", "Oscar Flamion", null, null],
+    ["2026-03-19", "Dhurandhar: The Revenge", "T", "Action, spy, thriller", "India", "L", "Aditya Dhar", "Ranveer Singh, Arjun Rampal", null],
+    ["2026-03-19", "Youth", "C", "Comedy, romance", "India", "L", "Ken Karunas", null, null],
+    ["2026-03-19", "Aadu 3", "C", "Action, comedy, fantasy", "India", "L", "Midhun Manuel Thomas", "Jayasurya, Saiju Kurup", null],
+    ["2026-03-21", "Tristan et Isolde (Metropolitan Opera)", "E", "Opera", "USA", "X", "Yuval Sharon", "Lise Davidsen, Ekaterina Gubanova", null],
+    ["2026-03-18", "Pierre Zucca: Roberte, Vincent mit l'âne dans un pré, Rouge-Gorge, Alouette je te plumerai", "R", "Comedy-drama", "France", "L", "Pierre Zucca", "Fabrice Luchini", "1976–1988"]
+  ]
+}

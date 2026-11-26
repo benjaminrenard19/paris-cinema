@@ -1,0 +1,28 @@
+{
+  "week": "2026-10-21",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-10-21", "Karma", "T", "Drama, thriller", "France", "W", "Guillaume Canet", "Marion Cotillard, Denis Ménochet", null],
+    ["2026-10-21", "L'Île des souvenirs", "A", "Animation, adventure, comedy", "USA", "W", "Joel Crawford, Januel P. Mercado", null, "Forgotten Island"],
+    ["2026-10-21", "Clayface", "T", "Drama, horror, thriller", "USA", "W", "James Watkins", "Tom Rhys Harries, Naomi Ackie", null],
+    ["2026-10-21", "Klara et le soleil", "T", "Drama, sci-fi", "USA", "W", "Taika Waititi", "Jenna Ortega, Mia Tharia", "Klara and the Sun"],
+    ["2026-10-21", "Le Roi du game", "C", "Comedy", "France", "M", "Eric Judor", "Eric Judor, Alexandra Lamy", null],
+    ["2026-10-21", "Une femme aujourd'hui", "D", "Comedy-drama", "France", "M", "Robert Guédiguian", "Marilou Aussilloux, Ariane Ascaride", null],
+    ["2026-10-21", "La Gradiva", "D", "Comedy-drama", "France", "M", "Marine Atlan", "Antonia Buresi, Colas Quignard", null],
+    ["2026-10-21", "Shaun le Mouton : La Bêaaate d'Halloween", "A", "Animation, adventure, comedy", "UK", "M", "Steve Cox, Matthew Walker", null, "Shaun the Sheep: The Beast of Mossy Bottom"],
+    ["2026-10-21", "Wicker", "D", "Comedy-drama, fantasy", null, "M", "Alex Huston Fischer, Eleanor Wilson", "Olivia Colman, Alexander Skarsgård", null],
+    ["2026-10-21", "Marie Madeleine", "D", "Comedy-drama", null, "L", "Gessica Généus", "Gessica Généus, Béonard Monteau", null],
+    ["2026-10-21", "Le Printemps vint en riant", "D", "Drama", "Egypt", "L", "Noha Adel", "Sally Abdou, Carol Ackad", "Dakhal Al Rabie Yadhak"],
+    ["2026-10-21", "Les Recommencements", "V", "Documentary", null, "L", "Isabelle Ingold, Vivianne Perelmuter", null, null],
+    ["2026-10-23", "Violence du corps de l'autre", "D", "Drama", "Canada", "L", "Denis Côté", "Larissa Corriveau, Philippe Rebbot", null],
+    ["2026-10-25", "BTS World Tour 'Arirang' in Buenos Aires: Live Viewing", "E", "Concert", "South Korea", "X", "Jungjae Ha", "BTS", null],
+    ["2026-10-27", "L'Histoire de Manon (The Royal Ballet)", "E", "Ballet", "UK", "X", null, "William Bracewell", null],
+    ["2026-10-27", "Mylène Farmer – Égrégore – L'avant-première", "E", "Music, live event", "France", "X", "François Hanss", "Mylène Farmer", null],
+    ["2026-10-21", "Hunger Games – La Révolte : Partie 1", "R", "Action, drama, sci-fi", "USA", "L", "Francis Lawrence", "Jennifer Lawrence, Josh Hutcherson", "2014"],
+    ["2026-10-21", "Octobre à Paris", "R", "Documentary", "France", "L", "Jacques Panijel", null, "1962"],
+    ["2026-10-21", "Safe", "R", "Drama", "USA", "L", "Todd Haynes", "Julianne Moore, Xander Berkeley", "1995"],
+    ["2026-10-21", "Peking Opera Blues", "R", "Action, comedy, romance", "Hong Kong", "L", "Tsui Hark", "Brigitte Lin, Cherie Chung", "Do ma daan (1986)"],
+    ["2026-10-21", "Nadja", "R", "Comedy, horror", "USA", "L", "Michael Almereyda", "Elina Löwensohn, Peter Fonda", "1994"]
+  ]
+}

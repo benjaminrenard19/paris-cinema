@@ -1,0 +1,28 @@
+{
+  "week": "2026-09-09",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-09-09", "Les Ensorceleuses 2", "C", "Fantasy, romance", "USA", "W", "Susanne Bier", "Nicole Kidman, Sandra Bullock", "Practical Magic 2"],
+    ["2026-09-09", "Pressure", "T", "War, historical, thriller", null, "W", "Anthony Maras", "Andrew Scott, Brendan Fraser", null],
+    ["2026-09-09", "Rose", "D", "Historical drama", null, "M", "Markus Schleinzer", "Sandra Hüller, Caro Braun", null],
+    ["2026-09-09", "La Vie d'une femme", "D", "Comedy-drama", "France", "M", "Charline Bourgeois-Tacquet", "Léa Drucker, Mélanie Thierry", null],
+    ["2026-09-09", "Les Héros du Louvre", "D", "Historical drama", "France", "M", "Élie Chouraqui", "Kad Merad, Marie Gillain", null],
+    ["2026-09-09", "Oasis: Don't Look Back in Anger", "M", "Documentary, music", "UK", "M", "Dylan Southern, Will Lovelace", "Liam Gallagher, Noel Gallagher", null],
+    ["2026-09-09", "Les Survivants du Che", "V", "Documentary", "France", "M", "Christophe Réveille", "Vincent Lindon", null],
+    ["2026-09-09", "Adieu monde cruel", "D", "Drama", "France", "L", "Félix de Givry", "Milo Machado-Graner, Jane Beever", null],
+    ["2026-09-09", "Flush", "C", "Comedy, horror", "France", "L", "Grégory Morin", "Jonathan Lambert, Élodie Navarre", null],
+    ["2026-09-09", "Billie Melody", "D", "Drama", "France", "L", "Christine Paillard", "Roschdy Zem, Bonnie Bouriche Troutaud", null],
+    ["2026-09-09", "The Sea", "D", "Drama", "Israel", "L", "Shai Carmeli-Pollak", "Muhammad Gazawi, Khalifa Natour", "Ha'Yam"],
+    ["2026-09-09", "Commis d'office", "C", "Comedy", "France", "L", "Stéphane Garrigues", "Bing Yin, Emma Vaneecloo", null],
+    ["2026-09-09", "Hair, Paper, Water…", "V", "Documentary", "Vietnam", "L", "Minh Quý Trương, Nicolas Graux", null, "Tóc, giấy và nước…"],
+    ["2026-09-10", "Mandaadi", "T", "Action, drama", "India", "L", "Pugazhendhi Mathimaran", "Soori, Suhas", null],
+    ["2026-09-12", "Entretien avec un requin", "V", "Documentary", "France", "X", "Pierre-Étienne Larrous", null, null],
+    ["2026-09-15", "Hamlet (Comédie-Française)", "E", "Theatre", "France", "X", "Ivo van Hove", null, null],
+    ["2026-09-09", "Akira", "R", "Animation, action", "Japan", "L", "Katsuhiro Ōtomo", null, "1988"],
+    ["2026-09-09", "La Rivière", "R", "Drama", "Taiwan", "L", "Tsai Ming-liang", "Lee Kang-sheng", "1997"],
+    ["2026-09-09", "Vive l'amour", "R", "Comedy-drama", "Taiwan", "L", "Tsai Ming-liang", "Lee Kang-sheng", "1994"],
+    ["2026-09-09", "Les Rebelles du dieu néon", "R", "Drama, crime", "Taiwan", "L", "Tsai Ming-liang", "Lee Kang-sheng", "1992"],
+    ["2026-09-09", "La Femme du dimanche", "R", "Comedy, crime", "Italy", "L", "Luigi Comencini", "Marcello Mastroianni, Jacqueline Bisset", "1975"]
+  ]
+}

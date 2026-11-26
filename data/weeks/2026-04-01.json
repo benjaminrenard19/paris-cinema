@@ -1,0 +1,24 @@
+{
+  "week": "2026-04-01",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-04-01", "Super Mario Galaxy, le film", "B", "Animation, action, adventure", "USA", "W", "Aaron Horvath, Michael Jelenic", "Chris Pratt, Anya Taylor-Joy", "The Super Mario Galaxy Movie"],
+    ["2026-04-01", "The Drama", "D", "Drama, romance", "USA", "M", "Kristoffer Borgli", "Zendaya, Robert Pattinson", null],
+    ["2026-04-01", "Plus fort que moi", "M", "Biopic, drama", "UK", "M", "Kirk Jones", "Robert Aramayo, Shirley Henderson", "I Swear"],
+    ["2026-04-01", "Mauvaise pioche", "C", "Comedy", "France", "M", "Gérard Jugnot", "Gérard Jugnot, Philippe Lacheau", null],
+    ["2026-04-01", "Dolly", "T", "Horror", "USA", "M", "Rod Blackhurst", "Fabianne Therese, Seann William Scott", null],
+    ["2026-04-01", "Peppa au cinéma : La famille s'agrandit !", "A", "Animation", "UK", "M", "Mark Baker", null, null],
+    ["2026-04-01", "Compostelle", "D", "Comedy-drama", "France", "L", "Yann Samuell", "Alexandra Lamy, Julien Le Berre", null],
+    ["2026-04-01", "Silent Friend", "D", "Drama", "Germany", "L", "Ildikó Enyedi", "Tony Leung Chiu-wai, Léa Seydoux", null],
+    ["2026-04-01", "Yellow Letters", "D", "Drama", "Germany", "L", "İlker Çatak", "Özgü Namal, Tansu Biçer", "Sarı Zarflar"],
+    ["2026-04-01", "Derrière les palmiers", "D", "Drama", "Morocco", "L", "Meryem Benm'Barek", "Sara Giraudeau, Driss Ramdi", "Behind the Palm Trees"],
+    ["2026-04-01", "Nuestra Tierra", "V", "Documentary", "Argentina", "L", "Lucrecia Martel", null, null],
+    ["2026-04-01", "Le Secret du loup d'Éthiopie", "V", "Documentary", "France", "L", "Baptiste Deturche, Adrien Lesaffre", null, null],
+    ["2026-04-01", "Hélène Trésore transnationale", "V", "Documentary", "France", "L", "Judith Abitbol", "Hélène Hazera", null],
+    ["2026-04-01", "De la Résistance à la Résilience", "V", "Documentary", "France", "L", "Marie-Monique Robin", null, null],
+    ["2026-04-01", "Holding Liat", "V", "Documentary", "USA", "L", "Brandon Kramer", null, null],
+    ["2026-04-03", "Dans le sillage de Marie-Anne", "D", "Historical drama", "France", "L", "Benjamin Lheureux", null, null],
+    ["2026-04-01", "Anja Breien: Wives 2 & Wives 3", "R", "Comedy-drama", "Norway", "L", "Anja Breien", "Anne Marie Ottersen, Frøydis Armand", "1985–1996"]
+  ]
+}

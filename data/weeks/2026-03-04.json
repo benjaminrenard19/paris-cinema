@@ -1,0 +1,27 @@
+{
+  "week": "2026-03-04",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-03-04", "Jumpers", "A", "Animation, adventure, comedy", "USA", "W", "Daniel Chong", null, "Hoppers"],
+    ["2026-03-04", "The Bride!", "T", "Drama, horror, romance", "USA", "M", "Maggie Gyllenhaal", "Jessie Buckley, Christian Bale", null],
+    ["2026-03-04", "Alter Ego", "C", "Comedy", "France", "M", "Nicolas Charlet, Bruno Lavaine", "Laurent Lafitte, Blanche Gardin", null],
+    ["2026-03-04", "La Maison des femmes", "D", "Drama", "France", "M", "Mélisa Godet", "Karin Viard, Laetitia Dosch", null],
+    ["2026-03-04", "Christy", "M", "Biopic, drama", "USA", "M", "David Michôd", "Sydney Sweeney, Ben Foster", null],
+    ["2026-03-04", "Pillion", "D", "Comedy-drama", "UK", "L", "Harry Lighton", "Harry Melling, Alexander Skarsgård", null],
+    ["2026-03-04", "Allah n'est pas obligé", "A", "Animation, drama", "France", "L", "Zaven Najjar", "Thomas Ngijol", null],
+    ["2026-03-04", "Deux femmes et quelques hommes", "C", "Comedy", "Canada", "L", "Chloé Robichaud", "Laurence Leboeuf, Karine Gonthier-Hyndman", "Deux femmes en or"],
+    ["2026-03-04", "Nino dans la nuit", "D", "Drama", "Belgium", "L", "Laurent Micheli", "Oscar Högström, Mara Taquin", null],
+    ["2026-03-04", "Une dernière chance", "D", "Drama", "France", "L", "Fabien Grare, Jean-Michel Lejeune", null, null],
+    ["2026-03-04", "Rural", "V", "Documentary", "France", "L", "Édouard Bergeon", null, null],
+    ["2026-03-04", "Pédale rurale", "V", "Documentary", "France", "L", "Antoine Vazquez", null, null],
+    ["2026-03-04", "Fantastique", "V", "Documentary", null, "L", "Marjolijn Prins", null, null],
+    ["2026-03-04", "La Croisière", "V", "Documentary", "USA", "L", "Bennett Miller", "Timothy 'Speed' Levitch", "The Cruise"],
+    ["2026-03-04", "A Fidai Film", "V", "Documentary", "Palestine", "L", "Kamal Aljafari", null, null],
+    ["2026-03-06", "Aurora: What Happened to the Earth?", "E", "Concert, documentary", "Norway", "X", "Gonzalo López", "Aurora", null],
+    ["2026-03-07", "Véronique", "V", "Documentary, music", "France", "X", "Tom Volf", null, null],
+    ["2026-03-07", "Enhypen [Walk the Line Summer Edition] in Cinemas", "E", "Concert", "South Korea", "X", null, "Enhypen", null],
+    ["2026-03-10", "Turner et Constable (Exhibition on Screen)", "V", "Documentary, art", "UK", "X", "David Bickerstaff", null, null],
+    ["2026-03-04", "Raymond Depardon: Profils paysans 1 & 2, La Vie moderne", "R", "Documentary", "France", "L", "Raymond Depardon", null, "2001–2008"]
+  ]
+}

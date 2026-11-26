@@ -1,0 +1,27 @@
+{
+  "week": "2026-01-28",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-01-28", "Nuremberg", "D", "Historical drama", "USA", "W", "James Vanderbilt", "Russell Crowe, Rami Malek", null],
+    ["2026-01-28", "Reconnu coupable", "T", "Action, drama, sci-fi", "USA", "W", "Timur Bekmambetov", "Chris Pratt, Rebecca Ferguson", "Mercy"],
+    ["2026-01-28", "Gourou", "T", "Drama, thriller", "France", "M", "Yann Gozlan", "Pierre Niney, Marion Barbeau", null],
+    ["2026-01-28", "La Grazia", "D", "Drama, romance", "Italy", "M", "Paolo Sorrentino", "Toni Servillo, Anna Ferzetti", null],
+    ["2026-01-28", "Dreams", "D", "Drama, romance", "Mexico", "M", "Michel Franco", "Jessica Chastain, Isaac Hernández", null],
+    ["2026-01-28", "Les Légendaires", "A", "Animation, adventure, fantasy", "France", "M", "Guillaume Ivernel", null, null],
+    ["2026-01-28", "Baise-en-ville", "C", "Comedy", "France", "L", "Martin Jauvat", "Martin Jauvat, Emmanuelle Bercot", null],
+    ["2026-01-28", "Promis le ciel", "D", "Drama", "Tunisia", "L", "Erige Sehiri", "Aïssa Maïga", null],
+    ["2026-01-28", "La Reconquista", "D", "Drama", "Spain", "L", "Jonás Trueba", "Itsaso Arana, Francesco Carril", null],
+    ["2026-01-28", "Bel ami", "C", "Comedy, romance", "China", "L", "Geng Jun", null, "Piao Liang Peng You"],
+    ["2026-01-28", "Le Chasseur de baleines", "D", "Drama", "Russia", "L", "Philipp Yuryev", null, "Kitoboy"],
+    ["2026-01-28", "La Grande Rêvasion", "A", "Animation, family", "Belgium", "L", "Rémi Durin", null, null],
+    ["2026-01-28", "Howard Zinn, une histoire populaire américaine 2", "V", "Documentary", "France", "L", "Olivier Azam, Daniel Mermet", "Howard Zinn, Noam Chomsky", null],
+    ["2026-01-28", "La Vie après Siham", "V", "Documentary", "France", "L", "Namir Abdel Messeeh", null, null],
+    ["2026-01-30", "Mardaani 3", "T", "Action, crime", "India", "L", "Abhiraj Minawala", "Rani Mukerji", null],
+    ["2026-01-30", "Gandhi Talks", "C", "Comedy", "India", "L", "Kishor Pandurang Belekar", "Vijay Sethupathi, Arvind Swamy", null],
+    ["2026-01-30", "Lockdown", "T", "Thriller", "India", "L", "A.R. Jeeva", "Anupama Parameswaran", null],
+    ["2026-01-30", "Valathu Vashathe Kallan", "T", "Drama, thriller", "India", "L", "Jeethu Joseph", "Biju Menon, Joju George", null],
+    ["2026-01-30", "Prakambanam", "C", "Comedy, horror", "India", "L", "Vijesh Panathur", null, null],
+    ["2026-01-30", "Un violon sur le sable fait son cinéma", "E", "Concert", "France", "X", null, "Pene Pati, Liya Petrova", null]
+  ]
+}

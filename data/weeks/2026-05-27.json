@@ -1,0 +1,27 @@
+{
+  "week": "2026-05-27",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-05-27", "Colony", "T", "Horror", "South Korea", "M", "Yeon Sang-ho", "Gianna Jun, Ji Chang-wook", "Gunche"],
+    ["2026-05-27", "L'Objet du délit", "D", "Comedy-drama", "France", "M", "Agnès Jaoui", "Agnès Jaoui, Daniel Auteuil", null],
+    ["2026-05-27", "Le Virtuose", "T", "Thriller", "USA", "M", "Daniel Roher", "Leo Woodall, Dustin Hoffman", "Tuner"],
+    ["2026-05-27", "Tout va super", "C", "Comedy, romance", "France", "M", "Patrick Cassir", "Hakim Jemili, Noémie Lvovsky", null],
+    ["2026-05-27", "Mata", "T", "Spy thriller", "France", "L", "Rachel Lang", "Eye Haïdara, Joséphine Japy", null],
+    ["2026-05-27", "Cocotte", "D", "Drama", null, "L", "György Pálfi", "Maria Diakopanayotou, Argyris Pandazaras", "Kota"],
+    ["2026-05-27", "Father", "D", "Drama", "Slovakia", "L", "Tereza Nvotová", "Milan Ondrík, Dominika Morávková", "Otec"],
+    ["2026-05-27", "À bras-le-corps", "D", "Historical drama", "Switzerland", "L", "Marie-Elsa Sgualdo", "Lila Gueneau, Grégoire Colin", "Silent Rebellion"],
+    ["2026-05-27", "Le Pont", "D", "Drama", "Tunisia", "L", "Walid Mattar", "Mohamed Amine Hamzaoui, Seifeddine Omrane", "Quantra"],
+    ["2026-05-27", "Le Dernier Souffle d'un yakuza", "A", "Animation", "Japan", "L", "Baku Kinoshita", null, "Housenka"],
+    ["2026-05-27", "Le Coyote", "D", "Drama", "Canada", "L", "Katherine Jerkovic", "Eva Avila, Christian de la Cortina", null],
+    ["2026-05-27", "Pauline, réversible", "D", "Drama", "France", "L", "Keven Hamon, Renaud Cathelineau", null, null],
+    ["2026-05-27", "Holy Destructors", "V", "Documentary", "Lithuania", "L", "Aistė Žegulytė", null, "Biodestruktoriai"],
+    ["2026-05-28", "WHO", "T", "Drama, thriller", null, "L", "Wil Aime", "Wil Aime", null],
+    ["2026-05-28", "Paul Mirabel – Par amour : le spectacle au cinéma", "E", "Comedy show", "France", "X", "Nathanael Munnich", "Paul Mirabel", null],
+    ["2026-05-30", "Le Dernier Rêve de Frida et Diego (Metropolitan Opera)", "E", "Opera", "USA", "X", "Deborah Colker", "Isabel Leonard, Carlos Álvarez", null],
+    ["2026-05-27", "Macho Dancer", "R", "Drama, romance", "Philippines", "L", "Lino Brocka", "Daniel Fernando, Jaclyn Jose", "1988"],
+    ["2026-05-27", "French Connection", "R", "Crime, thriller", "USA", "L", "William Friedkin", "Gene Hackman, Roy Scheider", "1971"],
+    ["2026-05-27", "L'Homme qui voulut être roi", "R", "Adventure", "UK", "L", "John Huston", "Sean Connery, Michael Caine", "1975"],
+    ["2026-05-27", "Les Hommes préfèrent les blondes", "R", "Musical comedy", "USA", "L", "Howard Hawks", "Marilyn Monroe, Jane Russell", "1953"]
+  ]
+}

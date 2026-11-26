@@ -1,0 +1,27 @@
+{
+  "week": "2026-06-03",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-06-03", "La Bataille de Gaulle – Partie 1 : L'Âge de fer", "T", "Historical, thriller", "France", "W", "Antonin Baudry", "Simon Abkarian, Simon Russell Beale", null],
+    ["2026-06-03", "Scary Movie", "C", "Comedy, horror", "USA", "W", "Michael Tiddes", "Marlon Wayans, Shawn Wayans", null],
+    ["2026-06-03", "Anna et les enfants", "C", "Comedy", "France", "M", "Diane Clavier", "Camille Chamoux, Alban Lenoir", null],
+    ["2026-06-03", "L'Affaire Zanetti", "D", "Drama", "Italy", "L", "Leonardo Di Costanzo", "Roschdy Zem, Barbara Ronchi", "Elisa"],
+    ["2026-06-03", "The Plague", "T", "Thriller", "USA", "L", "Charlie Polinger", "Joel Edgerton, Everett Blunck", null],
+    ["2026-06-03", "Saccharine", "T", "Horror", "Australia", "L", "Natalie Erika James", "Midori Francis, Danielle Macdonald", null],
+    ["2026-06-03", "Francesca & Giovanni", "D", "Drama, romance", "Italy", "L", "Simona Izzo, Ricky Tognazzi", "Ester Pantano, Primo Reggiani", "Francesca e Giovanni"],
+    ["2026-06-03", "Le Garçon qui faisait danser les collines", "C", "Comedy-drama, musical", "North Macedonia", "L", "Georgi M. Unkovski", "Arif Jakup, Agush Agushev", "DJ Ahmet"],
+    ["2026-06-03", "Bait", "D", "Comedy-drama", "UK", "L", "Mark Jenkin", "Edward Rowe, Simon Shepherd", null],
+    ["2026-06-03", "Bouchra", "A", "Animation", null, "L", "Orian Barki, Meriem Bennani", null, null],
+    ["2026-06-03", "Nouveaux copains à Puffin Rock", "A", "Animation, family", "Ireland", "L", "Jeremy Purcell", "Chris O'Dowd, Amy Huberman", "Puffin Rock and the New Friends"],
+    ["2026-06-03", "En nous", "V", "Documentary", "France", "L", "Juliette Binoche", "Juliette Binoche, Akram Khan", null],
+    ["2026-06-03", "La Tsigane, sur la route avec Tamèrantong !", "V", "Documentary", "France", "L", "Sébastien Lefebvre", null, null],
+    ["2026-06-03", "Toutes mes sœurs", "V", "Documentary", "Iran", "L", "Massoud Bakhshi", null, "Seh Khahar"],
+    ["2026-06-03", "Loin de moi la colère", "V", "Documentary", null, "L", "Joël Akafou", null, null],
+    ["2026-06-04", "Santa – Le Concert au cinéma", "E", "Concert", "France", "X", "Tristan Carné", "Santa", null],
+    ["2026-06-06", "The Amazing Digital Circus : Acte final", "A", "Animation, adventure", "USA", "X", null, null, "The Amazing Digital Circus: The Last Act"],
+    ["2026-06-09", "Mirage", "V", "Documentary", null, "L", "Valentin Birant", null, null],
+    ["2026-06-03", "Bye Bye Brésil", "R", "Adventure, drama", "Brazil", "L", "Carlos Diegues", "Betty Faria, José Wilker", "1979"],
+    ["2026-06-03", "When We Were Kings", "R", "Documentary", "USA", "L", "Leon Gast", "Muhammad Ali, George Foreman", "1996"]
+  ]
+}

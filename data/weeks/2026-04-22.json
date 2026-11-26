@@ -1,0 +1,29 @@
+{
+  "week": "2026-04-22",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-04-22", "Michael", "M", "Biopic, drama, music", "USA", "W", "Antoine Fuqua", "Jaafar Jackson, Colman Domingo", null],
+    ["2026-04-22", "L'Arnaqueuse", "C", "Comedy", "France", "M", "Wilfried Méance", "Fadily Camara, Josiane Balasko", null],
+    ["2026-04-22", "La Poupée", "C", "Comedy, romance", "France", "M", "Sophie Beaulieu", "Vincent Macaigne, Zoé Marchal", null],
+    ["2026-04-22", "Pour le meilleur", "D", "Comedy-drama", "France", "M", "Marie-Castille Mention-Schaar", null, null],
+    ["2026-04-22", "À voix basse", "D", "Drama", "Tunisia", "L", "Leyla Bouzid", "Eya Bouteraa, Hiam Abbass", null],
+    ["2026-04-22", "Soumsoum, la nuit des astres", "D", "Drama", "Chad", "L", "Mahamat-Saleh Haroun", "Maïmouna Miawama, Eriq Ebouaney", null],
+    ["2026-04-22", "Première ligne", "D", "Comedy-drama", "Algeria", "L", "Merzak Allouache", "Nabil Asli, Fatiha Ouared", "Front Row"],
+    ["2026-04-22", "Les Fleurs du manguier", "D", "Drama", "Japan", "L", "Akio Fujimoto", null, "Harà Watan"],
+    ["2026-04-22", "Mārama", "T", "Horror, historical", "New Zealand", "L", "Taratoa Stappard", "Ariāna Osborne, Toby Stephens", null],
+    ["2026-04-22", "Vil & misérable", "C", "Comedy", "Canada", "L", "Jean-François Leblanc", "Fabien Cloutier, Pier-Luc Funk", null],
+    ["2026-04-22", "Drunken Noodles", "D", "Drama", "USA", "L", "Lucio Castro", "Laith Khalifeh, Ezriel Kornel", null],
+    ["2026-04-22", "Caravane", "D", "Drama", "Czech Republic", "L", "Zuzana Kirchnerová", "Aňa Geislerová", "Karavan"],
+    ["2026-04-22", "Nous l'orchestre", "V", "Documentary, music", "France", "L", "Philippe Béziat", "Klaus Mäkelä", null],
+    ["2026-04-22", "Alice au pays des colons", "V", "Documentary", "France", "L", "Yanis Mhamdi", null, null],
+    ["2026-04-22", "La Grève", "V", "Documentary", "France", "L", "Gabrielle Stemmer", "Julia Faure", null],
+    ["2026-04-22", "La Terre de mon grand-père (Partie 1 : L'Héritage)", "V", "Documentary", "France", "L", "Martin Esposito", null, null],
+    ["2026-04-22", "Un lugar más grande", "V", "Documentary", null, "L", "Nicolas Défossé", null, null],
+    ["2026-04-22", "didy", "V", "Documentary", null, "L", "Gaël Kamilindi, François-Xavier Destors", null, null],
+    ["2026-04-22", "Sans retour possible", "V", "Documentary", null, "L", "Jacques Kebadian, Serge Avédikian", null, null],
+    ["2026-04-23", "The Legend of Hei II", "A", "Animation, adventure, fantasy", "China", "L", "MTJJ, Gu Jie", null, "Luo Xiaohei Zhan Ji 2"],
+    ["2026-04-22", "Werner Herzog: Les Cloches des profondeurs, La Grande Extase du sculpteur sur bois Steiner", "R", "Documentary", "Germany", "L", "Werner Herzog", null, "1974–1993"],
+    ["2026-04-22", "En vitesse", "R", "Comedy", "USA", "L", "Ted Wilde", "Harold Lloyd", "Speedy (1928)"]
+  ]
+}

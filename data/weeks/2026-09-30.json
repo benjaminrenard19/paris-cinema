@@ -1,0 +1,29 @@
+{
+  "week": "2026-09-30",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-09-30", "Digger", "T", "Action, comedy", "USA", "W", "Alejandro González Iñárritu", "Tom Cruise, Sandra Hüller", null],
+    ["2026-09-30", "Verity", "D", "Drama, romance, thriller", "USA", "W", "Michael Showalter", "Anne Hathaway, Dakota Johnson", null],
+    ["2026-09-30", "Notre salut", "D", "Drama, history", "France", "M", "Emmanuel Marre", "Swann Arlaud, Sandrine Blancke", null],
+    ["2026-09-30", "Mémoire de fille", "D", "Drama", "France", "M", "Judith Godrèche", "Tess Barthélemy, Valérie Dréville", null],
+    ["2026-09-30", "Kraken", "T", "Horror", "France", "L", "Mohamed Chabane, Théo Jourdain Rhodes", "Alassane Diong, Manon Bresch", null],
+    ["2026-09-30", "Le Chant des oliviers", "D", "Comedy-drama", "Malta", "L", "Alex Camilleri", "Michela Farrugia, Nenu Borg", "Zejtune"],
+    ["2026-09-30", "Melpomène", "D", "Drama", "France", "L", "Charlotte Dauphin", "Charlotte Dauphin, Pascal Greggory", null],
+    ["2026-09-30", "L'Idée qu'on s'en faisait", "C", "Comedy", "France", "L", "Sabrina Nouchi", "Laetitia Beauvais, Andrea Dolente", null],
+    ["2026-09-30", "Kadar, the Sons of the Lord", "D", "Drama", null, "L", "Imen Ben Hassine", "Takla Chamoun, Wajiha Jendoubi", null],
+    ["2026-09-30", "Le Monde à l'endroit", "V", "Documentary", "France", "L", "Sylvie Meyer", "Isild Le Besco, Sandrine Bonnaire", null],
+    ["2026-09-30", "Délivre-nous du mal", "V", "Documentary", "Italy", "L", "Valeria Baldan, Giovanni Ziberna", null, "Libera nos: Il trionfo sul male"],
+    ["2026-09-30", "Un hiver russe", "V", "Documentary", null, "L", "Patric Chiha", null, null],
+    ["2026-10-01", "Linkin Park: Unshatter", "E", "Concert, documentary", "USA", "X", "Joe Hahn", "Linkin Park", null],
+    ["2026-10-02", "Sigma", "T", "Action, adventure, drama", "India", "L", "Jason Sanjay", "Sundeep Kishan, Faria Abdullah", null],
+    ["2026-10-02", "Avarachan & Sons", "D", "Comedy-drama", "India", "L", "Thamby", "Biju Menon, Sreenath Bhasi", null],
+    ["2026-10-02", "Aaram", "T", "Crime, thriller", "India", "L", "Rajesh Parameswaran", "Saiju Kurup, Siddique", null],
+    ["2026-10-03", "Così fan tutte (Metropolitan Opera)", "E", "Opera", "USA", "X", "Phelim McDermott", "Federica Lombardi, Samantha Hankey", null],
+    ["2026-10-04", "Al Atlas, les disparus d'un royaume", "V", "Documentary", null, "X", "Thomas Julienne, Alexandre Tuffin", null, null],
+    ["2026-09-30", "Cars", "R", "Animation, comedy", "USA", "L", "John Lasseter", "Owen Wilson", "2006"],
+    ["2026-09-30", "Aprile", "R", "Comedy-drama", "Italy", "L", "Nanni Moretti", "Nanni Moretti, Silvio Orlando", "1998"],
+    ["2026-09-30", "Maison de poupée", "R", "Drama", "UK", "L", "Joseph Losey", "Jane Fonda, Edward Fox", "1973"],
+    ["2026-09-30", "Gervaise", "R", "Drama", "France", "L", "René Clément", "Maria Schell, François Périer", "1956"]
+  ]
+}

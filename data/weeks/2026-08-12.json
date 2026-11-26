@@ -1,0 +1,24 @@
+{
+  "week": "2026-08-12",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-08-12", "Tombé du ciel", "C", "Comedy, family", "France", "W", "Mohamed Hamidi", "Ilyes Djadel, Josiane Balasko", null],
+    ["2026-08-12", "La Fin d'Oak Street", "T", "Action, adventure, sci-fi", "USA", "M", "David Robert Mitchell", "Anne Hathaway, Ewan McGregor", "The End of Oak Street"],
+    ["2026-08-12", "Juste pour une nuit", "C", "Comedy, romance", "USA", "M", "Will Gluck", "Monica Barbaro, Callum Turner", "One Night Only"],
+    ["2026-08-12", "Soudain", "D", "Drama", "Japan", "M", "Ryūsuke Hamaguchi", "Virginie Efira, Tao Okamoto", null],
+    ["2026-08-12", "Undertone", "T", "Horror", "Canada", "M", "Ian Tuason", "Nina Kiri, Michelle Duquet", null],
+    ["2026-08-12", "Lydia et le vaisseau des tempêtes", "A", "Animation, adventure, family", "Canada", "M", "Nancy Florence Savard, Philippe Arseneau Bussières", null, null],
+    ["2026-08-12", "Chicas tristes", "D", "Drama", "Mexico", "L", "Fernanda Tovar", "Rocío Guzmán, Darana Álvarez", null],
+    ["2026-08-12", "Un grand raccourci", "C", "Comedy-drama", "France", "L", "Armand Foëx, Clément Devilliers", "Sara Montpetit, Louise Labeque", null],
+    ["2026-08-12", "Une affaire turque", "T", "Thriller", "France", "L", "Hüseyin Aydin Gürsoy", "Lionel Erdogan, Charles Berling", null],
+    ["2026-08-12", "Une aube nouvelle", "A", "Animation, drama", "Japan", "L", "Yoshitoshi Shinomiya", null, "Hana rokushō ga akeru hi ni"],
+    ["2026-08-12", "Arcobaleno", "V", "Documentary", "Italy", "L", "Pablo Cirès", null, null],
+    ["2026-08-15", "Katseye: Wild Hearts", "E", "Concert, documentary", null, "X", "Nadia Hallgren", "Katseye", null],
+    ["2026-08-12", "The Quiet Family", "R", "Horror comedy", "South Korea", "L", "Kim Jee-woon", "Song Kang-ho, Choi Min-sik", "Choyonghan kajok (1998)"],
+    ["2026-08-12", "Le Château de l'araignée", "R", "Drama", "Japan", "L", "Akira Kurosawa", "Toshirō Mifune, Isuzu Yamada", "1957"],
+    ["2026-08-12", "Sanjuro", "R", "Action, drama", "Japan", "L", "Akira Kurosawa", "Toshirō Mifune, Tatsuya Nakadai", "1962"],
+    ["2026-08-12", "La Forteresse cachée", "R", "Adventure", "Japan", "L", "Akira Kurosawa", "Toshirō Mifune", "1958"],
+    ["2026-08-12", "L'Île", "R", "Drama, thriller", "South Korea", "L", "Kim Ki-duk", "Suh Jung, Kim Yoo-seok", "2000"]
+  ]
+}

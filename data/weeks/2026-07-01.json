@@ -1,0 +1,24 @@
+{
+  "week": "2026-07-01",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-07-01", "Supergirl", "B", "Action, sci-fi", "USA", "W", "Craig Gillespie", "Milly Alcock", null],
+    ["2026-07-01", "On l'appelait Robin des Bois", "T", "Action, adventure, thriller", "USA", "M", "Michael Sarnoski", "Hugh Jackman", "The Death of Robin Hood"],
+    ["2026-07-01", "Permis de détruire", "C", "Comedy", "France", "M", "Eric Fraticelli", "Kad Merad, Patrick Timsit", null],
+    ["2026-07-01", "In Waves", "A", "Animation, romance, drama", null, "L", "Phuong Mai Nguyen", null, null],
+    ["2026-07-01", "Un champ de fraises pour l'éternité", "C", "Comedy", "France", "L", "Alain Raoust", null, null],
+    ["2026-07-01", "Miss Mermaid", "D", "Comedy-drama", "France", "L", "Pauline Brunner, Marion Verlé", null, null],
+    ["2026-07-01", "Notre histoire – Chroniques du Caire", "D", "Comedy-drama", "Egypt", "L", "A.B. Shawky", null, "The Stories"],
+    ["2026-07-01", "Entroncamento", "D", "Drama", "Portugal", "L", "Pedro Cabeleira", null, null],
+    ["2026-07-01", "Ghost Elephants", "V", "Documentary", null, "L", "Werner Herzog", null, null],
+    ["2026-07-01", "André Is an Idiot", "V", "Documentary", null, "L", "Anthony Benna", null, null],
+    ["2026-07-01", "Laissez-nous les clés", "V", "Documentary", "France", "L", "Yacine Helali", null, null],
+    ["2026-07-01", "Autour de Lucio", "V", "Documentary", null, "L", "Etienne Barrier, Pierre-Alain Delisse", null, null],
+    ["2026-07-01", "Mon premier cinéma avec Les Trois Bricochons", "A", "Animation, kids", "France", "L", "Romain Villemaine", null, null],
+    ["2026-07-02", "Julien Doré – Le Dernier Pestacle", "E", "Concert", "France", "X", null, "Julien Doré", null],
+    ["2026-07-01", "Le Tombeau des lucioles", "R", "Animation, drama", "Japan", "L", "Isao Takahata", null, "1988"],
+    ["2026-07-01", "Kwaïdan", "R", "Fantasy, horror", "Japan", "L", "Masaki Kobayashi", null, "1964"],
+    ["2026-07-01", "Disons, un soir à dîner", "R", "Drama", "Italy", "L", "Giuseppe Patroni Griffi", null, "1969"]
+  ]
+}

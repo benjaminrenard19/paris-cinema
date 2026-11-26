@@ -1,0 +1,26 @@
+{
+  "week": "2026-06-10",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-06-10", "Disclosure Day", "T", "Sci-fi, thriller", "USA", "W", "Steven Spielberg", "Emily Blunt, Josh O'Connor", null],
+    ["2026-06-10", "Le Vertige", "A", "Animation, comedy", "France", "M", "Quentin Dupieux", "Alain Chabat, Jonathan Cohen", null],
+    ["2026-06-10", "Fils de personne", "D", "Drama", "France", "M", "Safy Nebbou", "Romain Duris, Cristiana Capotondi", null],
+    ["2026-06-10", "The Christophers", "C", "Comedy-drama", "USA", "M", "Steven Soderbergh", "Ian McKellen, Michaela Coel", null],
+    ["2026-06-10", "The Furious", "T", "Action, martial arts", null, "M", "Kenji Tanigaki", "Xie Miao, Joe Taslim", "Huo zhe yan"],
+    ["2026-06-10", "Une année italienne", "D", "Comedy-drama", "Italy", "L", "Laura Samani", "Stella Wendick, Giacomo Covi", "Un anno di scuola"],
+    ["2026-06-10", "Au bord du monde", "D", "Drama", "Belgium", "L", "Guérin van de Vorst, Sophie Muselle", "Mara Taquin, Sasha Deprez", null],
+    ["2026-06-10", "A Second Life", "D", "Drama", "France", "L", "Laurent Slama", "Agathe Rousselle, Alex Lawther", null],
+    ["2026-06-10", "Le Dernier Vrai Samouraï", "C", "Comedy, fantasy", "Japan", "L", "Jun'ichi Yasuda", "Makiya Yamaguchi", "A Samurai in Time"],
+    ["2026-06-10", "Ma famille chérie", "D", "Comedy-drama", "France", "L", "Isild Le Besco", "Élodie Bouchez, Marisa Berenson", null],
+    ["2026-06-10", "D'un monde à l'autre", "V", "Documentary", "Belgium", "L", "Jérémie Renier", "Jérémie Renier", null],
+    ["2026-06-10", "L'Athlète", "V", "Documentary", "Canada", "L", "Marie-Claude Fournier", null, null],
+    ["2026-06-12", "Governor", "D", "Historical drama, thriller", "India", "L", "Chinmay Mandlekar", "Manoj Bajpayee, Adah Sharma", null],
+    ["2026-06-13", "BTS World Tour 'Arirang' in Busan: Live Viewing", "E", "Concert", "South Korea", "X", "Jungjae Ha", "BTS", null],
+    ["2026-06-15", "Johnny Hallyday, Lorada Tour – Bercy 1995", "E", "Concert", "France", "X", "Bernard Schmitt", "Johnny Hallyday", null],
+    ["2026-06-10", "Sur mes lèvres", "R", "Thriller", "France", "L", "Jacques Audiard", "Vincent Cassel, Emmanuelle Devos", "2001"],
+    ["2026-06-10", "Ghost in the Shell", "R", "Animation, sci-fi", "Japan", "L", "Mamoru Oshii", null, "1995"],
+    ["2026-06-10", "L'Amant", "R", "Drama, romance", "France", "L", "Jean-Jacques Annaud", "Jane March, Tony Leung Ka-fai", "1992"],
+    ["2026-06-10", "The Party", "R", "Comedy", "USA", "L", "Blake Edwards", "Peter Sellers", "1968"]
+  ]
+}

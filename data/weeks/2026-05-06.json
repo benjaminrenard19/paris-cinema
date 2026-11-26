@@ -1,0 +1,29 @@
+{
+  "week": "2026-05-06",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-05-06", "Mortal Kombat II", "B", "Action, adventure", "USA", "W", "Simon McQuoid", "Karl Urban, Lewis Tan", null],
+    ["2026-05-06", "Pour le plaisir", "C", "Comedy", "France", "M", "Reem Kherici", "Alexandra Lamy, François Cluzet", null],
+    ["2026-05-06", "C'est quoi l'amour ?", "C", "Comedy", "France", "M", "Fabien Gorgeart", "Laure Calamy, Vincent Macaigne", null],
+    ["2026-05-06", "The Criminals", "T", "Action, thriller", "UK", "M", "David Mackenzie", "Aaron Taylor-Johnson, Theo James", "Fuze"],
+    ["2026-05-06", "Cinque secondi", "D", "Comedy-drama", "Italy", "M", "Paolo Virzì", "Valerio Mastandrea, Galatea Bellugi", null],
+    ["2026-05-06", "ETTY – Parts 1 & 2", "D", "Historical drama", "Netherlands", "M", "Hagai Levi", "Julia Windischbauer, Sebastian Koch", null],
+    ["2026-05-06", "Mi Amor", "T", "Thriller", "France", "L", "Guillaume Nicloux", "Pom Klementieff, Benoît Magimel", null],
+    ["2026-05-06", "The World of Love", "D", "Comedy-drama", "South Korea", "L", "Yoon Ga-eun", "Seo Su-bin, Jang Hye-jin", null],
+    ["2026-05-06", "Cosmos", "D", "Drama", null, "L", "Germinal Roaux", "Ángela Molina, Andrés Catzín", null],
+    ["2026-05-06", "Sauvons les meubles", "D", "Drama", "Belgium", "L", "Catherine Cosme", "Vimala Pons, Yoann Zimmer", null],
+    ["2026-05-06", "Mon grand frère et moi", "D", "Comedy-drama", "Japan", "L", "Ryôta Nakano", "Kô Shibasaki, Joe Odagiri", null],
+    ["2026-05-06", "The New West", "D", "Drama", "USA", "L", "Kate Beecroft", "Porshia Zimiga, Tabatha Zimiga", "East of Wall"],
+    ["2026-05-06", "L'Entente – La face cachée d'Alexandrie", "T", "Thriller", "Egypt", "L", "Mohamed Rashad", "Hajar Omar, Emad Ghoniem", "Al mosta'mera"],
+    ["2026-05-06", "Planète Sanseverino", "M", "Documentary, music", "France", "L", "Mathilde Mignon, Philippe Crnogorac", "Sanseverino", null],
+    ["2026-05-06", "Collapse (Face à Gaza)", "V", "Documentary", null, "L", "Anat Even", null, null],
+    ["2026-05-06", "Ressacs, une histoire touarègue", "V", "Documentary", null, "L", "Intagrist el Ansari", null, null],
+    ["2026-05-06", "Do You Love Me", "V", "Documentary", "Lebanon", "L", "Lana Daher", null, null],
+    ["2026-05-06", "Yvon", "V", "Documentary", "France", "L", "Marie Tavernier", null, null],
+    ["2026-05-06", "Flana", "V", "Documentary", null, "L", "Zahraa Ghandour", null, null],
+    ["2026-05-07", "Billie Eilish – Hit Me Hard and Soft: The Tour Live in 3D", "E", "Concert", "USA", "X", "James Cameron, Billie Eilish", "Billie Eilish, Finneas", null],
+    ["2026-05-12", "La Vénus électrique", "C", "Comedy, romance", "France", "M", "Pierre Salvadori", "Pio Marmaï, Anaïs Demoustier", null],
+    ["2026-05-06", "Anja Breien: Le Viol, La Persécution, L'Héritage", "R", "Drama", "Norway", "L", "Anja Breien", null, "1971–1981"]
+  ]
+}

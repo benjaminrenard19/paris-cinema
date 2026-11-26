@@ -1,0 +1,27 @@
+{
+  "week": "2026-01-21",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-01-21", "Hamnet", "D", "Drama", "UK", "W", "Chloé Zhao", "Paul Mescal, Jessie Buckley", null],
+    ["2026-01-21", "Le Mage du Kremlin", "T", "Thriller", "France", "M", "Olivier Assayas", "Paul Dano, Jude Law", "The Wizard of the Kremlin"],
+    ["2026-01-21", "Primate", "T", "Horror", "USA", "M", "Johannes Roberts", "Johnny Sequoyah, Jess Alexander", null],
+    ["2026-01-21", "Diamanti", "D", "Drama", "Italy", "M", "Ferzan Özpetek", "Luisa Ranieri, Jasmine Trinca", null],
+    ["2026-01-21", "Grand ciel", "T", "Drama, thriller", "France", "L", "Akihiro Hata", "Damien Bonnard, Samir Guesmi", null],
+    ["2026-01-21", "Amour apocalypse", "C", "Comedy, romance", "Canada", "L", "Anne Émond", "Patrick Hivon, Piper Perabo", "Peak Everything"],
+    ["2026-01-21", "Christy and His Brother", "D", "Drama", "Ireland", "L", "Brendan Canty", "Danny Power, Diarmuid Noyes", "Christy"],
+    ["2026-01-21", "Une page après l'autre", "D", "Drama", "Hong Kong", "L", "Nick Cheuk", "Lo Chun Yip, Ronald Cheng", "Time Still Turns the Pages"],
+    ["2026-01-21", "Imperial Princess", "D", "Drama", "France", "L", "Virgil Vernier", "Iulia Perminova", null],
+    ["2026-01-21", "Olivia", "A", "Animation", "Spain", "L", "Irene Iborra", null, "Olivia y el terremoto invisible"],
+    ["2026-01-21", "Tafiti", "A", "Animation, adventure, family", "Germany", "M", "Nina Wels", null, "Tafiti – Ab durch die Wüste"],
+    ["2026-01-21", "En route !", "A", "Animation, family", null, "L", "Alexei Mironov, Yuliya Matrosova, Harutyun Tumaghyan", null, null],
+    ["2026-01-21", "Le Retour du projectionniste", "V", "Documentary", "Azerbaijan", "L", "Orkhan Aghazadeh", null, "Kinomexanikin Qayidisi"],
+    ["2026-01-21", "Jane Goodall : Une vie extraordinaire", "V", "Documentary", null, "L", "David Lickley", null, "Jane Goodall: Reasons for Hope"],
+    ["2026-01-21", "Ludovic", "V", "Documentary, music", null, "L", "René Letzgus", null, null],
+    ["2026-01-21", "Nari Nari Naduma Murari", "C", "Comedy-drama", "India", "L", "Ram Abbaraju", "Sharwanand, Samyuktha Menon", null],
+    ["2026-01-22", "Megadeth: Behind the Mask", "M", "Documentary, music", "USA", "X", "Casey Tebo", "Dave Mustaine", null],
+    ["2026-01-22", "Chatha Pacha – The Ring of Rowdies", "T", "Action, comedy", "India", "L", "Adhvaith Nayar", "Arjun Ashokan, Roshan Mathew", null],
+    ["2026-01-23", "Baby Girl", "T", "Drama, thriller", "India", "L", "Arun Varma", "Nivin Pauly, Lijomol Jose", null],
+    ["2026-01-23", "Salliyargal", "D", "Drama", "India", "L", "T. Kittu", null, null]
+  ]
+}

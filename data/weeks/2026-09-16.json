@@ -1,0 +1,32 @@
+{
+  "week": "2026-09-16",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-09-16", "Resident Evil", "T", "Horror, sci-fi, thriller", "USA", "W", "Zach Cregger", "Austin Abrams, Paul Walter Hauser", null],
+    ["2026-09-16", "L'Invitation", "C", "Comedy", "USA", "M", "Olivia Wilde", "Seth Rogen, Penélope Cruz", "The Invite"],
+    ["2026-09-16", "Les Contrebandiers", "T", "Action, adventure, thriller", "USA", "M", "Padraic McKinley", "Ethan Hawke, Russell Crowe", "The Weight"],
+    ["2026-09-16", "Si tu penses bien", "D", "Drama", "France", "M", "Géraldine Nakache", "Monia Chokri, Niels Schneider", null],
+    ["2026-09-16", "Histoires de la nuit", "D", "Drama, thriller", "France", "L", "Léa Mysius", "Hafsia Herzi, Benoît Magimel", null],
+    ["2026-09-16", "Sham", "D", "Drama, thriller", "Japan", "L", "Takashi Miike", "Gô Ayano, Kô Shibasaki", null],
+    ["2026-09-16", "Les Vagues dans les yeux", "D", "Drama", "Haiti", "L", "Samuel Suffren", null, null],
+    ["2026-09-16", "Maoussi", "C", "Comedy-drama, romance", null, "L", "Charlotte Schiøler", "Moustapha Mbengue, Charlotte Schiøler", null],
+    ["2026-09-16", "Festin boréal", "D", "Drama", "Canada", "L", "Robert Morin", "Robert Morin, Solomon Wawatie", null],
+    ["2026-09-16", "Chien bleu et autres belles histoires de l'école des loisirs", "A", "Animation, family", "France", "L", "Dominique Pochat, Jean-Christophe Ribot, Benoît Laborde", null, null],
+    ["2026-09-16", "Ma famille de samouraïs", "A", "Animation, drama", "Brazil", "L", "Célia Catunda", null, "Meu Avô é um Nihonjin"],
+    ["2026-09-16", "Le Cygne et l'enfant", "A", "Animation, family", "South Korea", "L", "Miyoung Baek", null, null],
+    ["2026-09-16", "Hanuman Ansh", "M", "Biopic, drama", "India", "L", "Vishal Chaturvedi", null, null],
+    ["2026-09-16", "La Ligne bleue", "V", "Documentary", "France", "L", "Marie Dumora", null, null],
+    ["2026-09-16", "La Vie en relief – Jacques Henri Lartigue", "V", "Documentary", "France", "L", "Denis Gaubert", "Luàna Bajrami, Hervé Pierre", null],
+    ["2026-09-16", "Maquisards", "V", "Documentary", "France", "L", "Christian Philibert", null, null],
+    ["2026-09-16", "Une musique à vivre", "V", "Documentary, music", "France", "L", "Philippe Tabarly", null, null],
+    ["2026-09-17", "Fouilles", "V", "Documentary", "Cyprus", "L", "Danai Stylianou", null, null],
+    ["2026-09-18", "Daayra", "T", "Crime, thriller", "India", "L", "Meghna Gulzar", "Prithviraj Sukumaran, Kareena Kapoor", null],
+    ["2026-09-18", "La Meilleure Façon, c'est par accident", "V", "Documentary", null, "L", "Noémie D. Leclerc", null, null],
+    ["2026-09-20", "Ailleurs", "D", "Drama", null, "L", "Baptiste Bertheuil, Alexandre Ear", "Isidor Germain, Gaël Gerthoffer", "Another Place"],
+    ["2026-09-22", "Lesvia", "V", "Documentary", "Greece", "L", "Tzeli Hadjidimitriou", null, null],
+    ["2026-09-16", "Les Autres", "R", "Horror, fantasy", "Spain", "L", "Alejandro Amenábar", "Nicole Kidman, Elaine Cassidy", "The Others (2001)"],
+    ["2026-09-16", "La Belle et la Bête", "R", "Fantasy, romance", "France", "L", "Jean Cocteau", "Jean Marais, Josette Day", "1946"],
+    ["2026-09-16", "The Transformers: The Movie (40th anniversary)", "R", "Animation, action", "USA", "L", "Nelson Shin", null, "1986"]
+  ]
+}

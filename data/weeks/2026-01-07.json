@@ -1,0 +1,22 @@
+{
+  "week": "2026-01-07",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-01-07", "Father Mother Sister Brother", "D", "Comedy-drama", "USA", "M", "Jim Jarmusch", "Tom Waits, Adam Driver", null],
+    ["2026-01-07", "Ma frère", "C", "Comedy", "France", "M", "Lise Akoka, Romane Gueret", "Fanta Kebe, Shirel Nataf", null],
+    ["2026-01-07", "Les Échos du passé", "D", "Drama", "Germany", "M", "Mascha Schilinski", "Hanna Heckt, Lena Urzendowsky", "In die Sonne schauen"],
+    ["2026-01-07", "Pile ou face", "C", "Comedy, western", "Italy", "L", "Alessio Rigo de Righi, Matteo Zoppis", "John C. Reilly, Alessandro Borghi", "Heads or Tails"],
+    ["2026-01-07", "Le Studio photo de Nankin", "T", "War drama, historical", "China", "L", "Ao Shen", "Liu Haoran", "Nanjing Zhao Xiang Guan"],
+    ["2026-01-07", "Red Bird", "T", "Action", "France", "L", "Alexandre Laugier, Thomas Habibes, Houssam Adili", "Thomas Habibes, Houssam Adili", null],
+    ["2026-01-07", "Les Lumières de New York", "D", "Drama", "USA", "L", "Lloyd Lee Choi", "Fala Chen, Perry Yung", "Lucky Lu"],
+    ["2026-01-07", "Mr. Nobody Against Putin", "V", "Documentary", null, "L", "David Borenstein, Pavel Talankin", "Pavel Talankin", null],
+    ["2026-01-07", "Tout va bien", "V", "Documentary", null, "L", "Thomas Ellis", null, null],
+    ["2026-01-07", "Premières lunes", "V", "Documentary", "France", "L", "Mélanie Melot", null, null],
+    ["2026-01-07", "Animus Femina", "V", "Documentary", "France", "L", "Éliane de Latour", null, null],
+    ["2026-01-07", "Rien n'est oublié", "V", "Documentary", null, "L", "Andrea Ceriana Mayneri, Edie Laconi", null, null],
+    ["2026-01-07", "L'Académie des secrets", "V", "Documentary", null, "L", "Joachim Olender", null, null],
+    ["2026-01-10", "Parasakthi", "T", "Action, drama", "India", "L", "Sudha Kongara", "Sivakarthikeyan, Sree Leela", null],
+    ["2026-01-10", "Les Puritains (Metropolitan Opera)", "E", "Opera", "USA", "X", "Charles Edwards", "Lisette Oropesa, Lawrence Brownlee", null]
+  ]
+}

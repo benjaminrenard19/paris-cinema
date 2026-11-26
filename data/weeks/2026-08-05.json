@@ -1,0 +1,22 @@
+{
+  "week": "2026-08-05",
+  "source": "AlloCiné",
+  "updatedAt": "2026-11-26T15:00:00Z",
+  "films": [
+    ["2026-08-05", "La Pat' Patrouille : Le film mission Dino", "A", "Animation, adventure, comedy", "USA", "W", "Cal Brunker", null, "PAW Patrol: The Dino Movie"],
+    ["2026-08-05", "Kyma, l'onde mystérieuse", "A", "Adventure, fantasy", "France", "M", "Romain Daudet-Jahan", "Jules Lefebvre, Lucy Loste Berset", null],
+    ["2026-08-05", "Les Gendarmes", "C", "Comedy", "France", "M", "François Prévôt-Leygonie, Stephan Archinard", "Arnaud Ducret, Marc Riso", null],
+    ["2026-08-05", "Cotton Queen", "D", "Drama", "Sudan", "L", "Suzannah Mirghani", "Mihad Murtada, Rabha Mohamed Mahmoud", "Malikat Alqutn"],
+    ["2026-08-05", "Des fleurs pour Tokyo", "D", "Drama", "Japan", "L", "Yuiga Danzuka", "Kodai Kurosaki, Ken'ichi Endô", "Miharashi sedai"],
+    ["2026-08-05", "Girl", "D", "Drama", "Taiwan", "L", "Shu Qi", "Roy Chiu, Esther Liu", "Nühai"],
+    ["2026-08-05", "Les Silences de Riyad", "T", "Thriller", "Saudi Arabia", "L", "Haifaa Al Mansour", "Mila Al Zahrani, Aziz Gharbawi", "Unidentified"],
+    ["2026-08-05", "Jour de chasse", "T", "Thriller", "Canada", "L", "Annick Blanc", "Nahéma Ricci, Bruno Marcil", null],
+    ["2026-08-05", "Le Chantier", "V", "Documentary", "Switzerland", "L", "Jean-Stéphane Bron", null, null],
+    ["2026-08-06", "Ateez: Light the Way in Cinemas", "E", "Concert", "South Korea", "X", "Ji-ae Kim", "Ateez", null],
+    ["2026-08-08", "Le Concert d'été 2026 d'André Rieu : Viva Maastricht !", "E", "Concert", "Netherlands", "X", null, "André Rieu", null],
+    ["2026-08-05", "Le Bon, la Brute et le Truand", "R", "Western", "Italy", "L", "Sergio Leone", "Clint Eastwood, Eli Wallach", "1966"],
+    ["2026-08-05", "Antonia et ses filles", "R", "Comedy-drama", "Netherlands", "L", "Marleen Gorris", "Willeke van Ammelrooy, Els Dottermans", "1995"],
+    ["2026-08-05", "Enamorada", "R", "Comedy-drama, romance", "Mexico", "L", "Emilio Fernández", "María Félix, Pedro Armendáriz", "1946"],
+    ["2026-08-05", "Venise, la lune et toi", "R", "Comedy, romance", "Italy", "L", "Dino Risi", "Alberto Sordi, Marisa Allasio", "1958"]
+  ]
+}
