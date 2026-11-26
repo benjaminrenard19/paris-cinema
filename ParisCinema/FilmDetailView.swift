@@ -12,6 +12,7 @@ struct FilmDetailView: View {
     @State private var alt: ArtworkHit?
     @State private var viewer: Film?
     @State private var showCalendar = false
+    @State private var inviting = false
 
     var body: some View {
         if let f = store.index[id] {
@@ -68,7 +69,7 @@ struct FilmDetailView: View {
             Section("Credits") {
                 row("Director", f.dir)
                 row("Cast", f.cast)
-                row("Producers", f.prod ?? String(localized: "Not listed yet. The Tuesday update adds them."))
+                if !f.isRepertory { row("Producers", f.prod ?? String(localized: "Not listed yet. The Tuesday update adds them.")) }
                 row("Genres", f.genreText)
                 row("Origin", f.originText)
                 if let n = f.note, !n.isEmpty { row("Note", n) }
@@ -106,6 +107,7 @@ struct FilmDetailView: View {
                 alt = await Artwork.shared.lookup(film)
             }
         }
+        .sheet(isPresented: $inviting) { InviteSheet(filmId: id).environment(store) }
         .sheet(item: $calendarEvent) { draft in
             EventEditor(draft: draft) { calendarEvent = nil }
                 .ignoresSafeArea()
@@ -133,13 +135,13 @@ struct FilmDetailView: View {
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 6) {
                     CatBadge(cat: f.category)
-                    Text(f.releaseSize.label).font(.caption).foregroundStyle(.secondary)
+                    if !f.isRepertory { Text(f.releaseSize.label).font(.caption).foregroundStyle(.secondary) }
                 }
                 Text(f.title).font(.title2.weight(.bold)).fixedSize(horizontal: false, vertical: true)
                 if let o = f.orig, !o.isEmpty {
                     Text(f.category == .R ? o : String(localized: "Original: \(o)")).font(.subheadline).foregroundStyle(.secondary)
                 }
-                Text("In cinemas from \(D.fmt(f.date, "EEEE d MMMM yyyy"))")
+                Text(f.isRepertory ? String(localized: "Showing again in Paris") : String(localized: "In cinemas from \(D.fmt(f.date, "EEEE d MMMM yyyy"))"))
                     .font(.subheadline)
                 if let line = facts(f) {
                     Text(line).font(.subheadline.weight(.medium)).foregroundStyle(.secondary)
@@ -245,10 +247,11 @@ struct FilmDetailView: View {
 
             VStack(alignment: .leading, spacing: 10) {
                 step(3, "Time")
-                if let times = byDay[p.d], !times.isEmpty {
+                let list = store.sessions(f.id, at: p.cn, on: p.d)
+                if !list.isEmpty {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 66), spacing: 8)], alignment: .leading, spacing: 8) {
-                        ForEach(times, id: \.self) { t in
-                            Button { setTime(f, p, t) } label: { timeChip(t, selected: t == p.t) }
+                        ForEach(list) { s in
+                            Button { setTime(f, p, s.time) } label: { TimeChip(time: s.time, selected: s.time == p.t, version: s.version) }
                                 .buttonStyle(.plain)
                         }
                     }
@@ -272,6 +275,9 @@ struct FilmDetailView: View {
             }
             if let c = store.cinema(named: p.cn), let u = c.directionsURL {
                 Link(destination: u) { Label("Directions to \(c.name)", systemImage: "arrow.triangle.turn.up.right.diamond") }
+            }
+            Button { inviting = true } label: {
+                Label("Invite someone", systemImage: "person.2.wave.2")
             }
         } header: {
             Text("Plan to watch")
@@ -304,13 +310,13 @@ struct FilmDetailView: View {
                             .frame(width: 120, alignment: .leading)
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 6) {
-                                    ForEach(row.times, id: \.self) { t in
+                                    ForEach(row.sessions) { s in
                                         Button {
-                                            store.updatePlan(f.id, Plan(d: D.today, t: t, cn: row.cinema,
+                                            store.updatePlan(f.id, Plan(d: D.today, t: s.time, cn: row.cinema,
                                                                         ca: store.cinema(named: row.cinema)?.address,
                                                                         title: f.title, fd: f.date))
                                         } label: {
-                                            timeChip(t, selected: p.d == D.today && p.t == t && p.cn == row.cinema)
+                                            TimeChip(time: s.time, selected: p.d == D.today && p.t == s.time && p.cn == row.cinema, version: s.version)
                                         }
                                         .buttonStyle(.plain)
                                     }
@@ -364,9 +370,10 @@ struct FilmDetailView: View {
     private func setDay(_ f: Film, _ p: Plan, _ day: String) {
         var np = store.plans[f.id] ?? p
         np.d = day
-        let times = store.showtimes(for: f.id, at: np.cn)[day] ?? []
-        if !times.isEmpty && !times.contains(np.t) {
-            np.t = times.first { $0 >= "18:00" } ?? times[times.count - 1]
+        let all = store.sessions(f.id, at: np.cn, on: day)
+        if !all.isEmpty && !all.contains(where: { $0.time == np.t }) {
+            let pool = store.preferredPool(all, for: f.id).map { $0.time }
+            np.t = Habits.closest(pool, to: store.habits.usualTime ?? "20:00") ?? pool[0]
         }
         store.updatePlan(f.id, np)
     }

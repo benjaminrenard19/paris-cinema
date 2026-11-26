@@ -47,11 +47,13 @@ extension Store {
                                      detail: String(localized: "\(r.cinema): \(times)")))
             }
         }
-        let fresh = films(in: currentWeek).filter { $0.category != .E }.count
+        let week = releaseWeek(for: Date())
+        let fresh = releases(in: week).count
         if fresh > 0 {
-            out.append(InboxItem(id: "week-" + currentWeek, kind: .week, filmId: nil,
-                                 title: String(localized: "\(fresh) films out this week"),
-                                 detail: D.weekRange(currentWeek)))
+            out.append(InboxItem(id: "week-" + week, kind: .week, filmId: nil,
+                                 title: week > today ? String(localized: "\(fresh) films out \(D.fmt(week, "EEEE d MMMM"))")
+                                                     : String(localized: "\(fresh) films out this week"),
+                                 detail: String(localized: "Swipe through the posters")))
         }
         return out
     }
@@ -87,7 +89,7 @@ struct InboxView: View {
                         Label("Notification settings", systemImage: "bell.badge")
                     }
                 } footer: {
-                    Text("After each confirmed plan, Sloth Cinema sends a notification when the film should be over, to ask how it was.")
+                    Text("After each confirmed plan, Sloth Cinema sends a notification when the film should be over, to ask how it was. Choose the day of the weekly releases notification in Settings.")
                 }
             }
             .navigationTitle("🎥 What's new")
@@ -112,6 +114,15 @@ struct InboxView: View {
                         } label: { row(item, emoji: emoji) }
                     } else if let id = item.filmId {
                         NavigationLink(value: id) { row(item, emoji: emoji) }
+                    } else if item.kind == .week {
+                        Button {
+                            dismiss()
+                            let week = String(item.id.dropFirst(5))
+                            Task { @MainActor in
+                                try? await Task.sleep(nanoseconds: 450_000_000)
+                                store.releasesWeek = EditTarget(id: week)
+                            }
+                        } label: { row(item, emoji: emoji) }
                     } else {
                         row(item, emoji: emoji)
                     }

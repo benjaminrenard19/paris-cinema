@@ -119,6 +119,31 @@ def main():
                 f["ac"] = x["ac"]
             films.append(f)
 
+    # Classics and older films that cinemas are showing (scripts/allocine.py theaters).
+    release_ac = {f["ac"] for f in films if f.get("ac")}
+    release_slugs = {slug(f["title"]) for f in films}
+    rep_count = 0
+    for fid, e in sorted(load(DATA / "repertory.json", {}).items()):
+        days = sorted(d for c in (showtimes.get(fid) or {}).get("cinemas") or [] for d in (c.get("times") or {}))
+        title = text(e.get("title"))
+        if not days or not title or e.get("ac") in release_ac or slug(title) in release_slugs:
+            continue
+        f = {"id": fid, "week": week_of(days[0]), "date": days[0], "title": title, "cat": "R",
+             "genre": text(e.get("genre")), "origin": text(e.get("origin")), "size": "L",
+             "dir": text(e.get("dir")), "cast": text(e.get("cast")), "orig": text(e.get("year")),
+             "syn": text(e.get("syn")), "rep": True}
+        if text(e.get("poster")) and "empty" not in e["poster"]:
+            f["poster"] = e["poster"]
+        for key in ("press", "spect"):
+            if isinstance(e.get(key), (int, float)) and 0 < e[key] <= 5:
+                f[key] = round(float(e[key]), 1)
+        if isinstance(e.get("duration"), int) and 30 <= e["duration"] <= 400:
+            f["duration"] = e["duration"]
+        if e.get("ac"):
+            f["ac"] = e["ac"]
+        films.append({k: v for k, v in f.items() if v is not None})
+        rep_count += 1
+
     body = {"format": "paris-cinema-weeks/1", "films": films, "showtimes": showtimes, "cinemas": cinemas}
     digest = hashlib.sha256(json.dumps(body, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
     old = load(OUT, {})
@@ -132,12 +157,12 @@ def main():
     OUT.write_text(raw, encoding="utf-8")
     APP_COPY.write_text(raw, encoding="utf-8")
 
-    weeks = sorted({f["week"] for f in films})
+    weeks = sorted({f["week"] for f in films if not f.get("rep")})
     print(f"{len(films)} films in {len(weeks)} weeks ({weeks[0]} to {weeks[-1]}), "
           f"{len(details)} detail records, {sum(1 for f in films if f.get('poster'))} posters, "
           f"{sum(1 for f in films if f.get('press') or f.get('spect'))} rated, "
           f"{sum(1 for f in films if f.get('duration'))} running times, "
-          f"{len(showtimes)} showtime lists. exportedAt {stamp}")
+          f"{len(showtimes)} showtime lists, {rep_count} classics showing. exportedAt {stamp}")
     for p in problems:
         print("warning:", p, file=sys.stderr)
 

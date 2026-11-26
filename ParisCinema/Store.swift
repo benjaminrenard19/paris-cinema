@@ -7,6 +7,7 @@ import Observation
 struct ScreeningRow {
     let cinema: String
     let times: [String]
+    var sessions: [Session] = []
 }
 
 @MainActor
@@ -28,6 +29,9 @@ final class Store {
     var extraCinemas: [Cinema] = []
 
     var checkIn: CheckIn?
+    /// The week's releases slideshow, and a cinema, opened from a notification.
+    var releasesWeek: EditTarget?
+    var openCinema: EditTarget?
     var linkedFileName: String? = UserDefaults.standard.string(forKey: "linkedName")
     var message: String?
     var lastFeedCheck: Date? = UserDefaults.standard.object(forKey: "lastFeedCheck") as? Date
@@ -41,6 +45,7 @@ final class Store {
         loadData()
         refreshFromLinkedFile()
         syncNotifications()
+        scheduleReleaseAlerts()
     }
 
     // MARK: Files
@@ -78,7 +83,7 @@ final class Store {
             return a.title.localizedCaseInsensitiveCompare(b.title) == .orderedAscending
         }
         films = list
-        byWeek = Dictionary(grouping: list, by: { $0.week })
+        byWeek = Dictionary(grouping: list.filter { !$0.isRepertory }, by: { $0.week })
         weeks = byWeek.keys.sorted()
         index = Dictionary(list.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
         showtimes = f.showtimes ?? [:]
@@ -169,9 +174,11 @@ final class Store {
                 apply(f)
                 usingBundledData = false
                 feedStatus = String(localized: "Up to date: \(films.count) films.")
+                updateDoneCinemas(notify: true)
             } else {
                 feedStatus = String(localized: "Already up to date.")
             }
+            scheduleReleaseAlerts()
         } catch {
             feedStatus = String(localized: "Couldn't reach GitHub. Check your connection.")
         }
@@ -267,6 +274,86 @@ final class Store {
         return out.mapValues { $0.sorted() }
     }
 
+    /// The film's sessions at a cinema on a day, from now on, in the order you like them: your
+    /// version first (or only, for foreign films, when you said it's a must).
+    func sessions(_ id: String, at cinemaName: String, on day: String) -> [Session] {
+        guard let list = showtimes[id]?.cinemas, !cinemaName.isEmpty, day >= D.today else { return [] }
+        let now = D.stampString(Date()).time
+        var times = Set<String>()
+        var versions: [String: String] = [:]
+        for c in list where sameCinema(c.name ?? "", cinemaName) {
+            for t in c.times?[day] ?? [] where day > D.today || t >= now {
+                times.insert(t)
+                if let v = c.ver?[day]?[t] { versions[t] = v }
+            }
+        }
+        let all = times.sorted().map { Session(time: $0, version: versions[$0]) }
+        return ordered(all, for: id)
+    }
+
+    /// Applies your version preference to a film's sessions.
+    func ordered(_ all: [Session], for id: String) -> [Session] {
+        let pref = VersionPrefs.pref
+        guard pref != "any", index[id]?.isFrench != true else { return all }
+        func wanted(_ s: Session) -> Bool { pref == "vo" ? s.isOriginal : s.version == "VF" }
+        if VersionPrefs.must {
+            return all.filter { $0.version == nil || wanted($0) }
+        }
+        return all.filter { wanted($0) } + all.filter { !wanted($0) }
+    }
+
+    /// Sessions in the version you prefer when there are some, otherwise all of them.
+    func preferredPool(_ all: [Session], for id: String) -> [Session] {
+        let pref = VersionPrefs.pref
+        guard pref != "any", index[id]?.isFrench != true else { return all }
+        let mine = all.filter { pref == "vo" ? $0.isOriginal : $0.version == "VF" }
+        return mine.isEmpty ? all : mine
+    }
+
+    /// The version of one session, when known.
+    func version(_ id: String, at cinemaName: String, day: String, time: String) -> String? {
+        for c in showtimes[id]?.cinemas ?? [] where sameCinema(c.name ?? "", cinemaName) {
+            if let v = c.ver?[day]?[time] { return v }
+        }
+        return nil
+    }
+
+    /// Hide films you've seen from Films, cinemas and search (My profile).
+    var hideSeen: Bool { UserDefaults.standard.object(forKey: "hideSeen") as? Bool ?? true }
+
+    /// Every film with a session in the coming days (today to next Tuesday), for the Films page.
+    var nowShowing: [Film] {
+        let end = D.addDays(currentWeek, 6)
+        let today = D.today
+        let ids = showtimes.compactMap { entry -> String? in
+            let days = (entry.value.cinemas ?? []).flatMap { ($0.times ?? [:]).keys }
+            return days.contains { $0 >= today && $0 <= max(end, D.addDays(today, 6)) } ? entry.key : nil
+        }
+        let set = Set(ids)
+        return films.filter { set.contains($0.id) && !(hideSeen && seen[$0.id] != nil) }
+    }
+
+    /// Films showing at a cinema, with their next day of sessions.
+    func filmsShowing(at cinemaName: String) -> [Film] {
+        let today = D.today
+        return showtimes.compactMap { entry -> Film? in
+            let shows = (entry.value.cinemas ?? []).contains { c in
+                sameCinema(c.name ?? "", cinemaName) && (c.times ?? [:]).keys.contains { $0 >= today }
+            }
+            return shows ? index[entry.key] : nil
+        }
+    }
+
+    /// The first day (from today) a film has sessions at a cinema, with them.
+    func nextSessions(_ id: String, at cinemaName: String) -> (day: String, sessions: [Session])? {
+        for i in 0..<14 {
+            let d = D.addDays(D.today, i)
+            let s = sessions(id, at: cinemaName, on: d)
+            if !s.isEmpty { return (d, s) }
+        }
+        return nil
+    }
+
     /// Today's remaining screenings of a film, at your cinemas if any show it, else anywhere.
     func todayScreenings(_ id: String) -> (rows: [ScreeningRow], mine: Bool) {
         guard let list = showtimes[id]?.cinemas else { return ([], false) }
@@ -274,8 +361,8 @@ final class Store {
         let now = D.stampString(Date()).time
         let rows: [ScreeningRow] = list.compactMap { c -> ScreeningRow? in
             guard let name = c.name, let times = c.times?[today] else { return nil }
-            let left = times.filter { $0 >= now }.sorted()
-            return left.isEmpty ? nil : ScreeningRow(cinema: name, times: left)
+            let left = ordered(times.filter { $0 >= now }.sorted().map { Session(time: $0, version: c.ver?[today]?[$0]) }, for: id)
+            return left.isEmpty ? nil : ScreeningRow(cinema: name, times: left.map { $0.time }, sessions: left)
         }
         let mine = rows.filter { r in myCinemas.contains { sameCinema($0, r.cinema) } }
         return mine.isEmpty ? (Array(rows.prefix(8)), false) : (mine, true)
@@ -418,6 +505,7 @@ final class Store {
         seen[f.id] = SeenEntry(d: day, r: max(0, min(5, rating)), t: f.title, fd: f.date, c: f.cat, dir: f.dir, o: f.origin, orig: f.orig,
                                cn: p?.cn ?? old?.cn, tm: p?.t ?? old?.tm)
         saveUser()
+        updateDoneCinemas(notify: false)
     }
 
     /// Records where you saw a film (from its page, when there was no plan).

@@ -20,6 +20,7 @@ Christine).
 Every page is tried up to 5 times before a source gives up on it; a cinema whose website
 fails is still covered by AlloCiné for today and tomorrow.
 
+Each session can carry its version ("VF", "VOST" or "VO"), kept in "ver": {"YYYY-MM-DD": {"HH:MM": "VOST"}}.
 Each day a source has read for a cinema replaces what was stored for that cinema and day;
 days it didn't read are kept; past days are dropped. Requests are spaced out (1.5 s).
 """
@@ -112,6 +113,18 @@ def text(s):
     return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", s))).strip()
 
 
+def version(label):
+    """'En VOST', 'VOSTF', 'VOSF', 'Localization.Version.Original' -> 'VOST'; 'VF' -> 'VF'."""
+    t = (label or "").upper()
+    if "VOST" in t or "VOSF" in t or "SOUS-TITR" in t:
+        return "VOST"
+    if re.search(r"\bVF\b|FRAN[CÇ]AISE", t) or t.endswith("VF"):
+        return "VF"
+    if re.search(r"\bVO\b|ORIGINAL", t):
+        return "VO"
+    return None
+
+
 def today():
     return datetime.datetime.now(PARIS).date()
 
@@ -152,6 +165,13 @@ class Films:
         for fid, e in sorted(load_json(DATA / "extras.json", {}).items()):
             if e.get("ac") and fid in self.week_of:
                 self.by_ac[int(e["ac"])] = fid
+        # Classics and older films found on cinema pages (data/repertory.json), tried last.
+        self.rep_by_ac, self.rep_by_slug = {}, {}
+        for fid, e in load_json(DATA / "repertory.json", {}).items():
+            if e.get("ac"):
+                self.rep_by_ac[int(e["ac"])] = fid
+            if e.get("title"):
+                self.rep_by_slug.setdefault(slug(e["title"]), fid)
 
     def find(self, title=None, ac=None):
         if ac and int(ac) in self.by_ac:
@@ -168,13 +188,31 @@ class Films:
         if k in self.by_slug:
             return self.by_slug[k]
         close = difflib.get_close_matches(k, list(self.by_slug), n=1, cutoff=0.93)
-        return self.by_slug[close[0]] if close else None
+        if close:
+            return self.by_slug[close[0]]
+        return self.repertory(title, ac)
+
+    def repertory(self, title=None, ac=None):
+        """A film that isn't a new release: a classic or an older film still showing."""
+        if ac and int(ac) in self.rep_by_ac:
+            return self.rep_by_ac[int(ac)]
+        if title:
+            k = slug(title)
+            if k in self.rep_by_slug:
+                return self.rep_by_slug[k]
+            t = title.lower()
+            for pat in self.NOISE:
+                t = re.sub(pat, " ", t, flags=re.I)
+            return self.rep_by_slug.get(slug(t))
+        return None
 
 
 # ---------------------------------------------------------------- merging
 
-def merge(scraped, covered, addresses):
-    """scraped: {(film id, cinema): {day: {"HH:MM"}}}; covered: {(cinema, day)} read in full."""
+def merge(scraped, covered, addresses, versions=None):
+    """scraped: {(film id, cinema): {day: {"HH:MM"}}}; covered: {(cinema, day)} read in full;
+    versions: {(film id, cinema): {day: {"HH:MM": "VOST"}}}."""
+    versions = versions or {}
     shows = load_json(SHOWTIMES, {})
     films = Films()
     day0 = today().isoformat()
@@ -186,6 +224,11 @@ def merge(scraped, covered, addresses):
             times = {d: v for d, v in (c.get("times") or {}).items() if d >= day0 and (name, d) not in covered}
             if times:
                 c["times"] = times
+                ver = {d: v for d, v in (c.get("ver") or {}).items() if d in times}
+                if ver:
+                    c["ver"] = ver
+                else:
+                    c.pop("ver", None)
                 kept.append(c)
         if kept:
             shows[fid]["cinemas"] = kept
@@ -205,11 +248,16 @@ def merge(scraped, covered, addresses):
         for day, hours in times.items():
             if day >= day0:
                 cinema["times"][day] = sorted(set(cinema["times"].get(day, [])) | set(hours))
+        for day, labels in (versions.get((fid, name)) or {}).items():
+            if day >= day0 and labels:
+                cinema.setdefault("ver", {}).setdefault(day, {}).update(labels)
     for entry in shows.values():
         entry["cinemas"] = [c for c in entry["cinemas"] if c.get("times")]
         entry["cinemas"].sort(key=lambda c: c.get("name", ""))
         for c in entry["cinemas"]:
             c["times"] = dict(sorted(c["times"].items()))
+            if c.get("ver"):
+                c["ver"] = {d: dict(sorted(v.items())) for d, v in sorted(c["ver"].items())}
     shows = {k: v for k, v in shows.items() if v["cinemas"]}
     SHOWTIMES.write_text(json.dumps(dict(sorted(shows.items())), ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     sessions = sum(len(v) for e in shows.values() for c in e["cinemas"] for v in c["times"].values())
@@ -233,16 +281,22 @@ def add_cinema(name, kind, address, lat, lng):
 class Collector:
     def __init__(self, films):
         self.films = films
-        self.scraped, self.covered, self.unmatched = {}, set(), set()
+        self.scraped, self.covered, self.unmatched, self.versions = {}, set(), set(), {}
+        self.new_rep = {}   # AlloCiné id: title, for films not in the release list
         self.lock = threading.Lock()
 
-    def add(self, cinema, day, hhmm, title=None, ac=None):
+    def add(self, cinema, day, hhmm, title=None, ac=None, ver=None):
         fid = self.films.find(title, ac)
         with self.lock:
+            if not fid and ac and title:
+                fid = f"rep-{int(ac)}"
+                self.new_rep[int(ac)] = title
             if not fid:
                 self.unmatched.add(title or str(ac))
                 return
             self.scraped.setdefault((fid, cinema), {}).setdefault(day, set()).add(hhmm)
+            if ver:
+                self.versions.setdefault((fid, cinema), {}).setdefault(day, {})[hhmm] = ver
 
     def cover(self, cinema, day):
         with self.lock:
@@ -304,10 +358,11 @@ def ugc_cinema(col, cid, app_name):
             hour = re.search(r'data-seanceHour="(\d\d:\d\d)"', b)
             date = re.search(r'data-seanceDate="(\d\d)/(\d\d)/(\d{4})"', b)
             film = re.search(r'data-film="([^"]*)"', b)
+            lang = re.search(r'data-version="([^"]*)"', b)
             if not (hour and date and film):
                 continue
             d = f"{date.group(3)}-{date.group(2)}-{date.group(1)}"
-            col.add(name, d, hour.group(1), title=html.unescape(film.group(1)))
+            col.add(name, d, hour.group(1), title=html.unescape(film.group(1)), ver=version(lang.group(1)) if lang else None)
             n += 1
         col.cover(name, day.isoformat())
         counts.append(n)
@@ -348,9 +403,9 @@ def grandaction(col):
             time.sleep(PAUSE)
         for day, hours in (by_day or {}).items():
             days.add(day)
-            for hhmm in hours:
+            for hhmm, info in (hours or {}).items():
                 if known.get(mid):
-                    col.add(name, day, hhmm[:5], title=known[mid])
+                    col.add(name, day, hhmm[:5], title=known[mid], ver=version((info or {}).get("lang")))
     TITLES.write_text(json.dumps(titles, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     if days:
         first, last = today(), max(datetime.date.fromisoformat(d) for d in days)
@@ -375,9 +430,9 @@ def cotecine(col, name, url):
         if not film:
             continue
         title = text(re.sub(r'<span class="flag[^"]*">.*?</span>', "", film.group(2), flags=re.S))
-        for ts in re.findall(r"/reserver/F\d+/D(\d+)/", block):
+        for ts, lang in re.findall(r"/reserver/F\d+/D(\d+)/([^/\"]+)/", block):
             t = datetime.datetime.fromtimestamp(int(ts), PARIS)
-            col.add(name, t.date().isoformat(), t.strftime("%H:%M"), title=title, ac=int(film.group(1)))
+            col.add(name, t.date().isoformat(), t.strftime("%H:%M"), title=title, ac=int(film.group(1)), ver=version(lang))
             n += 1
     tabs = len(set(re.findall(r'class="fcel jour(\d+)', page)))
     for i in range(max(tabs, 1)):
@@ -459,6 +514,7 @@ WEBEDIA = [  # name in the app, page listing every film's sessions for one day (
     ("Luminor Hôtel de Ville", "https://www.luminor-hoteldeville.com/horaires/?date={d}"),
     ("Les 7 Parnassiens", "https://www.multicine.fr/seances/?theater=C0025&date={d}"),
     ("Elysées Lincoln", "https://www.multicine.fr/seances/?theater=C0108&date={d}"),
+    ("Les 5 Caumartin", "https://www.multicine.fr/seances/?theater=C0012&date={d}"),
 ]
 LOUXOR = ("Le Louxor", "https://www.cinemalouxor.fr")   # no day page: each film's page, per day
 
@@ -485,13 +541,17 @@ def webedia_sessions(page):
     """{AlloCiné film id: {"HH:MM"}} and the days named in the page's headings."""
     marks = [(m.start(), "film", m.group(1)) for m in re.finditer(r'href="/(?:films|movies)/(\d+)-', page)]
     marks += [(m.start(), "time", m.group(1)) for m in re.finditer(r'aria-label="(\d\d:\d\d)(?: \([^)]*\))?"', page)]
+    marks += [(m.start(), "ver", m.group(1)) for m in re.finditer(r'(?:title|aria-label)="(VF|VOST|VOSTFR|VO|VFST)"', page)]
     marks.sort()
-    film, out = None, {}
+    film, last, out = None, None, {}
     for _, kind, value in marks:
         if kind == "film":
-            film = int(value)
-        elif film:
-            out.setdefault(film, set()).add(value)
+            film, last = int(value), None
+        elif kind == "time" and film:
+            out.setdefault(film, {}).setdefault(value, None)
+            last = value
+        elif kind == "ver" and film and last and out.get(film, {}).get(last) is None:
+            out[film][last] = version(value)
     headings = re.findall(r'class="scheduleHeading[^"]*">([^<]+)<', page)
     return out, headings
 
@@ -535,7 +595,12 @@ def webedia(col, days=8):
                 continue
             sessions, headings = webedia_sessions(page)
             if only:   # a film's own page: every session on it is that film's
-                sessions = {only: set(re.findall(r'aria-label="(\d\d:\d\d)(?: \([^)]*\))?"', page))}
+                merged = {}
+                for hours in sessions.values():
+                    merged.update({k: v for k, v in hours.items() if v or k not in merged})
+                if not merged:
+                    merged = {t: None for t in re.findall(r'aria-label="(\d\d:\d\d)(?: \([^)]*\))?"', page)}
+                sessions = {only: merged}
             named = {heading_day(h, start) for h in headings} - {None}
             if named and d not in named:
                 failed[name] = failed.get(name, 0) + 1     # the site showed another day: don't trust it
@@ -543,8 +608,8 @@ def webedia(col, days=8):
             for ac, hours in sessions.items():
                 if only and ac != only:
                     continue
-                for hhmm in hours:
-                    col.add(name, d.isoformat(), hhmm, ac=ac)
+                for hhmm, ver in hours.items():
+                    col.add(name, d.isoformat(), hhmm, ac=ac, ver=ver)
                     counts[name] = counts.get(name, 0) + 1
             if not only:
                 col.cover(name, d.isoformat())
@@ -568,4 +633,4 @@ if __name__ == "__main__":
     for key in chosen:
         SOURCES[key](col)
     col.report("websites")
-    merge(col.scraped, col.covered, cinema_addresses())
+    merge(col.scraped, col.covered, cinema_addresses(), col.versions)

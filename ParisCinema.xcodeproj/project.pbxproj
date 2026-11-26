@@ -195,6 +195,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ParisCinema-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Cinéma Paris";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "Adds your planned cinema outings to your calendar.";
@@ -229,6 +230,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ParisCinema-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Cinéma Paris";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "Adds your planned cinema outings to your calendar.";

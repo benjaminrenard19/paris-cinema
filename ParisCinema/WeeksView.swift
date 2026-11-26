@@ -12,6 +12,40 @@ enum WeekSort: String, CaseIterable, Identifiable {
     case long = "Running time, longest first"
     var id: String { rawValue }
     var label: String { NSLocalizedString(rawValue, comment: "Sort order") }
+
+    static var current: WeekSort { WeekSort(rawValue: UserDefaults.standard.string(forKey: "weekSort") ?? "") ?? .standard }
+
+    /// Films without the value being sorted on go last.
+    func apply(_ list: [Film]) -> [Film] {
+        func highFirst(_ key: (Film) -> Double?) -> [Film] {
+            list.sorted { a, b in
+                switch (key(a), key(b)) {
+                case let (x?, y?): return x > y
+                case (.some, .none): return true
+                default: return false
+                }
+            }
+        }
+        func lowFirst(_ key: (Film) -> Double?) -> [Film] {
+            list.sorted { a, b in
+                switch (key(a), key(b)) {
+                case let (x?, y?): return x < y
+                case (.some, .none): return true
+                default: return false
+                }
+            }
+        }
+        switch self {
+        case .standard: return list
+        case .az: return list.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+        case .za: return list.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedDescending }
+        case .press: return highFirst { $0.press }
+        case .spect: return highFirst { $0.spect }
+        case .avg: return highFirst { $0.average }
+        case .short: return lowFirst { $0.duration.map { Double($0) } }
+        case .long: return highFirst { $0.duration.map { Double($0) } }
+        }
+    }
 }
 
 struct WeeksView: View {
@@ -25,45 +59,100 @@ struct WeeksView: View {
     @State private var showInbox = false
     @AppStorage("weekSort") private var sortRaw = WeekSort.standard.rawValue
     @AppStorage("userName") private var userName = ""
+    @AppStorage("filmsMode") private var modeRaw = "now"
+    @AppStorage("hideSeen") private var hideSeen = true
+    @State private var didScroll = false
+    @State private var showSeenResults = false
+    @State private var slideshow: EditTarget?
+
+    /// "now": every film with sessions this week; "week": releases of one week.
+    private var nowMode: Bool { modeRaw != "week" }
+    private var source: [Film] {
+        if !nowMode { return store.films(in: week) }
+        return store.nowShowing.sorted { a, b in
+            let ra = a.category == .R ? 1 : 0, rb = b.category == .R ? 1 : 0
+            if ra != rb { return ra < rb }
+            if a.releaseSize.rank != b.releaseSize.rank { return a.releaseSize.rank < b.releaseSize.rank }
+            return a.date > b.date
+        }
+    }
+    private var nowEnd: String { max(D.addDays(store.currentWeek, 6), D.addDays(D.today, 6)) }
 
     private var sort: WeekSort { WeekSort(rawValue: sortRaw) ?? .standard }
 
     var body: some View {
         NavigationStack {
+            ScrollViewReader { proxy in
             List {
                 if query.isEmpty {
+                    // Above the fold: scroll up to see the stage and the week.
                     Section {
                         StageHeader(name: userName)
                             .listRowInsets(EdgeInsets())
                             .listRowBackground(Color.clear)
                     }
-                    Section { weekHeader }
+                    Section {
+                        Picker("Show", selection: $modeRaw) {
+                            Text("Showing this week").tag("now")
+                            Text("Releases by week").tag("week")
+                        }
+                        .pickerStyle(.segmented)
+                        if nowMode { nowHeader } else {
+                            weekHeader
+                            if !store.releases(in: week).isEmpty {
+                                Button { slideshow = EditTarget(id: week) } label: {
+                                    Label("Swipe through this week's posters", systemImage: "play.rectangle.on.rectangle")
+                                }
+                            }
+                        }
+                    }
                     Section {
                         filterBar
                             .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+                            .id("filters")
                     }
                     Section {
                         if visible.isEmpty {
-                            Text(store.films(in: week).isEmpty ? "No films loaded for this week yet." : "No films match these filters.")
+                            Text(source.isEmpty ? (nowMode ? "No session times loaded yet. Pull down to refresh." : "No films loaded for this week yet.") : "No films match these filters.")
                                 .foregroundStyle(.secondary)
                         }
                         ForEach(visible) { f in
-                            NavigationLink(value: f.id) { FilmRow(film: f) }
+                            NavigationLink(value: f.id) { FilmRow(film: f, showDate: nowMode) }
                                 .swipeActions(edge: .trailing) { favButton(f) }
                         }
                     } header: {
                         Text((visible.count == 1 ? String(localized: "1 film") : String(localized: "\(visible.count) films")) + (sort == .standard ? "" : " · " + sort.label))
+                    } footer: {
+                        if nowMode && hideSeen {
+                            Text("Films you've seen are hidden. Change this in My profile.")
+                        }
                     }
                 } else {
-                    let results = store.search(query)
+                    let all = store.search(query)
+                    let hidden = hideSeen && !showSeenResults ? all.filter { store.seen[$0.id] != nil } : []
+                    let results = hidden.isEmpty ? all : all.filter { store.seen[$0.id] == nil }
                     Section(results.count == 1 ? String(localized: "1 result") : String(localized: "\(results.count) results")) {
                         ForEach(results.prefix(150)) { f in
                             NavigationLink(value: f.id) { FilmRow(film: f, showDate: true) }
+                        }
+                        if !hidden.isEmpty {
+                            Button(hidden.count == 1 ? String(localized: "Show 1 film you've seen") : String(localized: "Show \(hidden.count) films you've seen")) {
+                                showSeenResults = true
+                            }
                         }
                     }
                 }
             }
             .listStyle(.insetGrouped)
+            .task {
+                // Open on the filters, with the stage and week just above.
+                guard !didScroll else { return }
+                didScroll = true
+                try? await Task.sleep(for: .milliseconds(120))
+                proxy.scrollTo("filters", anchor: .top)
+            }
+            .onChange(of: query) { _, q in if q.isEmpty { showSeenResults = false } }
+            }
             .refreshable { await store.refreshFromFeed(force: true) }
             .navigationTitle("Sloth Cinema")
             .navigationBarTitleDisplayMode(.inline)
@@ -72,7 +161,7 @@ struct WeeksView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Menu {
-                        Picker("Sort this week", selection: $sortRaw) {
+                        Picker("Sort films", selection: $sortRaw) {
                             ForEach(WeekSort.allCases) { s in Text(s.label).tag(s.rawValue) }
                         }
                     } label: {
@@ -104,47 +193,26 @@ struct WeeksView: View {
             .sheet(isPresented: $showData) { DataView().environment(store) }
             .sheet(isPresented: $showInbox) { InboxView().environment(store) }
             .fullScreenCover(isPresented: $showStats) { StoryView(period: .thisMonth).environment(store) }
+            .fullScreenCover(item: $slideshow) { t in ReleasesSlideshowView(week: t.id).environment(store) }
             .onAppear { if week.isEmpty || store.byWeek[week] == nil { week = store.defaultWeek } }
             .onChange(of: store.weeks) { _, _ in if store.byWeek[week] == nil { week = store.defaultWeek } }
         }
     }
 
     private var visible: [Film] {
-        sorted(store.films(in: week).filter { f in
+        sort.apply(source.filter { f in
             (cats.isEmpty || cats.contains(f.category)) && (!favOnly || store.isFav(f.id))
         })
     }
 
-    /// Films without the value being sorted on go last.
-    private func sorted(_ list: [Film]) -> [Film] {
-        func highFirst(_ key: (Film) -> Double?) -> [Film] {
-            list.sorted { a, b in
-                switch (key(a), key(b)) {
-                case let (x?, y?): return x > y
-                case (.some, .none): return true
-                default: return false
-                }
-            }
+    private var nowHeader: some View {
+        VStack(spacing: 2) {
+            Text("This week").font(.title2.weight(.bold))
+            Text(String(localized: "Every film with sessions, today to \(D.fmt(nowEnd, "EEEE d MMMM"))"))
+                .font(.caption).foregroundStyle(.secondary)
         }
-        func lowFirst(_ key: (Film) -> Double?) -> [Film] {
-            list.sorted { a, b in
-                switch (key(a), key(b)) {
-                case let (x?, y?): return x < y
-                case (.some, .none): return true
-                default: return false
-                }
-            }
-        }
-        switch sort {
-        case .standard: return list
-        case .az: return list.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
-        case .za: return list.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedDescending }
-        case .press: return highFirst { $0.press }
-        case .spect: return highFirst { $0.spect }
-        case .avg: return highFirst { $0.average }
-        case .short: return lowFirst { $0.duration.map { Double($0) } }
-        case .long: return highFirst { $0.duration.map { Double($0) } }
-        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 4)
     }
 
     private var position: Int? { store.weeks.firstIndex(of: week) }
@@ -197,7 +265,7 @@ struct WeeksView: View {
             HStack(spacing: 8) {
                 chip("Favourites", symbol: "star.fill", on: favOnly, color: Color(hex: 0xE0A800)) { favOnly.toggle() }
                 ForEach(Cat.allCases) { c in
-                    let n = store.films(in: week).filter { $0.category == c }.count
+                    let n = source.filter { $0.category == c }.count
                     if n > 0 {
                         chip("\(c.short) \(n)", symbol: nil, on: cats.contains(c), color: c.color) {
                             if cats.contains(c) { cats.remove(c) } else { cats.insert(c) }

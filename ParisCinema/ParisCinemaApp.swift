@@ -15,15 +15,19 @@ struct ParisCinemaApp: App {
             ContentView()
                 .environment(store)
                 .onAppear {
-                    Notifier.shared.attach { id, action in
-                        Task { @MainActor in store.openCheckIn(id, action: action) }
+                    Notifier.shared.attach { tap in
+                        Task { @MainActor in store.handle(tap) }
                     }
                 }
         }
         .onChange(of: scenePhase, initial: true) { _, phase in
+            if phase == .background { store.scheduleBackgroundRefresh() }
             guard phase == .active else { return }
             store.refreshFromLinkedFile()
             Task { @MainActor in await store.refreshFromFeed() }
+        }
+        .backgroundTask(.appRefresh(AlertPrefs.refreshTask)) {
+            await store.backgroundRefresh()
         }
     }
 }
@@ -32,16 +36,18 @@ struct ContentView: View {
     @Environment(Store.self) private var store
     @AppStorage("tutorialSeen") private var tutorialSeen = false
     @AppStorage("welcomeDone") private var welcomeDone = false
+    @AppStorage("versionAsked") private var versionAsked = false
 
-    /// First the welcome (name, cinemas, sorting), then the tutorial.
+    /// First the welcome (name, cinemas, versions, sorting), then the tutorial.
     enum Cover: String, Identifiable {
-        case welcome, tutorial
+        case welcome, tutorial, versions
         var id: String { rawValue }
     }
 
     private var cover: Cover? {
         if !welcomeDone { return .welcome }
         if !tutorialSeen { return .tutorial }
+        if !versionAsked { return .versions }
         return nil
     }
 
@@ -68,12 +74,21 @@ struct ContentView: View {
         .fullScreenCover(item: Binding(get: { cover }, set: { _ in })) { c in
             switch c {
             case .welcome:
-                WelcomeView { welcomeDone = true }
+                WelcomeView { welcomeDone = true; versionAsked = true; store.scheduleReleaseAlerts(ask: true) }
                     .environment(store)
                     .tint(theme.color)
             case .tutorial:
                 TutorialView { tutorialSeen = true }
+            case .versions:
+                VersionSetupView { versionAsked = true; store.scheduleReleaseAlerts(ask: true) }
+                    .tint(theme.color)
             }
+        }
+        .fullScreenCover(item: $model.releasesWeek) { t in
+            ReleasesSlideshowView(week: t.id).environment(store).tint(theme.color)
+        }
+        .sheet(item: $model.openCinema) { t in
+            CinemaSheet(name: t.id).environment(store).tint(theme.color)
         }
     }
 }
@@ -180,7 +195,7 @@ struct FilmRow: View {
                 if let line = subtitle { Text(line).font(.subheadline).foregroundStyle(.secondary).lineLimit(2) }
                 HStack(spacing: 6) {
                     CatBadge(cat: film.category)
-                    Text(film.releaseSize.label).font(.caption2).foregroundStyle(.secondary)
+                    if !film.isRepertory { Text(film.releaseSize.label).font(.caption2).foregroundStyle(.secondary) }
                     if let s = store.seen[film.id] { Stars(rating: s.r, size: 9) }
                 }
                 if let facts {
@@ -211,7 +226,7 @@ struct FilmRow: View {
 
     private var subtitle: String? {
         var parts: [String] = []
-        if showDate || film.date != film.week { parts.append(D.fmt(film.date, "EEE d MMM")) }
+        if !film.isRepertory && (showDate || film.date != film.week) { parts.append(D.fmt(film.date, "EEE d MMM")) }
         if let d = film.dir, !d.isEmpty { parts.append(d) }
         if let o = film.origin, !o.isEmpty { parts.append(o) }
         if film.category == .R, let y = film.orig, !y.isEmpty { parts.append(y) }

@@ -12,6 +12,7 @@ struct WeekPlanView: View {
     @Environment(Store.self) private var store
     @State private var week = D.weekOf(D.today)
     @State private var target: PlanTarget?
+    @State private var inviting: EditTarget?
 
     var body: some View {
         NavigationStack {
@@ -55,6 +56,11 @@ struct WeekPlanView: View {
                                         Button { store.confirmPlan(item.0.id) } label: { Label("Confirm", systemImage: "checkmark") }
                                             .tint(.green)
                                     }
+                                    Button { inviting = EditTarget(id: item.0.id) } label: { Label("Invite", systemImage: "person.2.wave.2") }
+                                        .tint(.blue)
+                                }
+                                .contextMenu {
+                                    Button { inviting = EditTarget(id: item.0.id) } label: { Label("Invite someone", systemImage: "person.2.wave.2") }
                                 }
                         }
                         if day >= D.today {
@@ -86,6 +92,7 @@ struct WeekPlanView: View {
             .navigationTitle("My week")
             .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
             .sheet(item: $target) { t in AddPlanView(target: t).environment(store) }
+            .sheet(item: $inviting) { t in InviteSheet(filmId: t.id).environment(store) }
         }
     }
 
@@ -159,12 +166,13 @@ struct AddPlanView: View {
     private var days: [String] { (0..<14).map { D.addDays(D.today, $0) } }
     private var usualTime: String { store.habits.usualTime ?? "20:00" }
 
-    /// The film's sessions at a cinema on a day, from now on.
-    private func sessions(_ name: String, _ d: String) -> [String] {
+    /// The film's sessions at a cinema on a day, from now on, your version first.
+    private func sessionList(_ name: String, _ d: String) -> [Session] {
         guard let f = film, !name.isEmpty else { return [] }
-        let now = D.stampString(Date()).time
-        return (store.showtimes(for: f.id, at: name)[d] ?? []).filter { d > D.today || $0 >= now }
+        return store.sessions(f.id, at: name, on: d)
     }
+
+    private func sessions(_ name: String, _ d: String) -> [String] { sessionList(name, d).map { $0.time } }
 
     /// Days in the next two weeks when a cinema shows the film.
     private func sessionDays(_ name: String) -> [String] { days.filter { !sessions(name, $0).isEmpty } }
@@ -298,7 +306,7 @@ struct AddPlanView: View {
     // MARK: Day and session
 
     private var sessionSection: some View {
-        let times = sessions(cinemaName, day)
+        let times = sessionList(cinemaName, day)
         return Section {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
@@ -319,8 +327,8 @@ struct AddPlanView: View {
             }
             if !times.isEmpty {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 66), spacing: 8)], alignment: .leading, spacing: 8) {
-                    ForEach(times, id: \.self) { t in
-                        Button { time = t } label: { TimeChip(time: t, selected: t == time) }
+                    ForEach(times) { s in
+                        Button { time = s.time } label: { TimeChip(time: s.time, selected: s.time == time, version: s.version) }
                             .buttonStyle(.plain)
                     }
                 }
@@ -364,11 +372,11 @@ struct AddPlanView: View {
                         }
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 6) {
-                                ForEach(sessions(name, day), id: \.self) { t in
+                                ForEach(sessionList(name, day)) { s in
                                     Button {
                                         cinemaName = name
-                                        time = t
-                                    } label: { TimeChip(time: t, selected: false) }
+                                        time = s.time
+                                    } label: { TimeChip(time: s.time, selected: false, version: s.version) }
                                     .buttonStyle(.plain)
                                 }
                             }
@@ -391,10 +399,12 @@ struct AddPlanView: View {
         pickTime()
     }
 
-    /// The session nearest the time you usually go.
+    /// The session nearest the time you usually go, in the version you prefer.
     private func pickTime() {
-        let t = sessions(cinemaName, day)
-        if !t.isEmpty && !t.contains(time) { time = Habits.closest(t, to: usualTime) ?? t[0] }
+        let all = sessionList(cinemaName, day)
+        guard let f = film, !all.isEmpty, !all.contains(where: { $0.time == time }) else { return }
+        let pool = store.preferredPool(all, for: f.id).map { $0.time }
+        time = Habits.closest(pool, to: usualTime) ?? pool[0]
     }
 
     /// After choosing a cinema: its first day with a session, unless the chosen day has one.
@@ -490,12 +500,18 @@ struct DayChip: View {
 struct TimeChip: View {
     let time: String
     let selected: Bool
+    var version: String? = nil
 
     var body: some View {
-        Text(time)
-            .font(.subheadline.weight(.semibold).monospacedDigit())
+        VStack(spacing: 1) {
+            Text(time)
+                .font(.subheadline.weight(.semibold).monospacedDigit())
+            if let v = VersionPrefs.label(version) {
+                Text(v).font(.system(size: 9, weight: .bold)).opacity(0.85)
+            }
+        }
             .frame(minWidth: 58)
-            .padding(.horizontal, 8).padding(.vertical, 8)
+            .padding(.horizontal, 8).padding(.vertical, version == nil ? 8 : 4)
             .background(selected ? Color.theme : Color.theme.opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
             .foregroundStyle(selected ? Color.white : Color.theme)
             .accessibilityAddTraits(selected ? .isSelected : [])

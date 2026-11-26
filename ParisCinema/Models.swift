@@ -137,10 +137,13 @@ struct Film: Identifiable, Hashable, Codable {
     var spect: Double?      // AlloCiné audience rating out of 5
     var duration: Int?      // minutes
     var ac: Int?            // AlloCiné film id
+    var rep: Bool?          // a classic or older film still showing, not a release of the week
 
     enum CodingKeys: String, CodingKey {
-        case id, week, date, title, cat, genre, origin, size, dir, cast, orig, note, syn, prod, poster, press, spect, duration, ac
+        case id, week, date, title, cat, genre, origin, size, dir, cast, orig, note, syn, prod, poster, press, spect, duration, ac, rep
     }
+
+    var isRepertory: Bool { rep == true }
 
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
@@ -165,6 +168,7 @@ struct Film: Identifiable, Hashable, Codable {
         spect = try? c.decodeIfPresent(Double.self, forKey: .spect)
         duration = try? c.decodeIfPresent(Int.self, forKey: .duration)
         ac = try? c.decodeIfPresent(Int.self, forKey: .ac)
+        rep = try? c.decodeIfPresent(Bool.self, forKey: .rep)
     }
 
     /// Average of the press and audience ratings that exist.
@@ -242,6 +246,33 @@ struct ShowCinema: Codable, Hashable {
     var name: String?
     var address: String?
     var times: [String: [String]]?
+    /// Version of each session when the source says it: [day: ["20:30": "VOST"]].
+    var ver: [String: [String: String]]?
+}
+
+/// One session: its time and, when known, its version ("VF", "VOST" or "VO").
+struct Session: Hashable, Identifiable {
+    let time: String
+    let version: String?
+    var id: String { time }
+    var isOriginal: Bool { version == "VOST" || version == "VO" }
+}
+
+/// Which version you like to see (asked at the first launch, changed in My profile).
+enum VersionPrefs {
+    /// "vo" (original, subtitled), "vf" (dubbed in French) or "any".
+    static var pref: String { UserDefaults.standard.string(forKey: "versionPref") ?? "any" }
+    /// true: only your version for foreign films; false: yours first, the other one too.
+    static var must: Bool { UserDefaults.standard.bool(forKey: "versionMust") }
+
+    static func label(_ v: String?) -> String? {
+        switch v {
+        case "VOST": return "VOST"
+        case "VO": return "VO"
+        case "VF": return "VF"
+        default: return nil
+        }
+    }
 }
 
 struct Showtimes: Codable, Hashable {

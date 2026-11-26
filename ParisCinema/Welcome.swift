@@ -18,12 +18,13 @@ struct WelcomeView: View {
                 switch step {
                 case 0: nameStep
                 case 1: FavouriteCinemasList(intro: String(localized: "Star the cinemas you go to. They come first everywhere, with their session times."))
+                case 2: List { VersionQuestions() }
                 default: sortStep
                 }
                 Button {
                     next()
                 } label: {
-                    Text(step < 2 ? String(localized: "Next") : String(localized: "Start"))
+                    Text(step < 3 ? String(localized: "Next") : String(localized: "Start"))
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
@@ -53,6 +54,7 @@ struct WelcomeView: View {
         switch step {
         case 0: return String(localized: "Welcome")
         case 1: return String(localized: "Your cinemas")
+        case 2: return String(localized: "VO or VF?")
         default: return String(localized: "Your Films page")
         }
     }
@@ -94,7 +96,7 @@ struct WelcomeView: View {
                     }
                 }
             } header: {
-                Text("How should each week be sorted?")
+                Text("How should films be sorted?")
             } footer: {
                 Text("You can change it any time with the ⇅ button at the top left of Films.")
             }
@@ -103,7 +105,7 @@ struct WelcomeView: View {
 
     private func next() {
         if step == 0 { userName = name.trimmingCharacters(in: .whitespaces) }
-        if step < 2 { withAnimation { step += 1 } } else { finish() }
+        if step < 3 { withAnimation { step += 1 } } else { finish() }
     }
 
     private func finish() {
@@ -164,6 +166,7 @@ struct ProfileView: View {
     @Environment(Store.self) private var store
     @AppStorage("userName") private var userName = ""
     @AppStorage("weekSort") private var sortRaw = WeekSort.standard.rawValue
+    @AppStorage("hideSeen") private var hideSeen = true
     @State private var scope = 0
     @State private var year = D.cal.component(.year, from: Date())
     @State private var month = D.cal.component(.month, from: Date())
@@ -197,6 +200,11 @@ struct ProfileView: View {
                 Picker("Films page order", selection: $sortRaw) {
                     ForEach(WeekSort.allCases) { s in Text(s.label).tag(s.rawValue) }
                 }
+            }
+            Section {
+                Toggle("Hide films I've seen", isOn: $hideSeen)
+            } footer: {
+                Text("When on, films you've marked as watched leave the Films list, the search and the cinema pages, so you only see what's left to watch.")
             }
             Section {
                 Text(store.habits.summary ?? String(localized: "Plan your films and mark them as watched: Sloth Cinema learns when and where you like to go, and suggests sessions to match."))

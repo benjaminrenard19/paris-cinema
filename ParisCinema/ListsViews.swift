@@ -317,7 +317,20 @@ struct DataView: View {
     @AppStorage("tutorialSeen") private var tutorialSeen = true
     @AppStorage("welcomeDone") private var welcomeDone = true
     @AppStorage("userName") private var userName = ""
+    @AppStorage("versionPref") private var versionPref = "any"
+    @AppStorage("versionMust") private var versionMust = false
+    @AppStorage("hideSeen") private var hideSeen = true
     @State private var calendarNote: String?
+
+    private var versionSummary: String {
+        switch (versionPref, versionMust) {
+        case ("vo", true): return String(localized: "Original version only")
+        case ("vo", false): return String(localized: "Original version first")
+        case ("vf", true): return String(localized: "VF only")
+        case ("vf", false): return String(localized: "VF first")
+        default: return String(localized: "No preference")
+        }
+    }
 
     private var version: String {
         let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -344,6 +357,24 @@ struct DataView: View {
                 } header: {
                     Text("My profile")
                 }
+
+                // Watching
+                Section {
+                    NavigationLink {
+                        List { VersionQuestions() }
+                            .navigationTitle("VO or VF")
+                            .navigationBarTitleDisplayMode(.inline)
+                    } label: {
+                        LabeledContent("Version", value: versionSummary)
+                    }
+                    Toggle("Hide films I've seen", isOn: $hideSeen)
+                } header: {
+                    Text("Watching")
+                } footer: {
+                    Text("Seen films leave the Films list, the search and the cinema pages. Search still offers to show them.")
+                }
+
+                NotificationSettings()
 
                 // Manual refreshing
                 Section {
@@ -455,7 +486,7 @@ struct DataView: View {
                 } header: {
                     Text("Information")
                 } footer: {
-                    Text("Films, posters and ratings come from AlloCiné; session times from the cinemas' own websites (UGC, Le Grand Rex, Max Linder, Luminor, Le Louxor, Les 7 Parnassiens, Elysées Lincoln, Le Grand Action, Le Balzac, Studio 28) and AlloCiné; extra posters from Apple's film catalogue. The app follows your iPhone's language, English or French; change it in Settings › Apps › Sloth Cinema › Language.")
+                    Text("Films, posters and ratings come from AlloCiné; session times from the cinemas' own websites (UGC, Le Grand Rex, Max Linder, Luminor, Le Louxor, Les 7 Parnassiens, Les 5 Caumartin, Elysées Lincoln, Le Grand Action, Le Balzac, Studio 28) and AlloCiné, with the classics the independent cinemas show; extra posters from Apple's film catalogue. The app follows your iPhone's language, English or French; change it in Settings › Apps › Sloth Cinema › Language.")
                 }
 
                 // Import
@@ -473,13 +504,14 @@ struct DataView: View {
                     if FileManager.default.fileExists(atPath: store.userURL.path) {
                         ShareLink(item: store.userURL) { Label("Share my lists (favourites, watched, plans)", systemImage: "square.and.arrow.up") }
                     }
-                    ShareLink(item: Feed.page, subject: Text("Sloth Cinema"), message: Text("Every film out in Paris cinemas, week by week.")) {
-                        Label("Share Sloth Cinema", systemImage: "person.2")
+                    ShareLink(item: Feed.page, subject: Text("Sloth Cinema"),
+                              message: Text("Sloth Cinema: every film in Paris cinemas with today's session times, VO or VF. It's a free iPhone app you can install from this page with a Mac and Xcode.")) {
+                        Label("Share this app with…", systemImage: "person.2")
                     }
                 } header: {
                     Text("Share")
                 } footer: {
-                    Text("Your lists are a file you can keep as a backup or open on another iPhone.")
+                    Text("Your lists are a file you can keep as a backup or open on another iPhone. To install the app on a friend's iPhone without a Mac, Apple requires TestFlight or the App Store, which need a paid Apple Developer account (99 € a year). Until then, the link points to the code on GitHub.")
                 }
             }
             .navigationTitle("Settings")
