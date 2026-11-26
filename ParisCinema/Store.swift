@@ -22,6 +22,7 @@ final class Store {
     var myCinemas: [String] = []
     var extraCinemas: [Cinema] = []
 
+    var checkIn: CheckIn?
     var linkedFileName: String? = UserDefaults.standard.string(forKey: "linkedName")
     var message: String?
     var lastFeedCheck: Date? = UserDefaults.standard.object(forKey: "lastFeedCheck") as? Date
@@ -34,6 +35,7 @@ final class Store {
         loadUser()
         loadData()
         refreshFromLinkedFile()
+        syncNotifications()
     }
 
     // MARK: Files
@@ -200,6 +202,76 @@ final class Store {
         let enc = JSONEncoder()
         enc.outputFormatting = [.prettyPrinted, .sortedKeys]
         if let data = try? enc.encode(u) { try? data.write(to: userURL, options: .atomic) }
+        syncNotifications()
+    }
+
+    // MARK: Plans and notifications
+
+    /// A film ends about 2 h 30 after the session starts (trailers included).
+    func planEnd(_ p: Plan) -> Date? { D.stamp(day: p.d, time: p.t)?.addingTimeInterval(150 * 60) }
+
+    private func syncNotifications() {
+        let alerts: [PlanAlert] = plans.compactMap { entry -> PlanAlert? in
+            let p = entry.value
+            guard p.ok == true, let end = planEnd(p) else { return nil }
+            return PlanAlert(id: entry.key, title: p.title ?? index[entry.key]?.title ?? "your film", cinema: p.cn, end: end)
+        }
+        Notifier.shared.schedule(alerts)
+    }
+
+    /// Plans you confirmed whose film has finished: time to say how it was.
+    var duePlans: [(Film, Plan)] {
+        let now = Date()
+        return plannedFilms.filter { item in
+            guard item.1.ok == true, let end = planEnd(item.1) else { return false }
+            return end < now
+        }
+    }
+
+    func planFilm(_ f: Film, day: String, time: String, cinemaName: String) {
+        favs.insert(f.id)
+        plans[f.id] = Plan(d: day, t: time, cn: cinemaName, ca: cinema(named: cinemaName)?.address, title: f.title, fd: f.date, ok: true)
+        saveUser()
+        Notifier.shared.requestPermission()
+    }
+
+    func confirmPlan(_ id: String) {
+        guard var p = plans[id] else { return }
+        p.ok = true
+        plans[id] = p
+        saveUser()
+        Notifier.shared.requestPermission()
+    }
+
+    func removePlan(_ id: String) {
+        plans[id] = nil
+        saveUser()
+    }
+
+    /// "I'm not going to see it": drops the plan and the favourite.
+    func dropPlan(_ id: String) {
+        plans[id] = nil
+        favs.remove(id)
+        saveUser()
+    }
+
+    func openCheckIn(_ id: String, action: String) {
+        guard index[id] != nil else { return }
+        checkIn = CheckIn(id: id, action: action)
+    }
+
+    func setSeenDate(_ id: String, _ day: String) {
+        guard var s = seen[id] else { return }
+        s.d = day
+        seen[id] = s
+        saveUser()
+    }
+
+    func updateCustomSeen(_ id: String, title: String, day: String, rating: Int, category: Cat) {
+        guard var s = seen[id] else { return }
+        s.t = title; s.d = day; s.r = max(0, min(5, rating)); s.c = category.rawValue
+        seen[id] = s
+        saveUser()
     }
 
     func isFav(_ id: String) -> Bool { favs.contains(id) }
@@ -257,9 +329,13 @@ final class Store {
         plans[f.id] = Plan(d: D.saturdayAfter(start), t: "20:00", cn: c.name, ca: c.address, title: f.title, fd: f.date)
     }
 
+    /// Any change you make to a plan confirms it.
     func updatePlan(_ id: String, _ p: Plan) {
-        plans[id] = p
+        var np = p
+        np.ok = true
+        plans[id] = np
         saveUser()
+        Notifier.shared.requestPermission()
     }
 
     func setSeen(_ f: Film, rating: Int, on day: String) {
@@ -313,8 +389,17 @@ final class Store {
         favs.compactMap { index[$0] }.filter { plans[$0.id] == nil }.sorted { $0.date > $1.date }
     }
 
+    /// For a year: films watched, and watched plus films still planned that year ("25 (28)").
+    func yearCounts(_ y: Int) -> (watched: Int, total: Int) {
+        let prefix = String(y)
+        let watched = seen.values.filter { $0.d.hasPrefix(prefix) }.count
+        let planned = plans.filter { $0.value.d.hasPrefix(prefix) && seen[$0.key] == nil }.count
+        return (watched, watched + planned)
+    }
+
     var seenYears: [Int] {
         var ys = Set(seen.values.compactMap { Int($0.d.prefix(4)) })
+        ys.formUnion(plans.values.compactMap { Int($0.d.prefix(4)) })
         ys.insert(D.cal.component(.year, from: Date()))
         return ys.sorted(by: >)
     }

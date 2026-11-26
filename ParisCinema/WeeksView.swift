@@ -40,7 +40,7 @@ struct WeeksView: View {
             }
             .listStyle(.insetGrouped)
             .refreshable { await store.refreshFromFeed(force: true) }
-            .navigationTitle("Paris cinema")
+            .navigationTitle("Sloth Cinema")
             .searchable(text: $query, prompt: "Title, director, actor")
             .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
             .toolbar {

@@ -31,8 +31,9 @@ struct FilmDetailView: View {
                           systemImage: store.isFav(f.id) ? "star.fill" : "star")
                 }
                 ratingRow(f)
-                if let s = store.seen[f.id] {
-                    LabeledContent("Watched", value: D.fmt(s.d, "EEE d MMM yyyy"))
+                if store.seen[f.id] != nil {
+                    DatePicker("Watched on", selection: seenDate(f), in: ...Date(), displayedComponents: .date)
+                        .environment(\.timeZone, D.paris)
                     Button("Remove from watched", role: .destructive) { store.removeSeen(f.id) }
                 } else {
                     DatePicker("Watched on", selection: $watchedOn, in: ...Date(), displayedComponents: .date)
@@ -92,7 +93,19 @@ struct FilmDetailView: View {
 
     private func header(_ f: Film) -> some View {
         HStack(alignment: .top, spacing: 16) {
-            PosterTile(title: f.title, cat: f.category, width: 110)
+            PosterTile(title: f.title, cat: f.category, width: 110, url: f.poster)
+                .overlay(alignment: .topTrailing) {
+                    Button { store.toggleFav(f) } label: {
+                        Image(systemName: store.isFav(f.id) ? "star.fill" : "star")
+                            .font(.title3.weight(.semibold))
+                            .foregroundStyle(store.isFav(f.id) ? Color(hex: 0xFFD23F) : Color.white)
+                            .padding(7)
+                            .background(.black.opacity(0.45), in: Circle())
+                    }
+                    .buttonStyle(.borderless)
+                    .padding(5)
+                    .accessibilityLabel(store.isFav(f.id) ? "Remove from favourites" : "Add to favourites")
+                }
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 6) {
                     CatBadge(cat: f.category)
@@ -171,6 +184,11 @@ struct FilmDetailView: View {
                 }
             }
 
+            if p.ok != true {
+                Button { store.confirmPlan(f.id) } label: {
+                    Label("Confirm this plan", systemImage: "checkmark.circle")
+                }
+            }
             Button { calendarEvent = draft(f, p) } label: {
                 Label("Add to Apple Calendar", systemImage: "calendar.badge.plus")
             }
@@ -183,12 +201,25 @@ struct FilmDetailView: View {
         } header: {
             Text("Plan to watch")
         } footer: {
-            if showings.isEmpty {
-                Text("Provisional plan. Real showtimes appear here after the Tuesday update, once cinemas publish the week.")
-            } else if let when = D.when(store.showtimes[f.id]?.updatedAt) {
-                Text("Showtimes checked \(when). Tap one to plan it.")
+            VStack(alignment: .leading, spacing: 4) {
+                if p.ok == true {
+                    Text("After the film you'll get a notification to say how it was, or to pick another day.")
+                } else {
+                    Text("Provisional plan. Confirm it, or change the day, time or cinema, to get a notification after the film.")
+                }
+                if showings.isEmpty {
+                    Text("Real showtimes appear here after the Tuesday update, once cinemas publish the week.")
+                } else if let when = D.when(store.showtimes[f.id]?.updatedAt) {
+                    Text("Showtimes checked \(when). Tap one to plan it.")
+                }
             }
         }
+    }
+
+    private func seenDate(_ f: Film) -> Binding<Date> {
+        Binding(
+            get: { store.seen[f.id].flatMap { D.date($0.d) } ?? Date() },
+            set: { store.setSeenDate(f.id, D.str($0)) })
     }
 
     private func planDate(_ f: Film, _ p: Plan) -> Binding<Date> {

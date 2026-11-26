@@ -125,9 +125,10 @@ struct Film: Identifiable, Hashable, Codable {
     var note: String?
     var syn: String?
     var prod: String?
+    var poster: String?
 
     enum CodingKeys: String, CodingKey {
-        case id, week, date, title, cat, genre, origin, size, dir, cast, orig, note, syn, prod
+        case id, week, date, title, cat, genre, origin, size, dir, cast, orig, note, syn, prod, poster
     }
 
     init(from decoder: Decoder) throws {
@@ -148,6 +149,7 @@ struct Film: Identifiable, Hashable, Codable {
         note = try c.decodeIfPresent(String.self, forKey: .note)
         syn = try c.decodeIfPresent(String.self, forKey: .syn)
         prod = try c.decodeIfPresent(String.self, forKey: .prod)
+        poster = try? c.decodeIfPresent(String.self, forKey: .poster)
     }
 
     var category: Cat { Cat.from(cat) }
@@ -270,6 +272,7 @@ struct Plan: Codable, Hashable {
     var ca: String?        // cinema address
     var title: String?
     var fd: String?        // release date
+    var ok: Bool? = nil    // confirmed by you (provisional plans get no notification)
 }
 
 /// Decodes what it can and skips a malformed entry instead of failing the whole file.

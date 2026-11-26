@@ -5,6 +5,7 @@
   data/details.json             {film id: {"synopsis", "producers", "cast", "checkedAt"}}
   data/showtimes.json           {film id: {"week", "updatedAt", "cinemas": [{"name", "address", "times": {"YYYY-MM-DD": ["HH:MM"]}}]}}
   data/cinemas.json             the Paris cinemas shown on the map
+  data/posters.json             {film id: official poster image URL (AlloCiné)}
 
 It also copies the feed into ParisCinema/paris-cinema.json so a fresh build of the
 app already contains every film. Run it after changing anything in data/:
@@ -72,6 +73,7 @@ def main():
     details = load(DATA / "details.json", {})
     showtimes = load(DATA / "showtimes.json", {})
     cinemas = load(DATA / "cinemas.json", [])
+    posters = load(DATA / "posters.json", {})
     films, seen_ids, problems = [], set(), []
 
     for path in sorted((DATA / "weeks").glob("*.json")):
@@ -102,6 +104,9 @@ def main():
             cast = text(d.get("cast"))
             if cast and len(cast) > len(f["cast"] or ""):
                 f["cast"] = cast
+            poster = text(posters.get(fid))
+            if poster and "empty_portrait" not in poster:
+                f["poster"] = poster
             films.append(f)
 
     body = {"format": "paris-cinema-weeks/1", "films": films, "showtimes": showtimes, "cinemas": cinemas}
@@ -119,7 +124,8 @@ def main():
 
     weeks = sorted({f["week"] for f in films})
     print(f"{len(films)} films in {len(weeks)} weeks ({weeks[0]} to {weeks[-1]}), "
-          f"{len(details)} detail records, {len(showtimes)} showtime lists. exportedAt {stamp}")
+          f"{len(details)} detail records, {sum(1 for f in films if f.get('poster'))} posters, "
+          f"{len(showtimes)} showtime lists. exportedAt {stamp}")
     for p in problems:
         print("warning:", p, file=sys.stderr)
 

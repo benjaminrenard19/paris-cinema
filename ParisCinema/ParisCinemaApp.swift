@@ -5,11 +5,21 @@ struct ParisCinemaApp: App {
     @State private var store = Store()
     @Environment(\.scenePhase) private var scenePhase
 
+    init() {
+        URLCache.shared = URLCache(memoryCapacity: 50_000_000, diskCapacity: 300_000_000)
+        Notifier.shared.setUp()
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(store)
                 .tint(Color(hex: 0xA3142F))
+                .onAppear {
+                    Notifier.shared.attach { id, action in
+                        Task { @MainActor in store.openCheckIn(id, action: action) }
+                    }
+                }
         }
         .onChange(of: scenePhase, initial: true) { _, phase in
             guard phase == .active else { return }
@@ -20,10 +30,15 @@ struct ParisCinemaApp: App {
 }
 
 struct ContentView: View {
+    @Environment(Store.self) private var store
+
     var body: some View {
+        @Bindable var model = store
         TabView {
             WeeksView()
                 .tabItem { Label("Films", systemImage: "film") }
+            WeekPlanView()
+                .tabItem { Label("My week", systemImage: "calendar") }
             MyListView()
                 .tabItem { Label("My list", systemImage: "star") }
             WatchedView()
@@ -31,19 +46,39 @@ struct ContentView: View {
             CinemasView()
                 .tabItem { Label("Cinemas", systemImage: "map") }
         }
+        .sheet(item: $model.checkIn) { c in
+            CheckInView(checkIn: c).environment(store)
+        }
     }
 }
 
 // MARK: - Shared pieces
 
 /// A designed poster tile (real posters can't be bundled, so each film gets its own tile).
+/// The film's official poster when there is one, otherwise a designed tile.
 struct PosterTile: View {
     let title: String
     let cat: Cat
     var width: CGFloat = 54
+    var url: String? = nil
 
     var body: some View {
-        let h = width * 1.45
+        ZStack {
+            tile
+            if let s = url, let u = URL(string: s) {
+                AsyncImage(url: u, transaction: Transaction(animation: .easeOut(duration: 0.2))) { phase in
+                    if let img = phase.image {
+                        img.resizable().scaledToFill()
+                    }
+                }
+            }
+        }
+        .frame(width: width, height: width * 1.45)
+        .clipShape(RoundedRectangle(cornerRadius: width * 0.12, style: .continuous))
+        .accessibilityHidden(true)
+    }
+
+    private var tile: some View {
         ZStack(alignment: .bottomLeading) {
             LinearGradient(colors: [cat.color, cat.color.opacity(0.55)], startPoint: .topLeading, endPoint: .bottomTrailing)
             Image(systemName: cat.symbol)
@@ -58,9 +93,6 @@ struct PosterTile: View {
                 .minimumScaleFactor(0.6)
                 .padding(width * 0.09)
         }
-        .frame(width: width, height: h)
-        .clipShape(RoundedRectangle(cornerRadius: width * 0.12, style: .continuous))
-        .accessibilityHidden(true)
     }
 }
 
@@ -98,7 +130,7 @@ struct FilmRow: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            PosterTile(title: film.title, cat: film.category)
+            PosterTile(title: film.title, cat: film.category, url: film.poster)
             VStack(alignment: .leading, spacing: 4) {
                 Text(film.title).font(.headline).lineLimit(2)
                 if let line = subtitle { Text(line).font(.subheadline).foregroundStyle(.secondary).lineLimit(2) }
@@ -109,9 +141,15 @@ struct FilmRow: View {
                 }
             }
             Spacer(minLength: 0)
-            if store.isFav(film.id) {
-                Image(systemName: "star.fill").foregroundStyle(Color(hex: 0xE0A800)).accessibilityLabel("Favourite")
+            Button { store.toggleFav(film) } label: {
+                Image(systemName: store.isFav(film.id) ? "star.fill" : "star")
+                    .font(.title3)
+                    .foregroundStyle(store.isFav(film.id) ? Color(hex: 0xE0A800) : Color.secondary.opacity(0.6))
+                    .frame(width: 34, height: 34)
+                    .contentShape(Rectangle())
             }
+            .buttonStyle(.borderless)
+            .accessibilityLabel(store.isFav(film.id) ? "Remove from favourites" : "Add to favourites")
         }
         .padding(.vertical, 2)
     }

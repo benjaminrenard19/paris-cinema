@@ -9,15 +9,15 @@ struct MyListView: View {
     var body: some View {
         NavigationStack {
             List {
-                let planned = store.plannedFilms
-                let others = store.otherFavourites
-                if planned.isEmpty && others.isEmpty {
+                let groups = yearGroups
+                if groups.isEmpty {
                     ContentUnavailableView("No favourites yet", systemImage: "star",
                                            description: Text("Tap the star on a film. Films you haven't seen get a provisional day to watch them, which you can send to your calendar."))
                 }
-                if !planned.isEmpty {
-                    Section("Planned") {
-                        ForEach(planned, id: \.0.id) { item in
+                ForEach(groups, id: \.year) { g in
+                    let c = store.yearCounts(g.year)
+                    Section {
+                        ForEach(g.planned, id: \.0.id) { item in
                             NavigationLink(value: item.0.id) {
                                 VStack(alignment: .leading, spacing: 4) {
                                     FilmRow(film: item.0, showDate: true)
@@ -28,20 +28,57 @@ struct MyListView: View {
                             }
                             .swipeActions { unfav(item.0) }
                         }
-                    }
-                }
-                if !others.isEmpty {
-                    Section("Other favourites") {
-                        ForEach(others) { f in
+                        ForEach(g.unplanned) { f in
                             NavigationLink(value: f.id) { FilmRow(film: f, showDate: true) }
                                 .swipeActions { unfav(f) }
                         }
+                        ForEach(g.watched) { f in
+                            NavigationLink(value: f.id) { FilmRow(film: f, showDate: true) }
+                                .swipeActions { unfav(f) }
+                        }
+                    } header: {
+                        HStack {
+                            Text(String(g.year)).font(.title3.weight(.bold)).foregroundStyle(.primary)
+                            Spacer()
+                            Text("\(c.watched) (\(c.total))").font(.headline.monospacedDigit()).foregroundStyle(.primary)
+                        }
+                        .textCase(nil)
+                    } footer: {
+                        Text("\(c.watched) watched in \(String(g.year)), \(c.total - c.watched) more planned.")
                     }
                 }
             }
             .navigationTitle("My list")
             .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
         }
+    }
+
+    private struct YearGroup {
+        let year: Int
+        var planned: [(Film, Plan)] = []
+        var unplanned: [Film] = []
+        var watched: [Film] = []
+    }
+
+    /// Favourites by year: planned films by the planned day, unplanned ones by release date,
+    /// and watched favourites by the day you watched them. Newest year first.
+    private var yearGroups: [YearGroup] {
+        var byYear: [Int: YearGroup] = [:]
+        func year(_ day: String) -> Int { Int(day.prefix(4)) ?? D.cal.component(.year, from: Date()) }
+        for item in store.plannedFilms where store.seen[item.0.id] == nil {
+            let y = year(item.1.d)
+            byYear[y, default: YearGroup(year: y)].planned.append(item)
+        }
+        for f in store.favs.compactMap({ store.index[$0] }).sorted(by: { $0.date > $1.date }) {
+            if let s = store.seen[f.id] {
+                let y = year(s.d)
+                byYear[y, default: YearGroup(year: y)].watched.append(f)
+            } else if store.plans[f.id] == nil {
+                let y = year(f.date)
+                byYear[y, default: YearGroup(year: y)].unplanned.append(f)
+            }
+        }
+        return byYear.values.sorted { $0.year > $1.year }
     }
 
     private func unfav(_ f: Film) -> some View {
@@ -55,6 +92,7 @@ struct WatchedView: View {
     @Environment(Store.self) private var store
     @State private var year = Calendar.current.component(.year, from: Date())
     @State private var adding = false
+    @State private var editing: String?
 
     var body: some View {
         NavigationStack {
@@ -62,10 +100,14 @@ struct WatchedView: View {
                 let items = store.watched(inYear: year)
                 Section {
                     Picker("Year", selection: $year) {
-                        ForEach(store.seenYears, id: \.self) { y in Text(String(y)).tag(y) }
+                        ForEach(store.seenYears, id: \.self) { y in
+                            let c = store.yearCounts(y)
+                            Text("\(String(y)) — \(c.watched) (\(c.total))").tag(y)
+                        }
                     }
                     let rated = items.map { $0.1.r }.filter { $0 > 0 }
-                    LabeledContent("Films watched", value: "\(items.count)")
+                    let counts = store.yearCounts(year)
+                    LabeledContent("Films watched", value: "\(counts.watched) (\(counts.total))")
                     if !rated.isEmpty {
                         LabeledContent("Average rating", value: String(format: "%.1f ★", Double(rated.reduce(0, +)) / Double(rated.count)))
                     }
@@ -79,7 +121,8 @@ struct WatchedView: View {
                         if store.index[item.0] != nil {
                             NavigationLink(value: item.0) { watchedRow(item.0, item.1) }
                         } else {
-                            watchedRow(item.0, item.1)
+                            Button { editing = item.0 } label: { watchedRow(item.0, item.1) }
+                                .foregroundStyle(.primary)
                         }
                     }
                     .swipeActions {
@@ -96,6 +139,9 @@ struct WatchedView: View {
                 }
             }
             .sheet(isPresented: $adding) { AddWatchedView().environment(store) }
+            .sheet(item: Binding(get: { editing.map { EditTarget(id: $0) } }, set: { editing = $0?.id })) { t in
+                AddWatchedView(editingId: t.id).environment(store)
+            }
         }
     }
 
@@ -103,7 +149,7 @@ struct WatchedView: View {
         let cat = Cat.from(s.c)
         let title = s.t ?? store.index[id]?.title ?? "Film"
         return HStack(spacing: 12) {
-            PosterTile(title: title, cat: cat, width: 40)
+            PosterTile(title: title, cat: cat, width: 40, url: store.index[id]?.poster)
             VStack(alignment: .leading, spacing: 3) {
                 Text(title).font(.headline).lineLimit(2)
                 Text("Watched \(D.fmt(s.d, "d MMM"))" + (s.dir.map { " · \($0)" } ?? ""))
@@ -114,13 +160,18 @@ struct WatchedView: View {
     }
 }
 
+struct EditTarget: Identifiable { let id: String }
+
+/// Adds a film you saw elsewhere, or edits one you added (title, date, rating).
 struct AddWatchedView: View {
     @Environment(Store.self) private var store
     @Environment(\.dismiss) private var dismiss
+    var editingId: String? = nil
     @State private var title = ""
     @State private var day = Date()
     @State private var rating = 0
     @State private var cat: Cat = .D
+    @State private var ready = false
 
     var body: some View {
         NavigationStack {
@@ -142,16 +193,30 @@ struct AddWatchedView: View {
                     }
                 }
             }
-            .navigationTitle("Add a film")
+            .navigationTitle(editingId == nil ? "Add a film" : "Edit")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Add") {
-                        store.addCustomSeen(title: title, day: D.str(day), rating: rating, category: cat)
+                    Button(editingId == nil ? "Add" : "Save") {
+                        if let id = editingId {
+                            store.updateCustomSeen(id, title: title, day: D.str(day), rating: rating, category: cat)
+                        } else {
+                            store.addCustomSeen(title: title, day: D.str(day), rating: rating, category: cat)
+                        }
                         dismiss()
                     }
                     .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
+                }
+            }
+            .onAppear {
+                guard !ready else { return }
+                ready = true
+                if let id = editingId, let s = store.seen[id] {
+                    title = s.t ?? ""
+                    day = D.date(s.d) ?? Date()
+                    rating = s.r
+                    cat = Cat.from(s.c)
                 }
             }
         }
