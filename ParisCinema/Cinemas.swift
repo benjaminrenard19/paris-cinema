@@ -41,7 +41,8 @@ extension Cinema {
         case "Multiplex": return "Big screens, new releases, dubbed and original versions"
         case "Art-house": return "Original versions with subtitles, auteur and foreign films"
         case "Repertory": return "Classics, re-releases and retrospectives"
-        default: return "Historic big single screens"
+        case "Landmark": return "Historic big single screens"
+        default: return "Cinemas you found on Apple Maps"
         }
     }
 }

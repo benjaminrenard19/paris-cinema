@@ -10,7 +10,14 @@ struct CinemasView: View {
     @State private var type: String = ""
     @State private var showList = false
 
-    private var shown: [Cinema] { store.cinemas.filter { type.isEmpty || $0.type == type } }
+    private var shown: [Cinema] {
+        store.allCinemas.filter { c in
+            type.isEmpty || c.type == type || (type == "My cinemas" && store.isPreferred(c.name))
+        }
+    }
+    private var typeChoices: [String] {
+        Cinema.types + (store.extraCinemas.isEmpty ? [] : ["Other"])
+    }
 
     var body: some View {
         NavigationStack {
@@ -24,7 +31,8 @@ struct CinemasView: View {
                     Menu {
                         Picker("Type", selection: $type) {
                             Text("All cinemas").tag("")
-                            ForEach(Cinema.types, id: \.self) { t in Text(t).tag(t) }
+                            Text("My cinemas").tag("My cinemas")
+                            ForEach(typeChoices, id: \.self) { t in Text(t).tag(t) }
                         }
                     } label: {
                         Label(type.isEmpty ? "All" : type, systemImage: "line.3.horizontal.decrease.circle")
@@ -44,8 +52,8 @@ struct CinemasView: View {
     private var map: some View {
         Map(position: $position, selection: $selected) {
             ForEach(shown) { c in
-                Marker(c.name, systemImage: "film", coordinate: c.coordinate)
-                    .tint(c.typeColor)
+                Marker(c.name, systemImage: store.isPreferred(c.name) ? "star.fill" : "film", coordinate: c.coordinate)
+                    .tint(store.isPreferred(c.name) ? Color(hex: 0xE0A800) : c.typeColor)
                     .tag(c.name)
             }
             UserAnnotation()
@@ -67,20 +75,21 @@ struct CinemasView: View {
 
     private var list: some View {
         List {
-            ForEach(Cinema.types.filter { type.isEmpty || $0 == type }, id: \.self) { t in
+            let mine = store.myCinemas.compactMap { store.cinema(named: $0) }
+            if (type.isEmpty || type == "My cinemas") {
                 Section {
-                    ForEach(store.cinemas.filter { $0.type == t }) { c in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(c.name).font(.headline)
-                            Text(c.address).font(.subheadline).foregroundStyle(.secondary)
-                            plannedHere(c)
-                            if let u = c.directionsURL {
-                                Link(destination: u) { Label("Directions", systemImage: "arrow.triangle.turn.up.right.diamond") }
-                                    .font(.subheadline)
-                            }
-                        }
-                        .padding(.vertical, 2)
+                    if mine.isEmpty {
+                        Text("Tap the star on a cinema to add it here. New plans use your cinemas first.")
+                            .font(.subheadline).foregroundStyle(.secondary)
                     }
+                    ForEach(mine) { c in listRow(c) }
+                } header: {
+                    Text("My cinemas")
+                }
+            }
+            ForEach(typeChoices.filter { type.isEmpty || $0 == type }, id: \.self) { t in
+                Section {
+                    ForEach(store.allCinemas.filter { $0.type == t }) { c in listRow(c) }
                 } header: {
                     Text(t)
                 } footer: {
@@ -88,6 +97,33 @@ struct CinemasView: View {
                 }
             }
         }
+    }
+
+    private func listRow(_ c: Cinema) -> some View {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(c.name).font(.headline)
+                Text(c.address).font(.subheadline).foregroundStyle(.secondary)
+                plannedHere(c)
+                if let u = c.directionsURL {
+                    Link(destination: u) { Label("Directions", systemImage: "arrow.triangle.turn.up.right.diamond") }
+                        .font(.subheadline)
+                }
+            }
+            Spacer()
+            starButton(c)
+        }
+        .padding(.vertical, 2)
+    }
+
+    private func starButton(_ c: Cinema) -> some View {
+        Button { store.togglePreferred(c) } label: {
+            Image(systemName: store.isPreferred(c.name) ? "star.fill" : "star")
+                .font(.title3)
+                .foregroundStyle(store.isPreferred(c.name) ? Color(hex: 0xE0A800) : Color.secondary)
+        }
+        .buttonStyle(.borderless)
+        .accessibilityLabel(store.isPreferred(c.name) ? "Remove from My cinemas" : "Add to My cinemas")
     }
 
     private func card(_ c: Cinema) -> some View {
@@ -98,6 +134,7 @@ struct CinemasView: View {
                     Text("\(c.type) · \(c.address)").font(.subheadline).foregroundStyle(.secondary)
                 }
                 Spacer()
+                starButton(c)
                 Button { selected = nil } label: { Image(systemName: "xmark.circle.fill").font(.title3).foregroundStyle(.secondary) }
                     .accessibilityLabel("Close")
             }

@@ -19,6 +19,8 @@ final class Store {
     var favs: Set<String> = []
     var seen: [String: SeenEntry] = [:]
     var plans: [String: Plan] = [:]
+    var myCinemas: [String] = []
+    var extraCinemas: [Cinema] = []
 
     var linkedFileName: String? = UserDefaults.standard.string(forKey: "linkedName")
     var message: String?
@@ -181,6 +183,8 @@ final class Store {
         favs = Set(u.favs ?? [])
         seen = u.seen ?? [:]
         plans = u.plans ?? [:]
+        myCinemas = u.myCinemas ?? []
+        extraCinemas = u.extraCinemas ?? []
     }
 
     /// Adds anything from the page's lists that the phone doesn't have yet.
@@ -192,7 +196,7 @@ final class Store {
     }
 
     func saveUser() {
-        let u = UserData(favs: favs.sorted(), seen: seen, plans: plans)
+        let u = UserData(favs: favs.sorted(), seen: seen, plans: plans, myCinemas: myCinemas, extraCinemas: extraCinemas)
         let enc = JSONEncoder()
         enc.outputFormatting = [.prettyPrinted, .sortedKeys]
         if let data = try? enc.encode(u) { try? data.write(to: userURL, options: .atomic) }
@@ -211,11 +215,39 @@ final class Store {
         saveUser()
     }
 
+    /// Your cinemas first (one that suits the film if possible), otherwise a typical one.
     func defaultCinema(for f: Film) -> Cinema {
-        cinemas.first { $0.type == f.venueType } ?? cinemas.first ?? Cinema.defaults[0]
+        let mine = myCinemas.compactMap { cinema(named: $0) }
+        if let c = mine.first(where: { $0.type == f.venueType }) ?? mine.first { return c }
+        return cinemas.first { $0.type == f.venueType } ?? cinemas.first ?? Cinema.defaults[0]
     }
 
-    func cinema(named n: String) -> Cinema? { cinemas.first { $0.name == n } }
+    /// The built-in cinemas plus any you added from Apple Maps.
+    var allCinemas: [Cinema] {
+        let names = Set(cinemas.map { $0.name })
+        return cinemas + extraCinemas.filter { !names.contains($0.name) }
+    }
+
+    func cinema(named n: String) -> Cinema? { allCinemas.first { $0.name == n } }
+
+    func isPreferred(_ name: String) -> Bool { myCinemas.contains(name) }
+
+    func togglePreferred(_ c: Cinema) {
+        if let i = myCinemas.firstIndex(of: c.name) {
+            myCinemas.remove(at: i)
+        } else {
+            if cinema(named: c.name) == nil { extraCinemas.append(c) }
+            myCinemas.append(c.name)
+        }
+        saveUser()
+    }
+
+    /// Remembers a cinema found on Apple Maps so plans and directions can use it.
+    func addExtra(_ c: Cinema) {
+        guard cinema(named: c.name) == nil else { return }
+        extraCinemas.append(c)
+        saveUser()
+    }
 
     /// A favourite you haven't seen gets a provisional Saturday-evening plan.
     func ensurePlan(_ f: Film) {

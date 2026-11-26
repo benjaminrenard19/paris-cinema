@@ -225,7 +225,8 @@ struct Cinema: Codable, Hashable, Identifiable {
         case "Multiplex": return Cat.D.color
         case "Art-house": return Cat.T.color
         case "Repertory": return Cat.A.color
-        default: return Cat.B.color
+        case "Landmark": return Cat.B.color
+        default: return Cat.O.color
         }
     }
 }
@@ -281,11 +282,14 @@ struct UserData: Codable {
     var favs: [String]?
     var seen: [String: SeenEntry]?
     var plans: [String: Plan]?
+    var myCinemas: [String]?
+    var extraCinemas: [Cinema]?
 
-    enum CodingKeys: String, CodingKey { case favs, seen, plans }
+    enum CodingKeys: String, CodingKey { case favs, seen, plans, myCinemas, extraCinemas }
 
-    init(favs: [String]?, seen: [String: SeenEntry]?, plans: [String: Plan]?) {
+    init(favs: [String]?, seen: [String: SeenEntry]?, plans: [String: Plan]?, myCinemas: [String]? = nil, extraCinemas: [Cinema]? = nil) {
         self.favs = favs; self.seen = seen; self.plans = plans
+        self.myCinemas = myCinemas; self.extraCinemas = extraCinemas
     }
 
     init(from decoder: Decoder) throws {
@@ -293,6 +297,8 @@ struct UserData: Codable {
         favs = (try? c.decodeIfPresent([Lossy<String>].self, forKey: .favs))?.compactMap { $0.value }
         seen = (try? c.decodeIfPresent([String: Lossy<SeenEntry>].self, forKey: .seen))?.compactMapValues { $0.value }
         plans = (try? c.decodeIfPresent([String: Lossy<Plan>].self, forKey: .plans))?.compactMapValues { $0.value }
+        myCinemas = (try? c.decodeIfPresent([Lossy<String>].self, forKey: .myCinemas))?.compactMap { $0.value }
+        extraCinemas = (try? c.decodeIfPresent([Lossy<Cinema>].self, forKey: .extraCinemas))?.compactMap { $0.value }
     }
 }
 

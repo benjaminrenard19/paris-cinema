@@ -160,15 +160,16 @@ struct FilmDetailView: View {
             DatePicker("Day and time", selection: planDate(f, p), in: Date()..., displayedComponents: [.date, .hourAndMinute])
                 .environment(\.timeZone, D.paris)
 
-            Picker("Cinema", selection: planCinema(f, p)) {
-                if store.cinema(named: p.cn) == nil { Text(p.cn).tag(p.cn) }
-                ForEach(Cinema.types, id: \.self) { t in
-                    Section(t) {
-                        ForEach(store.cinemas.filter { $0.type == t }) { c in Text(c.name).tag(c.name) }
+            NavigationLink {
+                CinemaPickerView(film: f, selected: planCinema(f, p))
+            } label: {
+                LabeledContent("Cinema") {
+                    HStack(spacing: 4) {
+                        if store.isPreferred(p.cn) { Image(systemName: "star.fill").font(.caption).foregroundStyle(Color(hex: 0xE0A800)) }
+                        Text(p.cn)
                     }
                 }
             }
-            .pickerStyle(.navigationLink)
 
             Button { calendarEvent = draft(f, p) } label: {
                 Label("Add to Apple Calendar", systemImage: "calendar.badge.plus")
