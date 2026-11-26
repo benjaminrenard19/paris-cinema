@@ -264,5 +264,299 @@
   "address": "66 bis, avenue des Gobelins, 75013",
   "lat": 48.8329,
   "lng": 2.3543
+ },
+ {
+  "name": "Les 5 Caumartin",
+  "type": "Art-house",
+  "address": "101, rue Saint-Lazare, 75009",
+  "lat": 48.8756,
+  "lng": 2.3279
+ },
+ {
+  "name": "Les 7 Batignolles",
+  "type": "Art-house",
+  "address": "86 rue Mstislav Rostropovitch, 75017",
+  "lat": 48.8924,
+  "lng": 2.3105
+ },
+ {
+  "name": "Chaplin Denfert",
+  "type": "Art-house",
+  "address": "24, Place Denfert-Rochereau, 75014",
+  "lat": 48.8338,
+  "lng": 2.3309
+ },
+ {
+  "name": "Chaplin Saint-Lambert",
+  "type": "Art-house",
+  "address": "6 Rue Péclet, 75015",
+  "lat": 48.8432,
+  "lng": 2.2986
+ },
+ {
+  "name": "Cinéma du Panthéon",
+  "type": "Art-house",
+  "address": "13, rue Victor-Cousin, 75005",
+  "lat": 48.8475,
+  "lng": 2.3425
+ },
+ {
+  "name": "Épée de Bois",
+  "type": "Art-house",
+  "address": "100 Rue Mouffetard, 75005",
+  "lat": 48.8413,
+  "lng": 2.3496
+ },
+ {
+  "name": "Espace Saint-Michel",
+  "type": "Art-house",
+  "address": "7 Pl. Saint-Michel, 75005",
+  "lat": 48.8531,
+  "lng": 2.3442
+ },
+ {
+  "name": "Filmothèque du Quartier Latin",
+  "type": "Repertory",
+  "address": "9, rue Champollion, 75005",
+  "lat": 48.8496,
+  "lng": 2.3428
+ },
+ {
+  "name": "Forum des images",
+  "type": "Repertory",
+  "address": "Forum des Halles, 2 rue du Cinéma, 75001",
+  "lat": 48.8625,
+  "lng": 2.3453
+ },
+ {
+  "name": "Fondation Jérôme Seydoux-Pathé",
+  "type": "Repertory",
+  "address": "73 avenue des Gobelins, 75013",
+  "lat": 48.8334,
+  "lng": 2.3545
+ },
+ {
+  "name": "L'Archipel",
+  "type": "Art-house",
+  "address": "17 bd de Strasbourg, 75010",
+  "lat": 48.8705,
+  "lng": 2.3547
+ },
+ {
+  "name": "L'Arlequin",
+  "type": "Art-house",
+  "address": "76 rue de Rennes, 75006",
+  "lat": 48.8512,
+  "lng": 2.3304
+ },
+ {
+  "name": "L'Entrepôt",
+  "type": "Art-house",
+  "address": "7-9 Rue Francis de Pressensé, 75014",
+  "lat": 48.8338,
+  "lng": 2.3166
+ },
+ {
+  "name": "La Clef",
+  "type": "Art-house",
+  "address": "34 rue Daubenton, 75005",
+  "lat": 48.8412,
+  "lng": 2.3524
+ },
+ {
+  "name": "Le Brady",
+  "type": "Art-house",
+  "address": "39, bd de Strasbourg, 75010",
+  "lat": 48.8718,
+  "lng": 2.3554
+ },
+ {
+  "name": "Le CiNey",
+  "type": "Art-house",
+  "address": "126-128 Bd Ney, 75018",
+  "lat": 48.8981,
+  "lng": 2.3407
+ },
+ {
+  "name": "Le Cinéma des Cinéastes",
+  "type": "Art-house",
+  "address": "7 Av. de Clichy, 75017",
+  "lat": 48.8843,
+  "lng": 2.3269
+ },
+ {
+  "name": "Le Miramar",
+  "type": "Art-house",
+  "address": "3 Rue du Départ, 75014",
+  "lat": 48.8433,
+  "lng": 2.3245
+ },
+ {
+  "name": "Le Ranelagh",
+  "type": "Art-house",
+  "address": "5, rue des Vignes, 75016",
+  "lat": 48.8545,
+  "lng": 2.2777
+ },
+ {
+  "name": "Le Saint-Germain-des-Prés",
+  "type": "Art-house",
+  "address": "22, Rue Guillaume Apollinaire, 75006",
+  "lat": 48.8546,
+  "lng": 2.3333
+ },
+ {
+  "name": "Les 3 Luxembourg",
+  "type": "Art-house",
+  "address": "67 rue Monsieur-le-Prince, 75006",
+  "lat": 48.8484,
+  "lng": 2.3408
+ },
+ {
+  "name": "Lucernaire",
+  "type": "Art-house",
+  "address": "53, rue Notre-Dame-des-Champs, 75006",
+  "lat": 48.8443,
+  "lng": 2.3305
+ },
+ {
+  "name": "Mac-Mahon",
+  "type": "Repertory",
+  "address": "5 Av. Mac-Mahon, 75017",
+  "lat": 48.8755,
+  "lng": 2.2945
+ },
+ {
+  "name": "Majestic Bastille",
+  "type": "Art-house",
+  "address": "4 boulevard Richard Lenoir, 75011",
+  "lat": 48.854,
+  "lng": 2.37
+ },
+ {
+  "name": "Majestic Passy",
+  "type": "Art-house",
+  "address": "18, Rue de Passy, 75016",
+  "lat": 48.8582,
+  "lng": 2.2823
+ },
+ {
+  "name": "Nouvel Odéon",
+  "type": "Art-house",
+  "address": "6, rue de l'Ecole-de-Medecine, 75006",
+  "lat": 48.8508,
+  "lng": 2.3418
+ },
+ {
+  "name": "Studio Galande",
+  "type": "Repertory",
+  "address": "42, rue Galande, 75005",
+  "lat": 48.8516,
+  "lng": 2.3471
+ },
+ {
+  "name": "Studio Luxembourg Accattone",
+  "type": "Art-house",
+  "address": "20 rue Cujas, 75005",
+  "lat": 48.8481,
+  "lng": 2.342
+ },
+ {
+  "name": "Studio des Ursulines",
+  "type": "Art-house",
+  "address": "10, rue des Ursulines, 75005",
+  "lat": 48.8427,
+  "lng": 2.342
+ },
+ {
+  "name": "Écoles Cinéma Club",
+  "type": "Repertory",
+  "address": "23, rue des Ecoles, 75005",
+  "lat": 48.8484,
+  "lng": 2.349
+ },
+ {
+  "name": "Publicis Cinémas",
+  "type": "Art-house",
+  "address": "129, av. des Champs-Elysées, 75008",
+  "lat": 48.8727,
+  "lng": 2.2974
+ },
+ {
+  "name": "CGR Paris Lilas",
+  "type": "Multiplex",
+  "address": "Place du Maquis du Vercors, 75020",
+  "lat": 48.8779,
+  "lng": 2.4094
+ },
+ {
+  "name": "La Géode",
+  "type": "Landmark",
+  "address": "26, av. Corentin-Cariou, 75019",
+  "lat": 48.896,
+  "lng": 2.3846
+ },
+ {
+  "name": "Pathé Alésia",
+  "type": "Multiplex",
+  "address": "73 avenue du Général Leclerc, 75014",
+  "lat": 48.8281,
+  "lng": 2.3278
+ },
+ {
+  "name": "Pathé Aquaboulevard",
+  "type": "Multiplex",
+  "address": "8-16, rue du Colonel-Pierre-Avia, 75015",
+  "lat": 48.8308,
+  "lng": 2.2768
+ },
+ {
+  "name": "Pathé BNP Paribas",
+  "type": "Multiplex",
+  "address": "32 Rue Louis le Grand, 75002",
+  "lat": 48.8706,
+  "lng": 2.3343
+ },
+ {
+  "name": "Pathé Convention",
+  "type": "Multiplex",
+  "address": "27, rue Alain-Chartier, 75015",
+  "lat": 48.8378,
+  "lng": 2.2963
+ },
+ {
+  "name": "Pathé Les Fauvettes",
+  "type": "Multiplex",
+  "address": "58 Av. des Gobelins, 75013",
+  "lat": 48.8336,
+  "lng": 2.3538
+ },
+ {
+  "name": "Pathé Montparnos",
+  "type": "Multiplex",
+  "address": "16 Rue d'Odessa, 75014",
+  "lat": 48.8422,
+  "lng": 2.3244
+ },
+ {
+  "name": "mk2 Bastille",
+  "type": "Multiplex",
+  "address": "4, boulevard Beaumarchais, 75011",
+  "lat": 48.8546,
+  "lng": 2.3691
+ },
+ {
+  "name": "mk2 Parnasse",
+  "type": "Multiplex",
+  "address": "11, rue Jules Chaplain, 75006",
+  "lat": 48.8428,
+  "lng": 2.3306
+ },
+ {
+  "name": "mk2 Grand Palais",
+  "type": "Multiplex",
+  "address": "Grand Palais, avenue Winston-Churchill, 75008",
+  "lat": 48.8661,
+  "lng": 2.3125
  }
 ]

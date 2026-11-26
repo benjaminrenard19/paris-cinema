@@ -169,5 +169,264 @@
    "B0176"
   ],
   "address": "Disney Village, 77700 Chessy"
+ },
+ {
+  "name": "Les 5 Caumartin",
+  "codes": [
+   "C0012"
+  ]
+ },
+ {
+  "name": "Les 7 Batignolles",
+  "codes": [
+   "P7517"
+  ]
+ },
+ {
+  "name": "Chaplin Denfert",
+  "codes": [
+   "C0153"
+  ]
+ },
+ {
+  "name": "Chaplin Saint-Lambert",
+  "codes": [
+   "W7515"
+  ]
+ },
+ {
+  "name": "Cinéma du Panthéon",
+  "codes": [
+   "C0076"
+  ]
+ },
+ {
+  "name": "Épée de Bois",
+  "codes": [
+   "W7504"
+  ]
+ },
+ {
+  "name": "Espace Saint-Michel",
+  "codes": [
+   "C0117"
+  ]
+ },
+ {
+  "name": "Filmothèque du Quartier Latin",
+  "codes": [
+   "C0020"
+  ]
+ },
+ {
+  "name": "Forum des images",
+  "codes": [
+   "C0119"
+  ]
+ },
+ {
+  "name": "Fondation Jérôme Seydoux-Pathé",
+  "codes": [
+   "W7513"
+  ]
+ },
+ {
+  "name": "L'Archipel",
+  "codes": [
+   "C0134"
+  ]
+ },
+ {
+  "name": "L'Arlequin",
+  "codes": [
+   "C0054"
+  ]
+ },
+ {
+  "name": "L'Entrepôt",
+  "codes": [
+   "C0005"
+  ]
+ },
+ {
+  "name": "La Clef",
+  "codes": [
+   "C0170"
+  ]
+ },
+ {
+  "name": "Le Brady",
+  "codes": [
+   "C0023"
+  ]
+ },
+ {
+  "name": "Le CiNey",
+  "codes": [
+   "G0G46"
+  ]
+ },
+ {
+  "name": "Le Cinéma des Cinéastes",
+  "codes": [
+   "C0004"
+  ]
+ },
+ {
+  "name": "Le Miramar",
+  "codes": [
+   "W7512"
+  ]
+ },
+ {
+  "name": "Le Ranelagh",
+  "codes": [
+   "W7516"
+  ]
+ },
+ {
+  "name": "Le Saint-Germain-des-Prés",
+  "codes": [
+   "C0096"
+  ]
+ },
+ {
+  "name": "Les 3 Luxembourg",
+  "codes": [
+   "C0095"
+  ]
+ },
+ {
+  "name": "Lucernaire",
+  "codes": [
+   "C0093"
+  ]
+ },
+ {
+  "name": "Mac-Mahon",
+  "codes": [
+   "C0172"
+  ]
+ },
+ {
+  "name": "Majestic Bastille",
+  "codes": [
+   "C0139"
+  ]
+ },
+ {
+  "name": "Majestic Passy",
+  "codes": [
+   "C0120"
+  ]
+ },
+ {
+  "name": "Nouvel Odéon",
+  "codes": [
+   "C0041"
+  ]
+ },
+ {
+  "name": "Studio Galande",
+  "codes": [
+   "C0016"
+  ]
+ },
+ {
+  "name": "Studio Luxembourg Accattone",
+  "codes": [
+   "W7505"
+  ]
+ },
+ {
+  "name": "Studio des Ursulines",
+  "codes": [
+   "C0083"
+  ]
+ },
+ {
+  "name": "Écoles Cinéma Club",
+  "codes": [
+   "C0071"
+  ]
+ },
+ {
+  "name": "Publicis Cinémas",
+  "codes": [
+   "C6336"
+  ]
+ },
+ {
+  "name": "CGR Paris Lilas",
+  "codes": [
+   "W7519"
+  ]
+ },
+ {
+  "name": "La Géode",
+  "codes": [
+   "C0189"
+  ]
+ },
+ {
+  "name": "Pathé Alésia",
+  "codes": [
+   "C0037"
+  ]
+ },
+ {
+  "name": "Pathé Aquaboulevard",
+  "codes": [
+   "C0116"
+  ]
+ },
+ {
+  "name": "Pathé BNP Paribas",
+  "codes": [
+   "C0060"
+  ]
+ },
+ {
+  "name": "Pathé Convention",
+  "codes": [
+   "C0161"
+  ]
+ },
+ {
+  "name": "Pathé Les Fauvettes",
+  "codes": [
+   "C0024"
+  ]
+ },
+ {
+  "name": "Pathé Montparnos",
+  "codes": [
+   "C0052"
+  ]
+ },
+ {
+  "name": "mk2 Bastille",
+  "codes": [
+   "C0140",
+   "C0040"
+  ]
+ },
+ {
+  "name": "mk2 Parnasse",
+  "codes": [
+   "C0099"
+  ]
+ },
+ {
+  "name": "mk2 Grand Palais",
+  "codes": [
+   "W7508"
+  ]
+ },
+ {
+  "name": "Cinémathèque française",
+  "codes": [
+   "C1559"
+  ]
  }
 ]
