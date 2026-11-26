@@ -225,6 +225,13 @@ final class LocationFinder: NSObject, CLLocationManagerDelegate {
         manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
     }
 
+    /// Asks for "while using the app" once, so the map can show where you are.
+    func askPermission() {
+        if manager.authorizationStatus == .notDetermined { manager.requestWhenInUseAuthorization() }
+    }
+
+    var denied: Bool { [.denied, .restricted].contains(manager.authorizationStatus) }
+
     func current() async -> CLLocation? {
         await withCheckedContinuation { cont in
             DispatchQueue.main.async {

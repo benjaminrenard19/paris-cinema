@@ -120,6 +120,20 @@ struct CinemasView: View {
             MapUserLocationButton()
             MapCompass()
         }
+        .onAppear { LocationFinder.shared.askPermission() }
+        .safeAreaInset(edge: .bottom) {
+            if LocationFinder.shared.denied {
+                Button {
+                    if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+                } label: {
+                    Label("Location is off: allow it in Settings", systemImage: "location.slash")
+                        .font(.footnote.weight(.semibold))
+                        .padding(.horizontal, 14).padding(.vertical, 8)
+                        .background(.thinMaterial, in: Capsule())
+                }
+                .padding(.bottom, 8)
+            }
+        }
     }
 
     private var list: some View {
