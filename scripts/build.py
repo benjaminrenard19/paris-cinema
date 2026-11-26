@@ -131,7 +131,7 @@ def main():
         f = {"id": fid, "week": week_of(days[0]), "date": days[0], "title": title, "cat": "R",
              "genre": text(e.get("genre")), "origin": text(e.get("origin")), "size": "L",
              "dir": text(e.get("dir")), "cast": text(e.get("cast")), "orig": text(e.get("year")),
-             "syn": text(e.get("syn")), "rep": True}
+             "syn": text((details.get(fid) or {}).get("synopsis")), "rep": True}
         if text(e.get("poster")) and "empty" not in e["poster"]:
             f["poster"] = e["poster"]
         for key in ("press", "spect"):

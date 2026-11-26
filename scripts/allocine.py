@@ -238,7 +238,8 @@ def english(names, terms, countries=False):
 
 
 def film_page(ac, terms):
-    """Poster, year, running time, director, genre, country, ratings and synopsis from a film page."""
+    """Poster, year, running time, director, genre, country and ratings from a film page.
+    (No synopsis: synopses are short summaries written in our own words, in data/details.json.)"""
     page = get(f"https://www.allocine.fr/film/fichefilm_gen_cfilm={ac}.html")
     e = {}
     info = re.search(r'meta-body-info">(.*?)</div>', page, re.S)
@@ -265,11 +266,6 @@ def film_page(ac, terms):
     m = re.search(r'Nationalit[ée]s?\s*</span>(.*?)</div>', page, re.S)
     if m:
         e["origin"] = english(re.sub(r"\s+", " ", text(m.group(1))), terms, countries=True)
-    m = re.search(r'class="content-txt\s*">\s*<p class="bo-p">(.*?)</p>', page, re.S)
-    if m:
-        syn = re.sub(r"\s+", " ", text(m.group(1))).strip()
-        if syn and "{" not in syn:
-            e["syn"] = syn
     for key, label in (("press", "Presse"), ("spect", "Spectateurs")):
         v = note(page, label)
         if v and 0 < v <= 5:
