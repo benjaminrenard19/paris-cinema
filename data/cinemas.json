@@ -201,5 +201,68 @@
   "address": "1 rue Balzac, 75008",
   "lat": 48.8737,
   "lng": 2.2992
+ },
+ {
+  "name": "UGC Ciné Cité Paris 19",
+  "type": "Multiplex",
+  "address": "166, Boulevard Macdonald, 75019",
+  "lat": 48.899,
+  "lng": 2.3773
+ },
+ {
+  "name": "UGC Ciné Cité Maillot",
+  "type": "Multiplex",
+  "address": "2, place de la Porte Maillot - Palais des Congrès - Niveau -1, 75017",
+  "lat": 48.8791,
+  "lng": 2.2835
+ },
+ {
+  "name": "UGC Danton",
+  "type": "Multiplex",
+  "address": "99, boulevard Saint-Germain, 75006",
+  "lat": 48.8522,
+  "lng": 2.339
+ },
+ {
+  "name": "UGC Odéon",
+  "type": "Multiplex",
+  "address": "124, boulevard Saint-Germain, 75006",
+  "lat": 48.8522,
+  "lng": 2.3399
+ },
+ {
+  "name": "UGC Rotonde",
+  "type": "Multiplex",
+  "address": "103, boulevard du Montparnasse, 75006",
+  "lat": 48.8424,
+  "lng": 2.329
+ },
+ {
+  "name": "UGC Montparnasse",
+  "type": "Multiplex",
+  "address": "83, boulevard du Montparnasse, 75006",
+  "lat": 48.8435,
+  "lng": 2.3257
+ },
+ {
+  "name": "UGC Opéra",
+  "type": "Multiplex",
+  "address": "32, boulevard des Italiens, 75009",
+  "lat": 48.8712,
+  "lng": 2.3355
+ },
+ {
+  "name": "UGC Lyon Bastille",
+  "type": "Multiplex",
+  "address": "12, rue de Lyon, 75012",
+  "lat": 48.8474,
+  "lng": 2.3717
+ },
+ {
+  "name": "UGC Gobelins",
+  "type": "Multiplex",
+  "address": "66 bis, avenue des Gobelins, 75013",
+  "lat": 48.8329,
+  "lng": 2.3543
  }
 ]

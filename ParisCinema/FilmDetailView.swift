@@ -28,6 +28,16 @@ struct FilmDetailView: View {
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
 
+            Section {
+                ratingsCard(f)
+            } header: {
+                Text("Ratings")
+            } footer: {
+                Text(f.press == nil && f.spect == nil
+                     ? "No ratings on AlloCiné yet. They usually appear in the first days of release."
+                     : "AlloCiné ratings out of 5: critics from press reviews, audience from spectators.")
+            }
+
             Section("Your film") {
                 Button { store.toggleFav(f) } label: {
                     Label(store.isFav(f.id) ? "In your favourites" : "Add to favourites",
@@ -138,6 +148,34 @@ struct FilmDetailView: View {
             }
         }
         .padding(.vertical, 8)
+    }
+
+    private func ratingsCard(_ f: Film) -> some View {
+        HStack(alignment: .top, spacing: 8) {
+            ratingTile("Critics", "Press", f.press)
+            Divider()
+            ratingTile("Audience", "Spectators", f.spect)
+            Divider()
+            ratingTile("Average", "Both", f.average)
+        }
+        .padding(.vertical, 6)
+        .accessibilityElement(children: .combine)
+    }
+
+    private func ratingTile(_ title: String, _ subtitle: String, _ value: Double?) -> some View {
+        VStack(spacing: 4) {
+            Text(title).font(.subheadline.weight(.semibold))
+            Text(value.map { String(format: "%.1f", $0) } ?? "–")
+                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .foregroundStyle(value == nil ? Color.secondary : Color.primary)
+                .monospacedDigit()
+            RatingStars(value: value ?? 0, size: 11)
+                .opacity(value == nil ? 0.35 : 1)
+            Text(subtitle).font(.caption2).foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(value.map { "\(title): \(String(format: "%.1f", $0)) out of 5" } ?? "\(title): no rating yet")
     }
 
     private func ratingRow(_ f: Film) -> some View {
@@ -349,8 +387,7 @@ struct FilmDetailView: View {
     private func facts(_ f: Film) -> String? {
         var parts: [String] = []
         if let d = f.durationText ?? alt?.minutes.map({ $0 >= 60 ? "\($0 / 60)h \(String(format: "%02d", $0 % 60))" : "\($0) min" }) { parts.append(d) }
-        if let p = f.press { parts.append(String(format: "Critics %.1f", p)) }
-        if let s = f.spect { parts.append(String(format: "Audience %.1f", s)) }
+        if let g = f.genre, !g.isEmpty { parts.append(g.components(separatedBy: ",").prefix(2).map { $0.trimmingCharacters(in: .whitespaces) }.joined(separator: ", ")) }
         return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
 

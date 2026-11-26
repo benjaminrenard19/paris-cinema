@@ -116,6 +116,24 @@ struct Stars: View {
     }
 }
 
+/// Five stars filled to a rating out of 5, in half steps (3.6 shows three and a half).
+struct RatingStars: View {
+    let value: Double
+    var size: CGFloat = 12
+    var body: some View {
+        let halves = Int((min(max(value, 0), 5) * 2).rounded())
+        HStack(spacing: 1) {
+            ForEach(1...5, id: \.self) { i in
+                let name = halves >= i * 2 ? "star.fill" : halves == i * 2 - 1 ? "star.leadinghalf.filled" : "star"
+                Image(systemName: name)
+                    .font(.system(size: size))
+                    .foregroundStyle(name == "star" ? Color.secondary.opacity(0.5) : Color(hex: 0xE0A800))
+            }
+        }
+        .accessibilityHidden(true)
+    }
+}
+
 struct CatBadge: View {
     let cat: Cat
     var body: some View {

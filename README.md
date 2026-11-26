@@ -2,9 +2,12 @@
 
 Every film released in Paris cinemas since January 2026, week by week, plus an iPhone app to browse them, keep favourites, plan your week at the cinema, and rate what you've seen.
 
-- `data/`: the film database. There is one file per French cinema week (Wednesday to Tuesday) in `data/weeks/`, plus producers and synopses (`details.json`), showtimes (`showtimes.json`), links to official posters (`posters.json`) and 29 Paris cinemas (`cinemas.json`).
+- `data/`: the film database. There is one file per French cinema week (Wednesday to Tuesday) in `data/weeks/`, plus producers and synopses (`details.json`), showtimes (`showtimes.json`), links to official posters (`posters.json`) and the Paris cinemas the app lists (`cinemas.json`).
 - `data/extras.json`: posters, critics and audience ratings and running times, read from AlloCiné's public pages by `scripts/allocine.py`.
-- `data/showtimes.json`: session times at the cinemas listed in `data/theaters.json` (name and AlloCiné cinema code), read each morning from each cinema's public AlloCiné page by `python3 scripts/allocine.py theaters`. Those pages list the current day and the next one, so the times build up one day at a time; past days are dropped.
+- `data/showtimes.json`: session times, refreshed every morning from two kinds of source:
+  - the cinemas' own websites, by `python3 scripts/sessions.py sites`: UGC's 11 Paris cinemas (ugc.fr), Le Grand Action and Le Balzac. These list every day the cinema has published, normally up to next Tuesday (the new week comes out on Monday or Tuesday), plus special screenings further ahead;
+  - each cinema's public AlloCiné page, by `python3 scripts/allocine.py theaters` (cinemas and codes in `data/theaters.json`), which gives today and tomorrow everywhere else, including Pathé, mk2 and Gaumont Disney Village.
+  Pathé's and mk2's websites load their times in the browser rather than in the page, so they come through AlloCiné. Past days are dropped.
 - `data/paris-cinema.json`: everything combined into one file. This is the file the app downloads. It is built by `scripts/build.py`.
 - `ParisCinema/` and `ParisCinema.xcodeproj`: the SwiftUI iPhone app.
 
@@ -15,7 +18,7 @@ Claude adds new weeks every Tuesday evening, once cinemas have published the new
 | Tab | What it does |
 | --- | --- |
 | **Films** | Browse week by week with official posters, running times and ratings. Sort a week by name (A–Z or Z–A), critics, audience or average rating, or running time. Tap the star at the top right of any film to add it to your favourites. Pull down to check for new films. |
-| **Film page** | Poster, synopsis, cast, producers, and links to the trailer (original version with French subtitles), AlloCiné and Paris showtimes. Tap the poster to see it full screen; tap or swipe for other posters, running time and ratings, the story, and the cast and producers. Mark the film as watched (any past date) and rate it out of 5. |
+| **Film page** | Poster, critics and audience ratings (with their average), synopsis, cast, producers, and links to the trailer (original version with French subtitles), AlloCiné and Paris showtimes. Tap the poster to see it full screen; tap or swipe for other posters, running time and ratings, the story, and the cast and producers. Mark the film as watched (any past date) and rate it out of 5. |
 | **Plan to watch** | Choose the cinema, then the day (a green dot shows the days it plays there, or open the calendar), then the time. "Today at your cinemas" lists today's screenings at your starred cinemas. |
 | **Calendar** | In Settings, turn on "Save plans to my calendar" and pick a calendar. Confirmed plans are added, moved and removed automatically. For Google Calendar, add your Google account in iPhone Settings › Apps › Calendar › Calendar Accounts first. |
 | **My week** | The week from Wednesday to Tuesday, day by day: which film, when and where. Add a film to any day, confirm provisional plans, and plan your favourites. |
