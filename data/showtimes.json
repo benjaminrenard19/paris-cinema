@@ -1,1 +1,4652 @@
-{}
+{
+ "2026-03-11_in-the-mood-for-love-4k": {
+  "week": "2026-03-11",
+  "cinemas": [
+   {
+    "name": "Christine Cinéma Club",
+    "address": "4 rue Christine, 75006",
+    "times": {
+     "2026-11-27": [
+      "19:45"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-04-08_l-affaire-abdallah": {
+  "week": "2026-04-08",
+  "cinemas": [
+   {
+    "name": "Le Grand Action",
+    "address": "5 rue des Écoles, 75005",
+    "times": {
+     "2026-11-26": [
+      "20:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-06-03_la-bataille-de-gaulle-partie-1-l-age-de-fer": {
+  "week": "2026-06-03",
+  "cinemas": [
+   {
+    "name": "Pathé Palace",
+    "address": "2 bd des Capucines, 75009",
+    "times": {
+     "2026-11-27": [
+      "13:15"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-26": [
+      "21:40"
+     ],
+     "2026-11-27": [
+      "13:45"
+     ]
+    }
+   },
+   {
+    "name": "Studio 28",
+    "address": "10 rue Tholozé, 75018",
+    "times": {
+     "2026-11-26": [
+      "14:30"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-06-26_la-bataille-de-gaulle-partie-2-j-ecris-ton-nom": {
+  "week": "2026-06-24",
+  "cinemas": [
+   {
+    "name": "Pathé Palace",
+    "address": "2 bd des Capucines, 75009",
+    "times": {
+     "2026-11-27": [
+      "16:30"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-27": [
+      "21:40"
+     ]
+    }
+   },
+   {
+    "name": "Studio 28",
+    "address": "10 rue Tholozé, 75018",
+    "times": {
+     "2026-11-27": [
+      "15:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-09-09_hair-paper-water": {
+  "week": "2026-09-09",
+  "cinemas": [
+   {
+    "name": "Le Grand Action",
+    "address": "5 rue des Écoles, 75005",
+    "times": {
+     "2026-11-26": [
+      "16:10"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-09-16_resident-evil": {
+  "week": "2026-09-16",
+  "cinemas": [
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "22:10"
+     ],
+     "2026-11-27": [
+      "22:10"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-09-23_garance": {
+  "week": "2026-09-23",
+  "cinemas": [
+   {
+    "name": "Saint-André des Arts",
+    "address": "30 rue Saint-André-des-Arts, 75006",
+    "times": {
+     "2026-11-27": [
+      "12:45"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-09-23_les-elephants-dans-la-brume": {
+  "week": "2026-09-23",
+  "cinemas": [
+   {
+    "name": "Luminor Hôtel de Ville",
+    "address": "20 rue du Temple, 75004",
+    "times": {
+     "2026-11-27": [
+      "09:45"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-09-23_primetime": {
+  "week": "2026-09-23",
+  "cinemas": [
+   {
+    "name": "Saint-André des Arts",
+    "address": "30 rue Saint-André-des-Arts, 75006",
+    "times": {
+     "2026-11-26": [
+      "12:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-09-23_raison-et-sentiments": {
+  "week": "2026-09-23",
+  "cinemas": [
+   {
+    "name": "Saint-André des Arts",
+    "address": "30 rue Saint-André-des-Arts, 75006",
+    "times": {
+     "2026-11-26": [
+      "16:20"
+     ],
+     "2026-11-27": [
+      "15:20"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-09-30_digger": {
+  "week": "2026-09-30",
+  "cinemas": [
+   {
+    "name": "Saint-André des Arts",
+    "address": "30 rue Saint-André-des-Arts, 75006",
+    "times": {
+     "2026-11-26": [
+      "14:15"
+     ],
+     "2026-11-27": [
+      "17:50"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-09-30_kraken": {
+  "week": "2026-09-30",
+  "cinemas": [
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-26": [
+      "22:30"
+     ],
+     "2026-11-27": [
+      "17:15",
+      "19:30",
+      "22:30"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-09-30_notre-salut": {
+  "week": "2026-09-30",
+  "cinemas": [
+   {
+    "name": "Le Grand Action",
+    "address": "5 rue des Écoles, 75005",
+    "times": {
+     "2026-11-27": [
+      "16:15"
+     ]
+    }
+   },
+   {
+    "name": "Saint-André des Arts",
+    "address": "30 rue Saint-André-des-Arts, 75006",
+    "times": {
+     "2026-11-26": [
+      "17:05"
+     ],
+     "2026-11-27": [
+      "15:00"
+     ]
+    }
+   },
+   {
+    "name": "Studio 28",
+    "address": "10 rue Tholozé, 75018",
+    "times": {
+     "2026-11-27": [
+      "17:50"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-14_le-corset": {
+  "week": "2026-10-14",
+  "cinemas": [
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:10",
+      "11:20",
+      "13:30",
+      "15:40",
+      "17:50",
+      "20:00"
+     ],
+     "2026-11-27": [
+      "09:10",
+      "11:20",
+      "13:30",
+      "15:40",
+      "17:50"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Quai de Seine & Quai de Loire",
+    "address": "14 quai de la Seine, 75019",
+    "times": {
+     "2026-11-27": [
+      "12:50",
+      "15:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-14_les-miserables": {
+  "week": "2026-10-14",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-27": [
+      "14:10"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-26": [
+      "20:30"
+     ],
+     "2026-11-27": [
+      "10:00",
+      "21:05"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "13:45"
+     ],
+     "2026-11-27": [
+      "13:45"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-14_malfaisante": {
+  "week": "2026-10-14",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-26": [
+      "21:45"
+     ],
+     "2026-11-27": [
+      "21:45"
+     ]
+    }
+   },
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-26": [
+      "22:15"
+     ],
+     "2026-11-27": [
+      "18:00",
+      "20:15",
+      "22:15"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-14_minotaure": {
+  "week": "2026-10-14",
+  "cinemas": [
+   {
+    "name": "mk2 Beaubourg",
+    "address": "50 rue Rambuteau, 75003",
+    "times": {
+     "2026-11-27": [
+      "10:10"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-21_clayface": {
+  "week": "2026-10-21",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-27": [
+      "17:35"
+     ]
+    }
+   },
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-26": [
+      "22:15"
+     ],
+     "2026-11-27": [
+      "13:15",
+      "17:00",
+      "22:30"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-26": [
+      "23:35"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "21:55"
+     ],
+     "2026-11-27": [
+      "21:55"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-21_karma": {
+  "week": "2026-10-21",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-27": [
+      "16:45"
+     ]
+    }
+   },
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-27": [
+      "14:15"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-27": [
+      "17:20"
+     ]
+    }
+   },
+   {
+    "name": "Studio 28",
+    "address": "10 rue Tholozé, 75018",
+    "times": {
+     "2026-11-27": [
+      "20:40"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "17:15"
+     ],
+     "2026-11-27": [
+      "17:15"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "11:10",
+      "16:15",
+      "21:30"
+     ],
+     "2026-11-27": [
+      "11:10",
+      "16:15",
+      "21:30"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-21_l-ile-des-souvenirs": {
+  "week": "2026-10-21",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-27": [
+      "14:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-21_la-gradiva": {
+  "week": "2026-10-21",
+  "cinemas": [
+   {
+    "name": "Le Balzac",
+    "address": "1 rue Balzac, 75008",
+    "times": {
+     "2026-11-27": [
+      "18:00"
+     ]
+    }
+   },
+   {
+    "name": "Les 7 Parnassiens",
+    "address": "98 bd du Montparnasse, 75014",
+    "times": {
+     "2026-11-26": [
+      "11:30",
+      "14:00",
+      "16:10"
+     ],
+     "2026-11-27": [
+      "11:30",
+      "14:00",
+      "18:15",
+      "21:00"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Wepler",
+    "address": "140 bd de Clichy, 75018",
+    "times": {
+     "2026-11-26": [
+      "21:30"
+     ],
+     "2026-11-27": [
+      "13:15",
+      "16:15",
+      "19:00"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:00",
+      "12:05",
+      "15:10",
+      "18:15",
+      "21:20"
+     ],
+     "2026-11-27": [
+      "09:00",
+      "12:05",
+      "15:10",
+      "18:15",
+      "21:20"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Beaubourg",
+    "address": "50 rue Rambuteau, 75003",
+    "times": {
+     "2026-11-27": [
+      "10:10",
+      "13:15",
+      "16:15",
+      "20:00"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "20:15"
+     ],
+     "2026-11-27": [
+      "11:15",
+      "14:15"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Gambetta",
+    "address": "6 rue Belgrand, 75020",
+    "times": {
+     "2026-11-26": [
+      "21:20"
+     ],
+     "2026-11-27": [
+      "12:00",
+      "16:35",
+      "21:20"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Nation",
+    "address": "133 bd Diderot, 75012",
+    "times": {
+     "2026-11-27": [
+      "21:20"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Odéon",
+    "address": "113 bd Saint-Germain, 75006",
+    "times": {
+     "2026-11-26": [
+      "21:30"
+     ],
+     "2026-11-27": [
+      "12:35",
+      "15:30",
+      "18:30",
+      "21:30"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Quai de Seine & Quai de Loire",
+    "address": "14 quai de la Seine, 75019",
+    "times": {
+     "2026-11-26": [
+      "20:00"
+     ],
+     "2026-11-27": [
+      "13:10",
+      "16:15",
+      "20:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-21_octobre-a-paris": {
+  "week": "2026-10-21",
+  "cinemas": [
+   {
+    "name": "Luminor Hôtel de Ville",
+    "address": "20 rue du Temple, 75004",
+    "times": {
+     "2026-11-26": [
+      "13:00",
+      "18:15"
+     ],
+     "2026-11-27": [
+      "16:15",
+      "19:40"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-21_peking-opera-blues": {
+  "week": "2026-10-21",
+  "cinemas": [
+   {
+    "name": "Le Grand Action",
+    "address": "5 rue des Écoles, 75005",
+    "times": {
+     "2026-11-26": [
+      "17:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-28_hope": {
+  "week": "2026-10-28",
+  "cinemas": [
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-27": [
+      "13:45"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-27": [
+      "17:50"
+     ]
+    }
+   },
+   {
+    "name": "Saint-André des Arts",
+    "address": "30 rue Saint-André-des-Arts, 75006",
+    "times": {
+     "2026-11-26": [
+      "14:10"
+     ],
+     "2026-11-27": [
+      "20:15"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "20:30"
+     ],
+     "2026-11-27": [
+      "20:30"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "11:00",
+      "14:20",
+      "17:40",
+      "21:00"
+     ],
+     "2026-11-27": [
+      "14:20",
+      "17:40",
+      "21:00"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "21:00"
+     ],
+     "2026-11-27": [
+      "11:05",
+      "14:15",
+      "17:15",
+      "21:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-28_irish-travellers": {
+  "week": "2026-10-28",
+  "cinemas": [
+   {
+    "name": "Escurial",
+    "address": "11 bd de Port-Royal, 75013",
+    "times": {
+     "2026-11-27": [
+      "11:15"
+     ]
+    }
+   },
+   {
+    "name": "Luminor Hôtel de Ville",
+    "address": "20 rue du Temple, 75004",
+    "times": {
+     "2026-11-26": [
+      "15:10"
+     ]
+    }
+   },
+   {
+    "name": "Reflet Médicis & Filmothèque",
+    "address": "3 and 9 rue Champollion, 75005",
+    "times": {
+     "2026-11-27": [
+      "11:00"
+     ]
+    }
+   },
+   {
+    "name": "Saint-André des Arts",
+    "address": "30 rue Saint-André-des-Arts, 75006",
+    "times": {
+     "2026-11-26": [
+      "14:30"
+     ],
+     "2026-11-27": [
+      "13:10"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Beaubourg",
+    "address": "50 rue Rambuteau, 75003",
+    "times": {
+     "2026-11-27": [
+      "10:15",
+      "13:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-28_le-mystere-lucy-lost": {
+  "week": "2026-10-28",
+  "cinemas": [
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-27": [
+      "10:40"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-28_les-diables": {
+  "week": "2026-10-28",
+  "cinemas": [
+   {
+    "name": "Le Grand Action",
+    "address": "5 rue des Écoles, 75005",
+    "times": {
+     "2026-11-26": [
+      "17:40",
+      "21:15"
+     ],
+     "2026-11-27": [
+      "16:40",
+      "21:15"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-28_moulin": {
+  "week": "2026-10-28",
+  "cinemas": [
+   {
+    "name": "Les 7 Parnassiens",
+    "address": "98 bd du Montparnasse, 75014",
+    "times": {
+     "2026-11-26": [
+      "11:30"
+     ],
+     "2026-11-27": [
+      "11:30"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Beaugrenelle",
+    "address": "7 rue Linois, 75015",
+    "times": {
+     "2026-11-26": [
+      "22:00"
+     ],
+     "2026-11-27": [
+      "15:30",
+      "20:15"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-26": [
+      "20:50"
+     ],
+     "2026-11-27": [
+      "10:40",
+      "16:00"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Wepler",
+    "address": "140 bd de Clichy, 75018",
+    "times": {
+     "2026-11-27": [
+      "10:15"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "16:00"
+     ],
+     "2026-11-27": [
+      "16:00"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:20",
+      "12:20",
+      "15:15",
+      "18:10",
+      "21:05"
+     ],
+     "2026-11-27": [
+      "09:20",
+      "12:20",
+      "15:15",
+      "18:10",
+      "21:05"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "21:15"
+     ],
+     "2026-11-27": [
+      "11:05"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Nation",
+    "address": "133 bd Diderot, 75012",
+    "times": {
+     "2026-11-27": [
+      "18:40"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Odéon",
+    "address": "113 bd Saint-Germain, 75006",
+    "times": {
+     "2026-11-26": [
+      "21:40"
+     ],
+     "2026-11-27": [
+      "21:40"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Quai de Seine & Quai de Loire",
+    "address": "14 quai de la Seine, 75019",
+    "times": {
+     "2026-11-27": [
+      "17:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-28_papa-ou-t-es": {
+  "week": "2026-10-28",
+  "cinemas": [
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-27": [
+      "15:45"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-10-28_quelques-mots-d-amour": {
+  "week": "2026-10-28",
+  "cinemas": [
+   {
+    "name": "Studio 28",
+    "address": "10 rue Tholozé, 75018",
+    "times": {
+     "2026-11-26": [
+      "17:20"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-04_club-kid": {
+  "week": "2026-11-04",
+  "cinemas": [
+   {
+    "name": "Le Louxor",
+    "address": "170 bd de Magenta, 75010",
+    "times": {
+     "2026-11-26": [
+      "13:00",
+      "16:55",
+      "21:25"
+     ],
+     "2026-11-27": [
+      "13:00",
+      "16:55",
+      "21:25"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-26": [
+      "22:50"
+     ],
+     "2026-11-27": [
+      "10:15",
+      "13:00",
+      "15:15",
+      "19:00",
+      "22:50"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Wepler",
+    "address": "140 bd de Clichy, 75018",
+    "times": {
+     "2026-11-27": [
+      "12:00",
+      "16:55",
+      "19:40",
+      "22:00"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "10:15",
+      "13:45",
+      "16:30",
+      "19:15",
+      "21:45"
+     ],
+     "2026-11-27": [
+      "10:15",
+      "13:45",
+      "16:30",
+      "19:15",
+      "21:45"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "08:55",
+      "11:25",
+      "14:00",
+      "16:40",
+      "19:20",
+      "21:55"
+     ],
+     "2026-11-27": [
+      "08:55",
+      "11:25",
+      "14:00",
+      "16:40",
+      "19:20",
+      "21:55"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Beaubourg",
+    "address": "50 rue Rambuteau, 75003",
+    "times": {
+     "2026-11-26": [
+      "21:40"
+     ],
+     "2026-11-27": [
+      "13:15",
+      "16:00",
+      "19:00",
+      "21:40"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "19:20",
+      "21:45"
+     ],
+     "2026-11-27": [
+      "11:05",
+      "14:20",
+      "16:45",
+      "19:20",
+      "21:45"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Gambetta",
+    "address": "6 rue Belgrand, 75020",
+    "times": {
+     "2026-11-26": [
+      "21:40"
+     ],
+     "2026-11-27": [
+      "10:25",
+      "13:05",
+      "15:40",
+      "19:00",
+      "21:40"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Odéon",
+    "address": "113 bd Saint-Germain, 75006",
+    "times": {
+     "2026-11-26": [
+      "21:45"
+     ],
+     "2026-11-27": [
+      "13:45",
+      "16:30",
+      "19:10",
+      "21:45"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Quai de Seine & Quai de Loire",
+    "address": "14 quai de la Seine, 75019",
+    "times": {
+     "2026-11-26": [
+      "21:40"
+     ],
+     "2026-11-27": [
+      "13:25",
+      "16:20",
+      "19:00",
+      "21:40"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-04_godzilla-minus-zero": {
+  "week": "2026-11-04",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-26": [
+      "22:10"
+     ],
+     "2026-11-27": [
+      "14:30",
+      "16:25",
+      "22:10"
+     ]
+    }
+   },
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-27": [
+      "16:45"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "15:00",
+      "21:30"
+     ],
+     "2026-11-27": [
+      "15:00",
+      "21:30"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "21:40"
+     ],
+     "2026-11-27": [
+      "11:05",
+      "14:30"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-04_l-affaire-marie-claire": {
+  "week": "2026-11-04",
+  "cinemas": [
+   {
+    "name": "Pathé Beaugrenelle",
+    "address": "7 rue Linois, 75015",
+    "times": {
+     "2026-11-27": [
+      "10:15"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Wepler",
+    "address": "140 bd de Clichy, 75018",
+    "times": {
+     "2026-11-27": [
+      "14:00",
+      "19:00"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "08:55",
+      "14:00",
+      "19:10"
+     ],
+     "2026-11-27": [
+      "08:55",
+      "14:00",
+      "19:10"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Nation",
+    "address": "133 bd Diderot, 75012",
+    "times": {
+     "2026-11-27": [
+      "12:05",
+      "14:30"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-04_l-arabe": {
+  "week": "2026-11-04",
+  "cinemas": [
+   {
+    "name": "Luminor Hôtel de Ville",
+    "address": "20 rue du Temple, 75004",
+    "times": {
+     "2026-11-26": [
+      "16:15"
+     ],
+     "2026-11-27": [
+      "18:50"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-04_si-tu-tends-l-oreille": {
+  "week": "2026-11-04",
+  "cinemas": [
+   {
+    "name": "Reflet Médicis & Filmothèque",
+    "address": "3 and 9 rue Champollion, 75005",
+    "times": {
+     "2026-11-26": [
+      "21:45"
+     ],
+     "2026-11-27": [
+      "11:00",
+      "18:10"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-04_wild-horse-nine": {
+  "week": "2026-11-04",
+  "cinemas": [
+   {
+    "name": "Escurial",
+    "address": "11 bd de Port-Royal, 75013",
+    "times": {
+     "2026-11-27": [
+      "14:00",
+      "16:30",
+      "18:50",
+      "21:10"
+     ]
+    }
+   },
+   {
+    "name": "Le Balzac",
+    "address": "1 rue Balzac, 75008",
+    "times": {
+     "2026-11-26": [
+      "18:35"
+     ],
+     "2026-11-27": [
+      "13:30",
+      "15:50",
+      "20:50"
+     ]
+    }
+   },
+   {
+    "name": "Les 7 Parnassiens",
+    "address": "98 bd du Montparnasse, 75014",
+    "times": {
+     "2026-11-26": [
+      "11:30",
+      "13:50",
+      "16:50",
+      "19:10",
+      "21:10"
+     ],
+     "2026-11-27": [
+      "11:30",
+      "14:00",
+      "16:50",
+      "19:10",
+      "21:30"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Beaugrenelle",
+    "address": "7 rue Linois, 75015",
+    "times": {
+     "2026-11-26": [
+      "20:10",
+      "22:35"
+     ],
+     "2026-11-27": [
+      "11:50",
+      "15:15",
+      "23:00"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Palace",
+    "address": "2 bd des Capucines, 75009",
+    "times": {
+     "2026-11-26": [
+      "20:35",
+      "22:30"
+     ],
+     "2026-11-27": [
+      "14:00",
+      "20:00"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Wepler",
+    "address": "140 bd de Clichy, 75018",
+    "times": {
+     "2026-11-27": [
+      "16:30",
+      "21:15"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "11:00",
+      "14:00",
+      "16:30",
+      "19:00",
+      "21:30"
+     ],
+     "2026-11-27": [
+      "11:00",
+      "14:00",
+      "16:30",
+      "19:00",
+      "21:30"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:00",
+      "11:30",
+      "14:05",
+      "16:40",
+      "19:15",
+      "21:45"
+     ],
+     "2026-11-27": [
+      "09:00",
+      "11:30",
+      "14:05",
+      "16:40",
+      "19:15",
+      "21:45"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "19:15",
+      "21:45"
+     ],
+     "2026-11-27": [
+      "11:15",
+      "14:25",
+      "16:50",
+      "19:15",
+      "21:45"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Gambetta",
+    "address": "6 rue Belgrand, 75020",
+    "times": {
+     "2026-11-26": [
+      "21:45"
+     ],
+     "2026-11-27": [
+      "12:05",
+      "14:20",
+      "16:50",
+      "19:20",
+      "21:45"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Nation",
+    "address": "133 bd Diderot, 75012",
+    "times": {
+     "2026-11-26": [
+      "19:45",
+      "21:45"
+     ],
+     "2026-11-27": [
+      "12:05",
+      "14:40",
+      "17:15",
+      "19:45",
+      "21:45"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Odéon",
+    "address": "113 bd Saint-Germain, 75006",
+    "times": {
+     "2026-11-26": [
+      "19:30",
+      "21:55"
+     ],
+     "2026-11-27": [
+      "12:40",
+      "17:00",
+      "19:30",
+      "21:55"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Quai de Seine & Quai de Loire",
+    "address": "14 quai de la Seine, 75019",
+    "times": {
+     "2026-11-26": [
+      "19:15",
+      "21:50"
+     ],
+     "2026-11-27": [
+      "13:45",
+      "16:30",
+      "19:15",
+      "21:50"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-06_ramayana-l-avenement-d-une-legende": {
+  "week": "2026-11-04",
+  "cinemas": [
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-26": [
+      "20:45"
+     ],
+     "2026-11-27": [
+      "13:30",
+      "17:30",
+      "21:15"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-11_15-18": {
+  "week": "2026-11-11",
+  "cinemas": [
+   {
+    "name": "Saint-André des Arts",
+    "address": "30 rue Saint-André-des-Arts, 75006",
+    "times": {
+     "2026-11-26": [
+      "12:30",
+      "18:50"
+     ],
+     "2026-11-27": [
+      "11:30",
+      "17:55"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "08:55",
+      "11:05",
+      "13:20",
+      "15:35",
+      "17:55"
+     ],
+     "2026-11-27": [
+      "11:05",
+      "13:20",
+      "15:35",
+      "17:55"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Quai de Seine & Quai de Loire",
+    "address": "14 quai de la Seine, 75019",
+    "times": {
+     "2026-11-26": [
+      "19:30",
+      "21:55"
+     ],
+     "2026-11-27": [
+      "17:00",
+      "19:30",
+      "21:55"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-11_ce-qui-nous-mene-a-toi": {
+  "week": "2026-11-11",
+  "cinemas": [
+   {
+    "name": "Luminor Hôtel de Ville",
+    "address": "20 rue du Temple, 75004",
+    "times": {
+     "2026-11-26": [
+      "14:25",
+      "21:15"
+     ],
+     "2026-11-27": [
+      "17:00",
+      "21:05"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-11_comment-braquer-une-banque": {
+  "week": "2026-11-11",
+  "cinemas": [
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-26": [
+      "22:00"
+     ],
+     "2026-11-27": [
+      "14:15"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-27": [
+      "15:10",
+      "20:15"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "21:30"
+     ],
+     "2026-11-27": [
+      "21:30"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-11_demain-est-un-autre-jour": {
+  "week": "2026-11-11",
+  "cinemas": [
+   {
+    "name": "Le Champo",
+    "address": "51 rue des Écoles, 75005",
+    "times": {
+     "2026-11-26": [
+      "16:00",
+      "19:40"
+     ],
+     "2026-11-27": [
+      "12:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-11_everytime": {
+  "week": "2026-11-11",
+  "cinemas": [
+   {
+    "name": "mk2 Beaubourg",
+    "address": "50 rue Rambuteau, 75003",
+    "times": {
+     "2026-11-27": [
+      "18:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-11_il-faut-bruler-maman": {
+  "week": "2026-11-11",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-27": [
+      "13:45",
+      "15:40"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Beaugrenelle",
+    "address": "7 rue Linois, 75015",
+    "times": {
+     "2026-11-27": [
+      "10:00",
+      "13:15",
+      "18:10"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-27": [
+      "13:05",
+      "15:30",
+      "17:00"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Wepler",
+    "address": "140 bd de Clichy, 75018",
+    "times": {
+     "2026-11-26": [
+      "22:30"
+     ],
+     "2026-11-27": [
+      "12:50",
+      "14:35",
+      "22:30"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "10:15",
+      "13:15",
+      "17:45",
+      "19:30"
+     ],
+     "2026-11-27": [
+      "10:15",
+      "13:15",
+      "17:45",
+      "19:30"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:00",
+      "10:50",
+      "12:40",
+      "14:35",
+      "16:35",
+      "18:35",
+      "20:30",
+      "22:25"
+     ],
+     "2026-11-27": [
+      "09:00",
+      "10:50",
+      "12:40",
+      "14:35",
+      "16:35",
+      "18:35",
+      "20:30",
+      "22:25"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-27": [
+      "13:45"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Gambetta",
+    "address": "6 rue Belgrand, 75020",
+    "times": {
+     "2026-11-27": [
+      "14:45",
+      "19:30"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Odéon",
+    "address": "113 bd Saint-Germain, 75006",
+    "times": {
+     "2026-11-27": [
+      "15:10"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Quai de Seine & Quai de Loire",
+    "address": "14 quai de la Seine, 75019",
+    "times": {
+     "2026-11-26": [
+      "22:10"
+     ],
+     "2026-11-27": [
+      "13:00",
+      "15:00",
+      "20:00",
+      "22:10"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-11_infirmary": {
+  "week": "2026-11-11",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-26": [
+      "22:30"
+     ]
+    }
+   },
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-26": [
+      "22:30"
+     ],
+     "2026-11-27": [
+      "22:30"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-11_l-age-d-or": {
+  "week": "2026-11-11",
+  "cinemas": [
+   {
+    "name": "Le Grand Action",
+    "address": "5 rue des Écoles, 75005",
+    "times": {
+     "2026-11-26": [
+      "14:10",
+      "19:05"
+     ],
+     "2026-11-27": [
+      "14:10",
+      "19:05"
+     ]
+    }
+   },
+   {
+    "name": "Luminor Hôtel de Ville",
+    "address": "20 rue du Temple, 75004",
+    "times": {
+     "2026-11-26": [
+      "13:00",
+      "17:05"
+     ],
+     "2026-11-27": [
+      "20:50"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-11_le-labyrinthe-de-pan": {
+  "week": "2026-11-11",
+  "cinemas": [
+   {
+    "name": "Christine Cinéma Club",
+    "address": "4 rue Christine, 75006",
+    "times": {
+     "2026-11-26": [
+      "18:10"
+     ],
+     "2026-11-27": [
+      "15:45"
+     ]
+    }
+   },
+   {
+    "name": "Le Champo",
+    "address": "51 rue des Écoles, 75005",
+    "times": {
+     "2026-11-26": [
+      "13:50",
+      "21:20"
+     ],
+     "2026-11-27": [
+      "15:45"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-11_le-merveilleux-hiver-de-tom-le-chat": {
+  "week": "2026-11-11",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-27": [
+      "13:10"
+     ]
+    }
+   },
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-27": [
+      "13:15"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-11_pierre-ou-les-ambiguites": {
+  "week": "2026-11-11",
+  "cinemas": [
+   {
+    "name": "Reflet Médicis & Filmothèque",
+    "address": "3 and 9 rue Champollion, 75005",
+    "times": {
+     "2026-11-27": [
+      "15:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-11_pola-x": {
+  "week": "2026-11-11",
+  "cinemas": [
+   {
+    "name": "Reflet Médicis & Filmothèque",
+    "address": "3 and 9 rue Champollion, 75005",
+    "times": {
+     "2026-11-27": [
+      "20:30"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-11_scrooge": {
+  "week": "2026-11-11",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-26": [
+      "22:00"
+     ],
+     "2026-11-27": [
+      "14:30",
+      "17:00",
+      "19:45",
+      "22:00"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Beaugrenelle",
+    "address": "7 rue Linois, 75015",
+    "times": {
+     "2026-11-26": [
+      "22:35"
+     ],
+     "2026-11-27": [
+      "13:00",
+      "17:45"
+     ]
+    }
+   },
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-27": [
+      "13:30",
+      "17:00"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Palace",
+    "address": "2 bd des Capucines, 75009",
+    "times": {
+     "2026-11-26": [
+      "22:30"
+     ],
+     "2026-11-27": [
+      "12:55",
+      "22:30"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-26": [
+      "22:10"
+     ],
+     "2026-11-27": [
+      "10:10",
+      "12:45",
+      "17:45"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Wepler",
+    "address": "140 bd de Clichy, 75018",
+    "times": {
+     "2026-11-27": [
+      "16:25"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "10:30",
+      "13:30",
+      "19:00",
+      "21:30"
+     ],
+     "2026-11-27": [
+      "10:30",
+      "13:30",
+      "19:00",
+      "21:30"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "11:35",
+      "14:10",
+      "16:45"
+     ],
+     "2026-11-27": [
+      "09:05",
+      "11:35",
+      "14:10",
+      "16:45",
+      "19:20",
+      "21:50"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-11_the-front-page": {
+  "week": "2026-11-11",
+  "cinemas": [
+   {
+    "name": "Christine Cinéma Club",
+    "address": "4 rue Christine, 75006",
+    "times": {
+     "2026-11-27": [
+      "15:35"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-18_camembert": {
+  "week": "2026-11-18",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-26": [
+      "22:30"
+     ],
+     "2026-11-27": [
+      "13:50",
+      "16:00",
+      "18:10",
+      "19:45",
+      "22:30"
+     ]
+    }
+   },
+   {
+    "name": "Le Grand Rex",
+    "address": "1 bd Poissonnière, 75002",
+    "times": {
+     "2026-11-26": [
+      "13:45",
+      "16:00",
+      "18:45",
+      "21:15"
+     ],
+     "2026-11-27": [
+      "13:00",
+      "15:15",
+      "18:45",
+      "21:15"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Beaugrenelle",
+    "address": "7 rue Linois, 75015",
+    "times": {
+     "2026-11-26": [
+      "22:55"
+     ],
+     "2026-11-27": [
+      "10:15",
+      "13:15",
+      "15:05",
+      "17:10",
+      "19:15"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Wepler",
+    "address": "140 bd de Clichy, 75018",
+    "times": {
+     "2026-11-26": [
+      "22:20"
+     ],
+     "2026-11-27": [
+      "10:40",
+      "12:45",
+      "15:35",
+      "17:45",
+      "20:00",
+      "22:30"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "10:30",
+      "14:00",
+      "16:00",
+      "18:00",
+      "20:00",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "10:30",
+      "14:00",
+      "16:00",
+      "18:00",
+      "20:00",
+      "22:00"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:00",
+      "11:10",
+      "13:20",
+      "15:30",
+      "17:40",
+      "19:50",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "09:00",
+      "11:10",
+      "13:20",
+      "15:30",
+      "17:40",
+      "19:50",
+      "22:00"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "20:00",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "11:15",
+      "14:00",
+      "16:00",
+      "18:00",
+      "20:00",
+      "22:00"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Nation",
+    "address": "133 bd Diderot, 75012",
+    "times": {
+     "2026-11-26": [
+      "20:00",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "11:40",
+      "13:50",
+      "15:55",
+      "18:00",
+      "20:05",
+      "22:05"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-18_fais-moi-un-signe": {
+  "week": "2026-11-18",
+  "cinemas": [
+   {
+    "name": "Reflet Médicis & Filmothèque",
+    "address": "3 and 9 rue Champollion, 75005",
+    "times": {
+     "2026-11-27": [
+      "13:00"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "17:55",
+      "20:15"
+     ],
+     "2026-11-27": [
+      "17:55",
+      "20:15"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-27": [
+      "15:30"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-18_gabin": {
+  "week": "2026-11-18",
+  "cinemas": [
+   {
+    "name": "Le Balzac",
+    "address": "1 rue Balzac, 75008",
+    "times": {
+     "2026-11-26": [
+      "21:00"
+     ],
+     "2026-11-27": [
+      "13:40",
+      "15:50",
+      "18:40",
+      "20:50"
+     ]
+    }
+   },
+   {
+    "name": "Le Louxor",
+    "address": "170 bd de Magenta, 75010",
+    "times": {
+     "2026-11-26": [
+      "14:50",
+      "17:15",
+      "19:20"
+     ],
+     "2026-11-27": [
+      "14:50",
+      "17:15",
+      "19:20"
+     ]
+    }
+   },
+   {
+    "name": "Les 7 Parnassiens",
+    "address": "98 bd du Montparnasse, 75014",
+    "times": {
+     "2026-11-26": [
+      "11:45",
+      "14:15",
+      "16:15",
+      "19:00",
+      "21:30"
+     ],
+     "2026-11-27": [
+      "11:45",
+      "14:15",
+      "16:45",
+      "19:00",
+      "21:15"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:45",
+      "12:10",
+      "14:35",
+      "17:00",
+      "19:25"
+     ],
+     "2026-11-27": [
+      "09:45",
+      "12:10",
+      "14:35",
+      "17:00",
+      "19:25"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-18_hunger-games-lever-de-soleil-sur-la-moisson": {
+  "week": "2026-11-18",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-26": [
+      "21:30",
+      "21:45",
+      "21:50"
+     ],
+     "2026-11-27": [
+      "13:15",
+      "13:30",
+      "14:45",
+      "16:00",
+      "16:45",
+      "18:15",
+      "18:30",
+      "19:15",
+      "20:15",
+      "21:30",
+      "21:45",
+      "21:50"
+     ]
+    }
+   },
+   {
+    "name": "Le Grand Rex",
+    "address": "1 bd Poissonnière, 75002",
+    "times": {
+     "2026-11-26": [
+      "13:30",
+      "17:00",
+      "20:30"
+     ],
+     "2026-11-27": [
+      "13:15",
+      "13:30",
+      "16:30",
+      "17:00",
+      "17:30",
+      "20:30",
+      "20:45"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Beaugrenelle",
+    "address": "7 rue Linois, 75015",
+    "times": {
+     "2026-11-26": [
+      "21:30",
+      "21:45"
+     ],
+     "2026-11-27": [
+      "10:00",
+      "10:30",
+      "13:30",
+      "14:00",
+      "16:45",
+      "17:15",
+      "19:35",
+      "19:55",
+      "20:30",
+      "21:20",
+      "22:50",
+      "23:20"
+     ]
+    }
+   },
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-26": [
+      "20:45",
+      "21:00",
+      "21:15"
+     ],
+     "2026-11-27": [
+      "13:30",
+      "14:15",
+      "16:00",
+      "16:45",
+      "17:30",
+      "18:00",
+      "18:15",
+      "19:15",
+      "20:00",
+      "20:45",
+      "21:00",
+      "21:30",
+      "21:45"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Palace",
+    "address": "2 bd des Capucines, 75009",
+    "times": {
+     "2026-11-26": [
+      "20:30",
+      "21:30"
+     ],
+     "2026-11-27": [
+      "13:30",
+      "15:30",
+      "16:45",
+      "17:00",
+      "19:00",
+      "20:30",
+      "21:50"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-26": [
+      "21:00",
+      "22:45"
+     ],
+     "2026-11-27": [
+      "10:05",
+      "11:00",
+      "13:20",
+      "14:30",
+      "16:35",
+      "17:45",
+      "19:30",
+      "21:00",
+      "22:15"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Wepler",
+    "address": "140 bd de Clichy, 75018",
+    "times": {
+     "2026-11-26": [
+      "21:15",
+      "21:35"
+     ],
+     "2026-11-27": [
+      "10:00",
+      "13:40",
+      "15:50",
+      "18:00",
+      "19:15",
+      "21:20",
+      "21:35"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "10:00",
+      "10:45",
+      "13:15",
+      "14:00",
+      "14:30",
+      "16:30",
+      "17:30",
+      "18:00",
+      "19:45",
+      "20:45",
+      "21:15"
+     ],
+     "2026-11-27": [
+      "10:00",
+      "10:45",
+      "13:15",
+      "14:00",
+      "14:30",
+      "16:30",
+      "17:30",
+      "18:00",
+      "19:45",
+      "20:45",
+      "21:15"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:10",
+      "11:00",
+      "12:35",
+      "14:25",
+      "16:00",
+      "17:50",
+      "19:25",
+      "21:15"
+     ],
+     "2026-11-27": [
+      "09:10",
+      "11:00",
+      "12:35",
+      "14:25",
+      "16:00",
+      "17:50",
+      "19:25",
+      "21:15"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "20:00",
+      "21:00"
+     ],
+     "2026-11-27": [
+      "11:05",
+      "12:00",
+      "13:30",
+      "15:30",
+      "16:45",
+      "19:00",
+      "20:00",
+      "21:00"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Quai de Seine & Quai de Loire",
+    "address": "14 quai de la Seine, 75019",
+    "times": {
+     "2026-11-26": [
+      "20:15"
+     ],
+     "2026-11-27": [
+      "13:15",
+      "16:40",
+      "20:15"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-18_jupiter": {
+  "week": "2026-11-18",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-26": [
+      "21:50"
+     ],
+     "2026-11-27": [
+      "13:30",
+      "15:30",
+      "17:30",
+      "19:30",
+      "22:30"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Beaugrenelle",
+    "address": "7 rue Linois, 75015",
+    "times": {
+     "2026-11-26": [
+      "21:00",
+      "23:00"
+     ],
+     "2026-11-27": [
+      "11:00",
+      "13:00",
+      "15:00",
+      "17:00",
+      "20:00",
+      "21:20"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-26": [
+      "20:00",
+      "22:30"
+     ],
+     "2026-11-27": [
+      "00:00",
+      "10:00",
+      "12:00",
+      "14:00",
+      "16:00",
+      "18:00",
+      "20:00",
+      "22:00"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Wepler",
+    "address": "140 bd de Clichy, 75018",
+    "times": {
+     "2026-11-26": [
+      "22:30"
+     ],
+     "2026-11-27": [
+      "10:45",
+      "13:15",
+      "15:30",
+      "17:30",
+      "19:30",
+      "22:30"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "10:00",
+      "14:00",
+      "16:00",
+      "18:00",
+      "20:00",
+      "22:15"
+     ],
+     "2026-11-27": [
+      "10:00",
+      "14:00",
+      "16:00",
+      "18:00",
+      "20:00",
+      "22:00"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:00",
+      "11:00",
+      "13:05",
+      "15:15",
+      "17:25",
+      "19:35",
+      "21:40"
+     ],
+     "2026-11-27": [
+      "09:00",
+      "11:00",
+      "13:05",
+      "15:15",
+      "17:25",
+      "19:35",
+      "21:40"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "20:25",
+      "22:15"
+     ],
+     "2026-11-27": [
+      "11:05",
+      "12:55",
+      "14:45",
+      "16:35",
+      "18:30",
+      "20:25",
+      "22:15"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Nation",
+    "address": "133 bd Diderot, 75012",
+    "times": {
+     "2026-11-26": [
+      "20:00",
+      "22:10"
+     ],
+     "2026-11-27": [
+      "11:40",
+      "13:40",
+      "15:45",
+      "17:50",
+      "20:00",
+      "22:10"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Odéon",
+    "address": "113 bd Saint-Germain, 75006",
+    "times": {
+     "2026-11-26": [
+      "20:15",
+      "22:15"
+     ],
+     "2026-11-27": [
+      "12:25",
+      "14:25",
+      "16:25",
+      "18:20",
+      "20:15",
+      "22:15"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Quai de Seine & Quai de Loire",
+    "address": "14 quai de la Seine, 75019",
+    "times": {
+     "2026-11-26": [
+      "19:50",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "12:10",
+      "15:10",
+      "17:20",
+      "19:50",
+      "22:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-18_les-braves": {
+  "week": "2026-11-18",
+  "cinemas": [
+   {
+    "name": "Les 7 Parnassiens",
+    "address": "98 bd du Montparnasse, 75014",
+    "times": {
+     "2026-11-26": [
+      "11:30",
+      "14:00",
+      "16:30",
+      "19:00",
+      "21:25"
+     ],
+     "2026-11-27": [
+      "11:30",
+      "14:00",
+      "16:30",
+      "19:00",
+      "21:25"
+     ]
+    }
+   },
+   {
+    "name": "Max Linder Panorama",
+    "address": "24 bd Poissonnière, 75009",
+    "times": {
+     "2026-11-26": [
+      "13:40",
+      "16:10",
+      "18:40",
+      "21:10"
+     ],
+     "2026-11-27": [
+      "13:40",
+      "16:10",
+      "18:40",
+      "21:10"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "10:15",
+      "13:30",
+      "16:15",
+      "21:50"
+     ],
+     "2026-11-27": [
+      "13:00",
+      "15:30",
+      "18:00",
+      "20:45"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "10:30",
+      "13:20",
+      "16:10",
+      "19:00",
+      "21:45"
+     ],
+     "2026-11-27": [
+      "10:30",
+      "13:20",
+      "16:10",
+      "19:00",
+      "21:45"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Beaubourg",
+    "address": "50 rue Rambuteau, 75003",
+    "times": {
+     "2026-11-26": [
+      "21:40"
+     ],
+     "2026-11-27": [
+      "13:00",
+      "16:10",
+      "19:00",
+      "21:40"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "21:30"
+     ],
+     "2026-11-27": [
+      "11:10",
+      "14:00"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Gambetta",
+    "address": "6 rue Belgrand, 75020",
+    "times": {
+     "2026-11-26": [
+      "21:30"
+     ],
+     "2026-11-27": [
+      "10:20",
+      "13:10",
+      "15:50",
+      "18:50",
+      "21:30"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Odéon",
+    "address": "113 bd Saint-Germain, 75006",
+    "times": {
+     "2026-11-26": [
+      "21:40"
+     ],
+     "2026-11-27": [
+      "13:30",
+      "16:15",
+      "19:00",
+      "21:40"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Quai de Seine & Quai de Loire",
+    "address": "14 quai de la Seine, 75019",
+    "times": {
+     "2026-11-26": [
+      "21:30"
+     ],
+     "2026-11-27": [
+      "13:00",
+      "16:00",
+      "18:50",
+      "21:30"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-18_malika": {
+  "week": "2026-11-18",
+  "cinemas": [
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "13:45",
+      "15:45",
+      "17:45",
+      "19:45",
+      "21:45"
+     ],
+     "2026-11-27": [
+      "13:45",
+      "15:45",
+      "18:00",
+      "22:15"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:25",
+      "11:35",
+      "13:35",
+      "15:40",
+      "17:45",
+      "19:50",
+      "21:50"
+     ],
+     "2026-11-27": [
+      "11:35",
+      "13:35",
+      "15:40",
+      "17:45",
+      "19:50",
+      "21:50"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Nation",
+    "address": "133 bd Diderot, 75012",
+    "times": {
+     "2026-11-27": [
+      "16:45"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-18_ulya": {
+  "week": "2026-11-18",
+  "cinemas": [
+   {
+    "name": "Escurial",
+    "address": "11 bd de Port-Royal, 75013",
+    "times": {
+     "2026-11-27": [
+      "11:15"
+     ]
+    }
+   },
+   {
+    "name": "Luminor Hôtel de Ville",
+    "address": "20 rue du Temple, 75004",
+    "times": {
+     "2026-11-26": [
+      "19:15"
+     ],
+     "2026-11-27": [
+      "17:40"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-18_une-femme-comme-eva": {
+  "week": "2026-11-18",
+  "cinemas": [
+   {
+    "name": "Reflet Médicis & Filmothèque",
+    "address": "3 and 9 rue Champollion, 75005",
+    "times": {
+     "2026-11-27": [
+      "11:00",
+      "21:45"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-18_weed-eaters": {
+  "week": "2026-11-18",
+  "cinemas": [
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "22:30"
+     ],
+     "2026-11-27": [
+      "22:30"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-20_o-m-operation-mole": {
+  "week": "2026-11-18",
+  "cinemas": [
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-27": [
+      "14:30"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_3670": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "mk2 Beaubourg",
+    "address": "50 rue Rambuteau, 75003",
+    "times": {
+     "2026-11-26": [
+      "21:00"
+     ],
+     "2026-11-27": [
+      "10:30",
+      "21:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_billie-a-la-croisee-des-mondes": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-26": [
+      "22:00"
+     ],
+     "2026-11-27": [
+      "13:00",
+      "13:30",
+      "14:00",
+      "15:30",
+      "16:00",
+      "16:40",
+      "18:00",
+      "19:30",
+      "20:30",
+      "22:00"
+     ]
+    }
+   },
+   {
+    "name": "Le Grand Rex",
+    "address": "1 bd Poissonnière, 75002",
+    "times": {
+     "2026-11-26": [
+      "13:30",
+      "16:00",
+      "18:30",
+      "21:00"
+     ],
+     "2026-11-27": [
+      "13:30",
+      "16:00",
+      "18:30",
+      "21:00"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Beaugrenelle",
+    "address": "7 rue Linois, 75015",
+    "times": {
+     "2026-11-26": [
+      "22:25"
+     ],
+     "2026-11-27": [
+      "10:00",
+      "10:30",
+      "12:20",
+      "13:15",
+      "14:45",
+      "15:35",
+      "17:15",
+      "18:00",
+      "19:00",
+      "21:50"
+     ]
+    }
+   },
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-26": [
+      "20:45",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "13:15",
+      "13:30",
+      "14:30",
+      "15:45",
+      "16:00",
+      "17:00",
+      "18:30",
+      "19:30",
+      "21:00",
+      "22:00"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Palace",
+    "address": "2 bd des Capucines, 75009",
+    "times": {
+     "2026-11-26": [
+      "20:20",
+      "22:45"
+     ],
+     "2026-11-27": [
+      "13:00",
+      "15:00",
+      "17:15",
+      "20:00",
+      "22:15"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-26": [
+      "20:20",
+      "22:20"
+     ],
+     "2026-11-27": [
+      "10:30",
+      "13:00",
+      "15:15",
+      "17:30",
+      "20:15",
+      "22:40"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Wepler",
+    "address": "140 bd de Clichy, 75018",
+    "times": {
+     "2026-11-26": [
+      "22:10"
+     ],
+     "2026-11-27": [
+      "10:20",
+      "13:00",
+      "13:20",
+      "14:50",
+      "15:30",
+      "17:15",
+      "19:45",
+      "22:15"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "11:00",
+      "14:00",
+      "16:15",
+      "18:30",
+      "20:45"
+     ],
+     "2026-11-27": [
+      "11:00",
+      "14:00",
+      "16:15",
+      "18:30",
+      "20:45"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:00",
+      "09:35",
+      "11:30",
+      "12:05",
+      "14:00",
+      "14:35",
+      "16:30",
+      "17:05",
+      "19:00",
+      "19:35",
+      "22:05"
+     ],
+     "2026-11-27": [
+      "09:00",
+      "09:35",
+      "11:30",
+      "12:05",
+      "14:00",
+      "14:35",
+      "16:30",
+      "17:05",
+      "19:00",
+      "19:35",
+      "22:05"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "19:55",
+      "22:05"
+     ],
+     "2026-11-27": [
+      "11:05",
+      "13:15",
+      "15:30",
+      "17:45",
+      "19:55",
+      "22:05"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Gambetta",
+    "address": "6 rue Belgrand, 75020",
+    "times": {
+     "2026-11-26": [
+      "21:55"
+     ],
+     "2026-11-27": [
+      "09:55",
+      "12:55",
+      "15:15",
+      "17:30",
+      "19:45",
+      "21:55"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_congo-boy": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-27": [
+      "17:40",
+      "19:45"
+     ]
+    }
+   },
+   {
+    "name": "Le Louxor",
+    "address": "170 bd de Magenta, 75010",
+    "times": {
+     "2026-11-26": [
+      "13:00",
+      "15:25",
+      "19:20",
+      "21:30"
+     ],
+     "2026-11-27": [
+      "13:00",
+      "15:25",
+      "19:20",
+      "21:30"
+     ]
+    }
+   },
+   {
+    "name": "Les 7 Parnassiens",
+    "address": "98 bd du Montparnasse, 75014",
+    "times": {
+     "2026-11-26": [
+      "14:10",
+      "16:10",
+      "20:00"
+     ],
+     "2026-11-27": [
+      "14:10",
+      "16:10",
+      "19:45",
+      "21:45"
+     ]
+    }
+   },
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-26": [
+      "22:15"
+     ],
+     "2026-11-27": [
+      "13:15",
+      "15:30",
+      "17:45",
+      "20:00",
+      "22:15"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:10",
+      "11:20",
+      "13:30",
+      "15:40",
+      "17:50",
+      "20:00",
+      "22:05"
+     ],
+     "2026-11-27": [
+      "09:10",
+      "11:20",
+      "13:30",
+      "15:40",
+      "17:50",
+      "20:00",
+      "22:05"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Quai de Seine & Quai de Loire",
+    "address": "14 quai de la Seine, 75019",
+    "times": {
+     "2026-11-26": [
+      "19:45",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "13:00",
+      "15:15",
+      "17:30",
+      "19:45",
+      "22:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_demain-je-tombe-amoureux": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "10:15",
+      "13:30",
+      "15:40",
+      "17:50",
+      "20:00",
+      "22:10"
+     ],
+     "2026-11-27": [
+      "10:15",
+      "13:30",
+      "15:40",
+      "17:50",
+      "20:00",
+      "22:10"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:15",
+      "11:40",
+      "14:10",
+      "16:45",
+      "19:20",
+      "21:50"
+     ],
+     "2026-11-27": [
+      "09:15",
+      "11:40",
+      "14:10",
+      "16:45",
+      "19:20",
+      "21:50"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Nation",
+    "address": "133 bd Diderot, 75012",
+    "times": {
+     "2026-11-26": [
+      "19:40",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "12:00",
+      "14:40",
+      "17:15",
+      "19:40",
+      "22:00"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Odéon",
+    "address": "113 bd Saint-Germain, 75006",
+    "times": {
+     "2026-11-26": [
+      "19:20"
+     ],
+     "2026-11-27": [
+      "12:25",
+      "14:45",
+      "17:00",
+      "19:20"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_espoir-sierra-de-teruel": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "Le Champo",
+    "address": "51 rue des Écoles, 75005",
+    "times": {
+     "2026-11-26": [
+      "14:00",
+      "15:50",
+      "17:20",
+      "19:00"
+     ],
+     "2026-11-27": [
+      "14:00",
+      "15:50",
+      "19:30",
+      "21:10"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_forty-love": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-27": [
+      "13:45",
+      "17:30",
+      "20:00"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Palace",
+    "address": "2 bd des Capucines, 75009",
+    "times": {
+     "2026-11-26": [
+      "20:15",
+      "23:00"
+     ],
+     "2026-11-27": [
+      "12:50",
+      "15:25",
+      "17:35",
+      "19:40",
+      "22:25"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-26": [
+      "21:40",
+      "23:50"
+     ],
+     "2026-11-27": [
+      "10:45",
+      "13:00",
+      "14:15",
+      "16:20",
+      "18:30",
+      "20:50",
+      "23:00"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "10:15",
+      "14:00",
+      "16:00",
+      "18:00",
+      "20:00",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "10:15",
+      "14:00",
+      "16:00",
+      "18:00",
+      "20:00",
+      "22:00"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:00",
+      "11:10",
+      "13:20",
+      "15:35",
+      "17:50",
+      "20:05",
+      "22:15"
+     ],
+     "2026-11-27": [
+      "09:00",
+      "11:10",
+      "13:20",
+      "15:35",
+      "17:50",
+      "20:05",
+      "22:15"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "22:05"
+     ],
+     "2026-11-27": [
+      "11:15",
+      "14:00",
+      "16:30",
+      "19:00",
+      "22:05"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Odéon",
+    "address": "113 bd Saint-Germain, 75006",
+    "times": {
+     "2026-11-26": [
+      "19:50",
+      "22:05"
+     ],
+     "2026-11-27": [
+      "13:00",
+      "15:15",
+      "17:30",
+      "19:50",
+      "22:05"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Quai de Seine & Quai de Loire",
+    "address": "14 quai de la Seine, 75019",
+    "times": {
+     "2026-11-26": [
+      "19:45",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "12:40",
+      "14:55",
+      "17:15",
+      "19:45",
+      "22:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_la-libertad-doble": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "mk2 Beaubourg",
+    "address": "50 rue Rambuteau, 75003",
+    "times": {
+     "2026-11-26": [
+      "20:00",
+      "22:10"
+     ],
+     "2026-11-27": [
+      "10:15",
+      "12:30",
+      "14:45",
+      "17:15",
+      "20:00",
+      "22:10"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_le-noel-d-ernest-et-celestine": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "Les 7 Parnassiens",
+    "address": "98 bd du Montparnasse, 75014",
+    "times": {
+     "2026-11-27": [
+      "18:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_le-sabre-des-gardiens": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-26": [
+      "22:20"
+     ],
+     "2026-11-27": [
+      "19:50",
+      "22:20"
+     ]
+    }
+   },
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-27": [
+      "14:00",
+      "16:45",
+      "19:30"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:10",
+      "12:00",
+      "14:50",
+      "17:40",
+      "20:30"
+     ],
+     "2026-11-27": [
+      "09:10",
+      "12:00",
+      "14:50",
+      "17:40",
+      "20:30"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_les-amants-du-pont-neuf": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "Reflet Médicis & Filmothèque",
+    "address": "3 and 9 rue Champollion, 75005",
+    "times": {
+     "2026-11-26": [
+      "20:50"
+     ],
+     "2026-11-27": [
+      "13:20",
+      "15:50",
+      "18:20",
+      "20:50"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Beaubourg",
+    "address": "50 rue Rambuteau, 75003",
+    "times": {
+     "2026-11-26": [
+      "21:00"
+     ],
+     "2026-11-27": [
+      "15:15",
+      "21:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_marie-antoinette": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "Christine Cinéma Club",
+    "address": "4 rue Christine, 75006",
+    "times": {
+     "2026-11-26": [
+      "14:00",
+      "16:45",
+      "21:30"
+     ],
+     "2026-11-27": [
+      "13:20",
+      "17:30",
+      "21:35"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:15",
+      "12:05",
+      "14:55",
+      "20:30"
+     ],
+     "2026-11-27": [
+      "09:15",
+      "12:05",
+      "14:55",
+      "20:30"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_merci-d-etre-venu": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "Les 7 Parnassiens",
+    "address": "98 bd du Montparnasse, 75014",
+    "times": {
+     "2026-11-26": [
+      "18:00"
+     ],
+     "2026-11-27": [
+      "16:20"
+     ]
+    }
+   },
+   {
+    "name": "Reflet Médicis & Filmothèque",
+    "address": "3 and 9 rue Champollion, 75005",
+    "times": {
+     "2026-11-26": [
+      "20:00"
+     ],
+     "2026-11-27": [
+      "14:00",
+      "16:00",
+      "18:00",
+      "20:00"
+     ]
+    }
+   },
+   {
+    "name": "Saint-André des Arts",
+    "address": "30 rue Saint-André-des-Arts, 75006",
+    "times": {
+     "2026-11-26": [
+      "12:35",
+      "16:40",
+      "18:20",
+      "20:50"
+     ],
+     "2026-11-27": [
+      "13:35",
+      "15:00",
+      "16:40",
+      "18:20"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Beaubourg",
+    "address": "50 rue Rambuteau, 75003",
+    "times": {
+     "2026-11-27": [
+      "10:20",
+      "13:00",
+      "15:00",
+      "17:00",
+      "19:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_mon-beau-pere-ma-belle-fille-et-moi": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "Gaumont Disney Village - IMAX",
+    "address": "Disney Village, 77700 Chessy",
+    "times": {
+     "2026-11-26": [
+      "21:30",
+      "22:30"
+     ],
+     "2026-11-27": [
+      "13:10",
+      "15:30",
+      "17:50",
+      "19:10",
+      "20:10",
+      "21:30",
+      "22:30"
+     ]
+    }
+   },
+   {
+    "name": "Le Grand Rex",
+    "address": "1 bd Poissonnière, 75002",
+    "times": {
+     "2026-11-26": [
+      "13:30",
+      "16:00",
+      "18:45",
+      "21:15"
+     ],
+     "2026-11-27": [
+      "13:30",
+      "16:00",
+      "18:45",
+      "21:15"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Beaugrenelle",
+    "address": "7 rue Linois, 75015",
+    "times": {
+     "2026-11-26": [
+      "20:15",
+      "22:10"
+     ],
+     "2026-11-27": [
+      "10:15",
+      "13:00",
+      "15:20",
+      "17:40",
+      "20:00",
+      "22:20",
+      "23:10"
+     ]
+    }
+   },
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-26": [
+      "22:15"
+     ],
+     "2026-11-27": [
+      "13:30",
+      "16:00",
+      "18:30",
+      "19:45",
+      "22:15"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Palace",
+    "address": "2 bd des Capucines, 75009",
+    "times": {
+     "2026-11-26": [
+      "20:25",
+      "22:45"
+     ],
+     "2026-11-27": [
+      "13:00",
+      "15:25",
+      "17:45",
+      "20:15",
+      "22:40"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-26": [
+      "20:00",
+      "21:25",
+      "23:45"
+     ],
+     "2026-11-27": [
+      "10:00",
+      "12:20",
+      "14:40",
+      "17:00",
+      "19:00",
+      "21:20"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Wepler",
+    "address": "140 bd de Clichy, 75018",
+    "times": {
+     "2026-11-26": [
+      "22:15"
+     ],
+     "2026-11-27": [
+      "10:30",
+      "13:15",
+      "15:15",
+      "17:40",
+      "20:10",
+      "22:10"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "10:30",
+      "13:30",
+      "15:40",
+      "17:50",
+      "20:00",
+      "22:10"
+     ],
+     "2026-11-27": [
+      "10:30",
+      "13:30",
+      "15:40",
+      "17:50",
+      "20:00",
+      "22:10"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:10",
+      "11:50",
+      "14:15",
+      "16:40",
+      "19:05",
+      "21:30"
+     ],
+     "2026-11-27": [
+      "09:10",
+      "11:50",
+      "14:15",
+      "16:40",
+      "19:05",
+      "21:30"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "19:45",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "11:05",
+      "13:15",
+      "15:25",
+      "17:35",
+      "19:45",
+      "22:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_paper-tiger": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "Le Balzac",
+    "address": "1 rue Balzac, 75008",
+    "times": {
+     "2026-11-26": [
+      "20:00"
+     ],
+     "2026-11-27": [
+      "13:30",
+      "15:50",
+      "18:10",
+      "20:30"
+     ]
+    }
+   },
+   {
+    "name": "Le Grand Action",
+    "address": "5 rue des Écoles, 75005",
+    "times": {
+     "2026-11-26": [
+      "14:00",
+      "16:30",
+      "18:50",
+      "21:10"
+     ],
+     "2026-11-27": [
+      "14:00",
+      "16:30",
+      "18:50",
+      "21:10"
+     ]
+    }
+   },
+   {
+    "name": "Le Louxor",
+    "address": "170 bd de Magenta, 75010",
+    "times": {
+     "2026-11-26": [
+      "13:45",
+      "16:15",
+      "18:45",
+      "21:10"
+     ],
+     "2026-11-27": [
+      "13:45",
+      "16:15",
+      "18:45",
+      "21:10"
+     ]
+    }
+   },
+   {
+    "name": "Les 7 Parnassiens",
+    "address": "98 bd du Montparnasse, 75014",
+    "times": {
+     "2026-11-26": [
+      "11:30",
+      "14:00",
+      "16:30",
+      "19:00",
+      "21:15"
+     ],
+     "2026-11-27": [
+      "11:30",
+      "14:00",
+      "16:30",
+      "19:00",
+      "21:15"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Beaugrenelle",
+    "address": "7 rue Linois, 75015",
+    "times": {
+     "2026-11-26": [
+      "22:30"
+     ],
+     "2026-11-27": [
+      "10:30",
+      "14:20",
+      "16:50",
+      "19:20",
+      "22:00",
+      "23:45"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Parnasse",
+    "address": "3 rue d'Odessa, 75014",
+    "times": {
+     "2026-11-26": [
+      "20:30",
+      "23:00"
+     ],
+     "2026-11-27": [
+      "10:30",
+      "13:00",
+      "15:30",
+      "18:00",
+      "19:45",
+      "20:30",
+      "22:45"
+     ]
+    }
+   },
+   {
+    "name": "Pathé Wepler",
+    "address": "140 bd de Clichy, 75018",
+    "times": {
+     "2026-11-26": [
+      "22:00"
+     ],
+     "2026-11-27": [
+      "10:10",
+      "13:00",
+      "14:50",
+      "17:25",
+      "20:00",
+      "22:15"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "10:30",
+      "14:00",
+      "16:45",
+      "19:15",
+      "21:45"
+     ],
+     "2026-11-27": [
+      "10:30",
+      "14:00",
+      "16:45",
+      "19:15",
+      "21:45"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:00",
+      "11:30",
+      "14:05",
+      "16:40",
+      "19:15",
+      "21:50"
+     ],
+     "2026-11-27": [
+      "09:00",
+      "11:30",
+      "14:05",
+      "16:40",
+      "19:15",
+      "21:50"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "19:30",
+      "21:50"
+     ],
+     "2026-11-27": [
+      "11:15",
+      "14:30",
+      "17:00",
+      "19:30",
+      "21:50"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Gambetta",
+    "address": "6 rue Belgrand, 75020",
+    "times": {
+     "2026-11-26": [
+      "21:50"
+     ],
+     "2026-11-27": [
+      "09:55",
+      "12:05",
+      "14:30",
+      "16:55",
+      "19:25",
+      "21:50"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Odéon",
+    "address": "113 bd Saint-Germain, 75006",
+    "times": {
+     "2026-11-26": [
+      "19:40",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "12:25",
+      "14:50",
+      "17:15",
+      "19:40",
+      "22:00"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Quai de Seine & Quai de Loire",
+    "address": "14 quai de la Seine, 75019",
+    "times": {
+     "2026-11-26": [
+      "19:25",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "12:30",
+      "14:15",
+      "16:50",
+      "19:25",
+      "22:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-25_un-bon-petit-soldat": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "Escurial",
+    "address": "11 bd de Port-Royal, 75013",
+    "times": {
+     "2026-11-26": [
+      "19:45",
+      "21:45"
+     ],
+     "2026-11-27": [
+      "13:45",
+      "15:45",
+      "17:45",
+      "19:45",
+      "21:45"
+     ]
+    }
+   },
+   {
+    "name": "Les 7 Parnassiens",
+    "address": "98 bd du Montparnasse, 75014",
+    "times": {
+     "2026-11-26": [
+      "11:45",
+      "13:45",
+      "15:45",
+      "17:45",
+      "19:45",
+      "21:45"
+     ],
+     "2026-11-27": [
+      "11:45",
+      "13:45",
+      "15:45",
+      "17:45",
+      "19:45",
+      "21:45"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "10:45",
+      "13:15",
+      "15:30",
+      "17:45",
+      "20:00",
+      "22:15"
+     ],
+     "2026-11-27": [
+      "10:45",
+      "13:15",
+      "15:30",
+      "17:45",
+      "20:00",
+      "22:15"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "09:10",
+      "11:35",
+      "14:05",
+      "16:35",
+      "19:00",
+      "21:20"
+     ],
+     "2026-11-27": [
+      "09:10",
+      "11:35",
+      "14:05",
+      "16:35",
+      "19:00",
+      "21:20"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Bibliothèque",
+    "address": "128-162 av. de France, 75013",
+    "times": {
+     "2026-11-26": [
+      "20:05",
+      "22:10"
+     ],
+     "2026-11-27": [
+      "11:15",
+      "13:50",
+      "15:55",
+      "18:00",
+      "20:05",
+      "22:10"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Nation",
+    "address": "133 bd Diderot, 75012",
+    "times": {
+     "2026-11-26": [
+      "19:30",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "12:00",
+      "14:30",
+      "17:00",
+      "19:30",
+      "22:00"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Odéon",
+    "address": "113 bd Saint-Germain, 75006",
+    "times": {
+     "2026-11-26": [
+      "19:45",
+      "22:00"
+     ],
+     "2026-11-27": [
+      "13:00",
+      "15:15",
+      "17:30",
+      "19:45",
+      "22:00"
+     ]
+    }
+   },
+   {
+    "name": "mk2 Quai de Seine & Quai de Loire",
+    "address": "14 quai de la Seine, 75019",
+    "times": {
+     "2026-11-26": [
+      "19:35",
+      "21:55"
+     ],
+     "2026-11-27": [
+      "12:20",
+      "14:45",
+      "17:05",
+      "19:35",
+      "21:55"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-11-27_yeh-prem-mol-liya": {
+  "week": "2026-11-25",
+  "cinemas": [
+   {
+    "name": "Pathé La Villette",
+    "address": "30 av. Corentin-Cariou, 75019",
+    "times": {
+     "2026-11-27": [
+      "21:15"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-12-23_i-play-rocky": {
+  "week": "2026-12-23",
+  "cinemas": [
+   {
+    "name": "Pathé Wepler",
+    "address": "140 bd de Clichy, 75018",
+    "times": {
+     "2026-11-26": [
+      "20:40"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2026-12-23_mysterious-skin": {
+  "week": "2026-12-23",
+  "cinemas": [
+   {
+    "name": "UGC Ciné Cité Bercy",
+    "address": "2 cour Saint-Émilion, 75012",
+    "times": {
+     "2026-11-26": [
+      "20:00"
+     ]
+    }
+   },
+   {
+    "name": "UGC Ciné Cité Les Halles",
+    "address": "Forum des Halles, 7 place de la Rotonde, 75001",
+    "times": {
+     "2026-11-26": [
+      "19:45"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ },
+ "2027-01-06_redemptions": {
+  "week": "2027-01-06",
+  "cinemas": [
+   {
+    "name": "Saint-André des Arts",
+    "address": "30 rue Saint-André-des-Arts, 75006",
+    "times": {
+     "2026-11-26": [
+      "20:00"
+     ]
+    }
+   }
+  ],
+  "updatedAt": "2026-11-26T21:28+01:00"
+ }
+}

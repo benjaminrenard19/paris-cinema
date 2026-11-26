@@ -5,6 +5,12 @@ from AlloCiné's public weekly release pages and film pages.
   python3 scripts/allocine.py agenda 2026-12-02 2026-12-09   # those weeks
   python3 scripts/allocine.py agenda --missing 8             # the 8 weeks with most gaps
   python3 scripts/allocine.py durations 120                  # running times for up to 120 films
+  python3 scripts/allocine.py theaters                       # session times at the cinemas in data/theaters.json
+
+data/showtimes.json: {film id: {"week", "updatedAt", "cinemas": [{"name", "address",
+                               "times": {"YYYY-MM-DD": ["HH:MM"]}}]}}
+  Each cinema's public page lists that day's sessions (and some for the next day). Earlier
+  days are dropped, today's list is replaced, later days already collected are kept.
 
 data/extras.json: {film id: {"ac": AlloCiné id, "poster": url, "press": 3.8, "spect": 4.0,
                               "duration": 157, "checked": "YYYY-MM-DD"}}
@@ -190,6 +196,126 @@ def durations(limit):
     print(f"running times found for {done} of {min(limit, len(todo))} films")
 
 
+SHOWTIMES = DATA / "showtimes.json"
+THEATERS = DATA / "theaters.json"
+
+
+def parse_theater(page):
+    """[(AlloCiné film id, title, {"YYYY-MM-DD": {"HH:MM"}})] from a cinema's public page."""
+    out = []
+    for part in page.split('class="card entity-card entity-card-list movie-card-theater')[1:]:
+        m = re.search(r'fichefilm_gen_cfilm=(\d+)\.html"[^>]*>(.*?)</a>', part, re.S)
+        if not m:
+            continue
+        times = {}
+        for stamp in re.findall(r'data-showtime-time="(\d{4}-\d\d-\d\d)T(\d\d:\d\d)', part):
+            times.setdefault(stamp[0], set()).add(stamp[1])
+        if times:
+            out.append((int(m.group(1)), text(m.group(2)), times))
+    return out
+
+
+def recent_films(days=120):
+    """Films released in the last `days` days or coming soon, newest first."""
+    start = (datetime.date.today() - datetime.timedelta(days=days)).isoformat()
+    films = []
+    for path in sorted((DATA / "weeks").glob("*.json"), reverse=True):
+        if path.stem >= start:
+            films += [(fid, title, orig, path.stem) for fid, title, orig in week_films(path.stem)]
+    return films
+
+
+def theaters():
+    extras = load()
+    films = recent_films(days=800)          # AlloCiné ids are exact, so any release counts
+    week_of = {fid: w for fid, _, _, w in films}
+    soon = (datetime.date.today() - datetime.timedelta(days=120)).isoformat()
+    by_ac = {}
+    for fid, e in sorted(extras.items()):
+        if e.get("ac") and fid in week_of:
+            by_ac[int(e["ac"])] = fid  # sorted, so the newest release wins
+    by_slug = {}
+    for fid, title, orig, w in reversed(films):
+        if w < soon:                        # titles only for recent releases (classics share titles)
+            continue
+        by_slug[slug(title)] = fid
+        if orig:
+            by_slug.setdefault(slug(orig), fid)
+    addresses = {c["name"]: c.get("address", "") for c in json.loads((DATA / "cinemas.json").read_text(encoding="utf-8"))}
+    try:
+        shows = json.loads(SHOWTIMES.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        shows = {}
+
+    today = datetime.date.today().isoformat()
+    now = datetime.datetime.now().astimezone().isoformat(timespec="minutes")
+    scraped = {}   # (film id, cinema) -> {day: set}
+    done, failed, unmatched = [], [], set()
+    for t in json.loads(THEATERS.read_text(encoding="utf-8")):
+        name = t["name"]
+        got = False
+        for code in t["codes"]:
+            try:
+                page = get(f"https://www.allocine.fr/seance/salle_gen_csalle={code}.html")
+            except Exception as ex:
+                print(f"{name} ({code}): {ex}", file=sys.stderr)
+                time.sleep(PAUSE)
+                continue
+            time.sleep(PAUSE)
+            got = True
+            for ac, title, times in parse_theater(page):
+                fid = by_ac.get(ac) or by_slug.get(slug(title))
+                if not fid:
+                    unmatched.add(title)
+                    continue
+                slot = scraped.setdefault((fid, name), {})
+                for day, hours in times.items():
+                    slot.setdefault(day, set()).update(hours)
+        (done if got else failed).append(name)
+
+    # merge: drop past days; for the cinemas just read, today's list is replaced
+    # and later days are added to what was already collected.
+    fresh = set(done)
+    for fid in list(shows):
+        kept = []
+        for c in shows[fid].get("cinemas") or []:
+            times = {d: v for d, v in (c.get("times") or {}).items() if d >= today}
+            if c.get("name") in fresh:
+                times.pop(today, None)
+            if times:
+                c["times"] = times
+                kept.append(c)
+        if kept:
+            shows[fid]["cinemas"] = kept
+        else:
+            del shows[fid]
+    for (fid, name), times in scraped.items():
+        entry = shows.setdefault(fid, {"week": week_of.get(fid), "cinemas": []})
+        entry["week"] = week_of.get(fid, entry.get("week"))
+        entry["updatedAt"] = now
+        entry.pop("note", None)
+        cinema = next((c for c in entry["cinemas"] if c.get("name") == name), None)
+        if cinema is None:
+            t = next(x for x in json.loads(THEATERS.read_text(encoding="utf-8")) if x["name"] == name)
+            cinema = {"name": name, "address": t.get("address") or addresses.get(name, ""), "times": {}}
+            entry["cinemas"].append(cinema)
+        for day, hours in times.items():
+            if day < today:
+                continue
+            cinema["times"][day] = sorted(set(cinema["times"].get(day, [])) | hours)
+    for entry in shows.values():
+        entry["cinemas"].sort(key=lambda c: c.get("name", ""))
+        for c in entry["cinemas"]:
+            c["times"] = dict(sorted(c["times"].items()))
+    SHOWTIMES.write_text(json.dumps(dict(sorted(shows.items())), ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    sessions = sum(len(v) for e in shows.values() for c in e["cinemas"] for v in c["times"].values())
+    print(f"{len(done)} cinemas read, {len(failed)} failed {failed if failed else ''}".rstrip())
+    print(f"{len(shows)} films with session times, {sessions} sessions in all")
+    if unmatched:
+        print(f"{len(unmatched)} titles not in the release list (older films, events): "
+              + ", ".join(sorted(unmatched)[:25]) + ("…" if len(unmatched) > 25 else ""))
+
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(__doc__)
@@ -202,5 +328,7 @@ if __name__ == "__main__":
             agenda(sys.argv[2:])
     elif cmd == "durations":
         durations(int(sys.argv[2]) if len(sys.argv) > 2 else 100)
+    elif cmd == "theaters":
+        theaters()
     else:
         print(__doc__)

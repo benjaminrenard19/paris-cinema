@@ -4,6 +4,7 @@ Every film released in Paris cinemas since January 2026, week by week, plus an i
 
 - `data/`: the film database. There is one file per French cinema week (Wednesday to Tuesday) in `data/weeks/`, plus producers and synopses (`details.json`), showtimes (`showtimes.json`), links to official posters (`posters.json`) and 29 Paris cinemas (`cinemas.json`).
 - `data/extras.json`: posters, critics and audience ratings and running times, read from AlloCiné's public pages by `scripts/allocine.py`.
+- `data/showtimes.json`: session times at the cinemas listed in `data/theaters.json` (name and AlloCiné cinema code), read each morning from each cinema's public AlloCiné page by `python3 scripts/allocine.py theaters`. Those pages list the current day and the next one, so the times build up one day at a time; past days are dropped.
 - `data/paris-cinema.json`: everything combined into one file. This is the file the app downloads. It is built by `scripts/build.py`.
 - `ParisCinema/` and `ParisCinema.xcodeproj`: the SwiftUI iPhone app.
 
