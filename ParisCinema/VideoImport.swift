@@ -110,16 +110,19 @@ enum RecordingReader {
         let w: Int, h: Int
 
         init?(_ image: CGImage) {
-            w = image.width; h = image.height
-            var buf = [UInt8](repeating: 0, count: w * h * 4)
+            let width = image.width, height = image.height
+            var buf = [UInt8](repeating: 0, count: width * height * 4)
             let ok = buf.withUnsafeMutableBytes { raw -> Bool in
-                guard let ctx = CGContext(data: raw.baseAddress, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w * 4,
-                                          space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                guard let space = CGColorSpace(name: CGColorSpace.sRGB),
+                      let ctx = CGContext(data: raw.baseAddress, width: width, height: height, bitsPerComponent: 8,
+                                          bytesPerRow: width * 4, space: space,
                                           bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return false }
-                ctx.draw(image, in: CGRect(x: 0, y: 0, width: w, height: h))
+                ctx.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
                 return true
             }
             guard ok else { return nil }
+            w = width
+            h = height
             data = buf
         }
 
@@ -161,9 +164,12 @@ extension Store {
         let y = Int(year) ?? 0
         func nearYear(_ f: Film) -> Bool { abs((Int(f.date.prefix(4)) ?? 0) - y) <= 1 || y == 0 }
         let candidates = films.filter(nearYear)
-        if let f = candidates.first(where: { slug($0.title) == key || ($0.orig.map { !$0.allSatisfy(\.isNumber) && slug($0) == key } ?? false) }) {
-            return f
+        func sameTitle(_ f: Film) -> Bool {
+            if slug(f.title) == key { return true }
+            guard let o = f.orig, !o.allSatisfy(\.isNumber) else { return false }
+            return slug(o) == key
         }
+        if let f = candidates.first(where: sameTitle) { return f }
         var best: (Film, Double)?
         for f in candidates {
             for t in [f.title, f.orig ?? ""] where !t.isEmpty {
@@ -365,7 +371,7 @@ struct VideoImportView: View {
             return
         }
         var used = Set<String>()
-        rows = read.compactMap { r in
+        rows = read.compactMap { r -> Row? in
             let f = store.matchFilm(title: r.title, year: r.year)
             if let f, !used.insert(f.id).inserted { return nil }    // the same film read twice
             return Row(id: r.id, read: r, filmId: f?.id, rating: r.rating, include: f != nil)
