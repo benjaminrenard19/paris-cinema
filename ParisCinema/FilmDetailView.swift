@@ -34,13 +34,13 @@ struct FilmDetailView: View {
                 Text("Ratings")
             } footer: {
                 Text(f.press == nil && f.spect == nil
-                     ? "No ratings on AlloCiné yet. They usually appear in the first days of release."
-                     : "AlloCiné ratings out of 5: critics from press reviews, audience from spectators.")
+                     ? String(localized: "No ratings on AlloCiné yet. They usually appear in the first days of release.")
+                     : String(localized: "AlloCiné ratings out of 5: critics from press reviews, audience from spectators."))
             }
 
             Section("Your film") {
                 Button { store.toggleFav(f) } label: {
-                    Label(store.isFav(f.id) ? "In your favourites" : "Add to favourites",
+                    Label(store.isFav(f.id) ? String(localized: "In your favourites") : String(localized: "Add to favourites"),
                           systemImage: store.isFav(f.id) ? "star.fill" : "star")
                 }
                 ratingRow(f)
@@ -68,16 +68,16 @@ struct FilmDetailView: View {
             Section("Credits") {
                 row("Director", f.dir)
                 row("Cast", f.cast)
-                row("Producers", f.prod ?? "Not listed yet. The Tuesday update adds them.")
-                row("Genres", f.genre)
-                row("Origin", f.origin)
+                row("Producers", f.prod ?? String(localized: "Not listed yet. The Tuesday update adds them."))
+                row("Genres", f.genreText)
+                row("Origin", f.originText)
                 if let n = f.note, !n.isEmpty { row("Note", n) }
             }
 
             Section {
                 if let u = f.trailerURL {
                     Link(destination: u) {
-                        Label(f.isFrench || f.category == .E ? "Trailer" : "Trailer in original version, French subtitles", systemImage: "play.rectangle.fill")
+                        Label(f.isFrench || f.category == .E ? String(localized: "Trailer") : String(localized: "Trailer in original version, French subtitles"), systemImage: "play.rectangle.fill")
                     }
                 }
                 if let u = f.allocineURL { Link(destination: u) { Label("Poster and reviews on AlloCiné", systemImage: "photo.on.rectangle") } }
@@ -85,7 +85,7 @@ struct FilmDetailView: View {
             } header: {
                 Text("Watch")
             } footer: {
-                Text("Usually shown in \(f.venueType.lowercased()) cinemas.")
+                Text(String(localized: "Usually shown in \(NSLocalizedString(f.venueType, comment: "Cinema type").lowercased()) cinemas."))
             }
         }
         .navigationTitle(f.title)
@@ -95,7 +95,7 @@ struct FilmDetailView: View {
                 Button { store.toggleFav(f) } label: {
                     Image(systemName: store.isFav(f.id) ? "star.fill" : "star")
                 }
-                .accessibilityLabel(store.isFav(f.id) ? "Remove from favourites" : "Add to favourites")
+                .accessibilityLabel(store.isFav(f.id) ? String(localized: "Remove from favourites") : String(localized: "Add to favourites"))
             }
         }
         .fullScreenCover(item: $viewer) { film in
@@ -128,7 +128,7 @@ struct FilmDetailView: View {
                     }
                     .buttonStyle(.borderless)
                     .padding(5)
-                    .accessibilityLabel(store.isFav(f.id) ? "Remove from favourites" : "Add to favourites")
+                    .accessibilityLabel(store.isFav(f.id) ? String(localized: "Remove from favourites") : String(localized: "Add to favourites"))
                 }
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 6) {
@@ -137,7 +137,7 @@ struct FilmDetailView: View {
                 }
                 Text(f.title).font(.title2.weight(.bold)).fixedSize(horizontal: false, vertical: true)
                 if let o = f.orig, !o.isEmpty {
-                    Text(f.category == .R ? o : "Original: \(o)").font(.subheadline).foregroundStyle(.secondary)
+                    Text(f.category == .R ? o : String(localized: "Original: \(o)")).font(.subheadline).foregroundStyle(.secondary)
                 }
                 Text("In cinemas from \(D.fmt(f.date, "EEEE d MMMM yyyy"))")
                     .font(.subheadline)
@@ -164,18 +164,19 @@ struct FilmDetailView: View {
 
     private func ratingTile(_ title: String, _ subtitle: String, _ value: Double?) -> some View {
         VStack(spacing: 4) {
-            Text(title).font(.subheadline.weight(.semibold))
+            Text(LocalizedStringKey(title)).font(.subheadline.weight(.semibold))
             Text(value.map { String(format: "%.1f", $0) } ?? "–")
                 .font(.system(size: 30, weight: .bold, design: .rounded))
                 .foregroundStyle(value == nil ? Color.secondary : Color.primary)
                 .monospacedDigit()
             RatingStars(value: value ?? 0, size: 11)
                 .opacity(value == nil ? 0.35 : 1)
-            Text(subtitle).font(.caption2).foregroundStyle(.secondary)
+            Text(LocalizedStringKey(subtitle)).font(.caption2).foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(value.map { "\(title): \(String(format: "%.1f", $0)) out of 5" } ?? "\(title): no rating yet")
+        .accessibilityLabel(value.map { String(localized: "\(NSLocalizedString(title, comment: "")): \(String(format: "%.1f", $0)) out of 5") }
+                            ?? String(localized: "\(NSLocalizedString(title, comment: "")): no rating yet"))
     }
 
     private func ratingRow(_ f: Film) -> some View {
@@ -193,7 +194,7 @@ struct FilmDetailView: View {
                         .foregroundStyle(i <= current ? Color(hex: 0xE0A800) : Color.secondary)
                 }
                 .buttonStyle(.borderless)
-                .accessibilityLabel("\(i) star\(i == 1 ? "" : "s")")
+                .accessibilityLabel(i == 1 ? String(localized: "1 star") : String(localized: "\(i) stars"))
             }
         }
     }
@@ -230,8 +231,8 @@ struct FilmDetailView: View {
                     }
                 }
                 Text(byDay.isEmpty
-                     ? "No showtimes known yet for this cinema. Pick any day, or check the calendar."
-                     : "A green dot means this cinema shows the film that day.")
+                     ? String(localized: "No showtimes known yet for this cinema. Pick any day, or check the calendar.")
+                     : String(localized: "A green dot means this cinema shows the film that day."))
                     .font(.caption).foregroundStyle(.secondary)
             }
             .padding(.vertical, 4)
@@ -279,8 +280,8 @@ struct FilmDetailView: View {
                 Text("\(D.fmt(p.d, "EEEE d MMMM")) at \(p.t), \(p.cn).")
                 if p.ok == true {
                     Text(CalendarSync.shared.enabled
-                         ? "Saved to your calendar automatically. After the film you'll get a notification to say how it was."
-                         : "After the film you'll get a notification to say how it was, or to pick another day.")
+                         ? String(localized: "Saved to your calendar automatically. After the film you'll get a notification to say how it was.")
+                         : String(localized: "After the film you'll get a notification to say how it was, or to pick another day."))
                 } else {
                     Text("Provisional plan. Confirm it, or change the cinema, day or time, to get a notification after the film.")
                 }
@@ -320,9 +321,9 @@ struct FilmDetailView: View {
                 }
                 .padding(.vertical, 4)
             } header: {
-                Text(today.mine ? "Today at your cinemas" : "Today in Paris")
+                Text(today.mine ? String(localized: "Today at your cinemas") : String(localized: "Today in Paris"))
             } footer: {
-                Text(today.mine ? "Tap a time to plan it." : "Star your cinemas in the Cinemas tab to see only those here. Tap a time to plan it.")
+                Text(today.mine ? String(localized: "Tap a time to plan it.") : String(localized: "Star your cinemas in the Cinemas tab to see only those here. Tap a time to plan it."))
             }
         }
     }
@@ -335,19 +336,19 @@ struct FilmDetailView: View {
                 .font(.caption.weight(.bold))
                 .foregroundStyle(.white)
                 .frame(width: 20, height: 20)
-                .background(Color.accentColor, in: Circle())
-            Text(title).font(.subheadline.weight(.semibold))
+                .background(Color.theme, in: Circle())
+            Text(LocalizedStringKey(title)).font(.subheadline.weight(.semibold))
         }
     }
 
     private func dayChip(_ day: String, selected: Bool, available: Bool) -> some View {
         VStack(spacing: 3) {
-            Text(day == D.today ? "Today" : D.fmt(day, "EEE")).font(.caption2)
+            Text(day == D.today ? String(localized: "Today") : D.fmt(day, "EEE")).font(.caption2)
             Text(D.fmt(day, "d")).font(.headline)
             Circle().fill(available ? Color.green : Color.clear).frame(width: 6, height: 6)
         }
         .frame(width: 50, height: 62)
-        .background(selected ? Color.accentColor : Color.secondary.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
+        .background(selected ? Color.theme : Color.secondary.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
         .foregroundStyle(selected ? Color.white : Color.primary)
     }
 
@@ -356,8 +357,8 @@ struct FilmDetailView: View {
             .font(.subheadline.weight(.semibold).monospacedDigit())
             .frame(minWidth: 58)
             .padding(.horizontal, 8).padding(.vertical, 8)
-            .background(selected ? Color.accentColor : Color.accentColor.opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
-            .foregroundStyle(selected ? Color.white : Color.accentColor)
+            .background(selected ? Color.theme : Color.theme.opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
+            .foregroundStyle(selected ? Color.white : Color.theme)
     }
 
     private func setDay(_ f: Film, _ p: Plan, _ day: String) {
@@ -387,7 +388,7 @@ struct FilmDetailView: View {
     private func facts(_ f: Film) -> String? {
         var parts: [String] = []
         if let d = f.durationText ?? alt?.minutes.map({ $0 >= 60 ? "\($0 / 60)h \(String(format: "%02d", $0 % 60))" : "\($0) min" }) { parts.append(d) }
-        if let g = f.genre, !g.isEmpty { parts.append(g.components(separatedBy: ",").prefix(2).map { $0.trimmingCharacters(in: .whitespaces) }.joined(separator: ", ")) }
+        if let g = f.genreText, !g.isEmpty { parts.append(g.components(separatedBy: ",").prefix(2).map { $0.trimmingCharacters(in: .whitespaces) }.joined(separator: ", ")) }
         return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
 
@@ -432,14 +433,14 @@ struct FilmDetailView: View {
 
     private func notes(_ f: Film) -> String {
         var lines: [String] = []
-        if let d = f.dir, !d.isEmpty { lines.append("Directed by " + d) }
+        if let d = f.dir, !d.isEmpty { lines.append(String(localized: "Directed by \(d)")) }
         if let s = f.syn, !s.isEmpty { lines.append(s) }
-        if let u = f.showtimesSearchURL { lines.append("Showtimes: " + u.absoluteString) }
+        if let u = f.showtimesSearchURL { lines.append(String(localized: "Showtimes: \(u.absoluteString)")) }
         return lines.joined(separator: "\n\n")
     }
 
     private func draft(_ f: Film, _ p: Plan) -> CalendarDraft {
-        CalendarDraft(title: "Cinema: " + f.title,
+        CalendarDraft(title: String(localized: "Cinema: \(f.title)"),
                       start: D.stamp(day: p.d, time: p.t) ?? Date(),
                       minutes: 150,
                       location: address(p),
@@ -451,7 +452,7 @@ struct FilmDetailView: View {
         let end = start.addingTimeInterval(150 * 60)
         return URL.with("https://calendar.google.com/calendar/render", [
             "action": "TEMPLATE",
-            "text": "Cinema: " + f.title,
+            "text": String(localized: "Cinema: \(f.title)"),
             "dates": D.gcal(start) + "/" + D.gcal(end),
             "ctz": "Europe/Paris",
             "location": address(p),
@@ -463,7 +464,7 @@ struct FilmDetailView: View {
         Group {
             if let v = value, !v.isEmpty {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(label).font(.caption).foregroundStyle(.secondary)
+                    Text(LocalizedStringKey(label)).font(.caption).foregroundStyle(.secondary)
                     Text(v)
                 }
             }

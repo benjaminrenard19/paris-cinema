@@ -14,7 +14,6 @@ struct ParisCinemaApp: App {
         WindowGroup {
             ContentView()
                 .environment(store)
-                .tint(Color(hex: 0xA3142F))
                 .onAppear {
                     Notifier.shared.attach { id, action in
                         Task { @MainActor in store.openCheckIn(id, action: action) }
@@ -32,9 +31,23 @@ struct ParisCinemaApp: App {
 struct ContentView: View {
     @Environment(Store.self) private var store
     @AppStorage("tutorialSeen") private var tutorialSeen = false
+    @AppStorage("welcomeDone") private var welcomeDone = false
+
+    /// First the welcome (name, cinemas, sorting), then the tutorial.
+    enum Cover: String, Identifiable {
+        case welcome, tutorial
+        var id: String { rawValue }
+    }
+
+    private var cover: Cover? {
+        if !welcomeDone { return .welcome }
+        if !tutorialSeen { return .tutorial }
+        return nil
+    }
 
     var body: some View {
         @Bindable var model = store
+        let theme = Theme.shared
         TabView {
             WeeksView()
                 .tabItem { Label("Films", systemImage: "film") }
@@ -47,11 +60,20 @@ struct ContentView: View {
             CinemasView()
                 .tabItem { Label("Cinemas", systemImage: "map") }
         }
+        .tint(theme.color)
+        .preferredColorScheme(theme.scheme)
         .sheet(item: $model.checkIn) { c in
             CheckInView(checkIn: c).environment(store)
         }
-        .fullScreenCover(isPresented: Binding(get: { !tutorialSeen }, set: { if !$0 { tutorialSeen = true } })) {
-            TutorialView { tutorialSeen = true }
+        .fullScreenCover(item: Binding(get: { cover }, set: { _ in })) { c in
+            switch c {
+            case .welcome:
+                WelcomeView { welcomeDone = true }
+                    .environment(store)
+                    .tint(theme.color)
+            case .tutorial:
+                TutorialView { tutorialSeen = true }
+            }
         }
     }
 }
@@ -112,7 +134,7 @@ struct Stars: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(rating == 0 ? "Not rated" : "\(rating) out of 5 stars")
+        .accessibilityLabel(rating == 0 ? String(localized: "Not rated") : String(localized: "\(rating) out of 5 stars"))
     }
 }
 
@@ -174,7 +196,7 @@ struct FilmRow: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.borderless)
-            .accessibilityLabel(store.isFav(film.id) ? "Remove from favourites" : "Add to favourites")
+            .accessibilityLabel(store.isFav(film.id) ? String(localized: "Remove from favourites") : String(localized: "Add to favourites"))
         }
         .padding(.vertical, 2)
     }
@@ -182,8 +204,8 @@ struct FilmRow: View {
     private var facts: String? {
         var parts: [String] = []
         if let d = film.durationText { parts.append(d) }
-        if let p = film.press { parts.append(String(format: "Critics %.1f", p)) }
-        if let s = film.spect { parts.append(String(format: "Audience %.1f", s)) }
+        if let p = film.press { parts.append(String(localized: "Critics \(String(format: "%.1f", p))")) }
+        if let s = film.spect { parts.append(String(localized: "Audience \(String(format: "%.1f", s))")) }
         return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
 

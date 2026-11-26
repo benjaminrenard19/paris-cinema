@@ -28,7 +28,7 @@ struct CinemaPickerView: View {
         List {
             Section {
                 Picker("Sort", selection: $sort) {
-                    ForEach(Sort.allCases) { s in Text(s.rawValue).tag(s) }
+                    ForEach(Sort.allCases) { s in Text(LocalizedStringKey(s.rawValue)).tag(s) }
                 }
                 .pickerStyle(.segmented)
                 if sort == .place {
@@ -54,7 +54,7 @@ struct CinemaPickerView: View {
                 }
             }
             if !others.isEmpty {
-                Section(store.myCinemas.isEmpty ? "All cinemas" : "Other cinemas") {
+                Section(store.myCinemas.isEmpty ? String(localized: "All cinemas") : String(localized: "Other cinemas")) {
                     ForEach(others) { c in row(c) }
                 }
             }
@@ -62,14 +62,14 @@ struct CinemaPickerView: View {
                 !store.allCinemas.contains { $0.name == m.name }
             })
             if !extra.isEmpty {
-                Section(query.isEmpty ? "More cinemas nearby (Apple Maps)" : "Found on Apple Maps") {
+                Section(query.isEmpty ? String(localized: "More cinemas nearby (Apple Maps)") : String(localized: "Found on Apple Maps")) {
                     ForEach(extra) { c in row(c) }
                 }
             }
             if !query.trimmingCharacters(in: .whitespaces).isEmpty && mapResults.isEmpty {
                 Section {
                     Button { Task { await searchMaps() } } label: {
-                        Label(searchingMaps ? "Searching…" : "Search Apple Maps for “\(query)”", systemImage: "magnifyingglass")
+                        Label(searchingMaps ? String(localized: "Searching…") : String(localized: "Search Apple Maps for “\(query)”"), systemImage: "magnifyingglass")
                     }
                     .disabled(searchingMaps)
                 }
@@ -94,11 +94,11 @@ struct CinemaPickerView: View {
                 HStack(spacing: 8) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(c.name).foregroundStyle(.primary)
-                        Text(c.type == "Other" ? c.address : "\(c.type) · \(c.address)")
+                        Text(verbatim: c.type == "Other" ? c.address : "\(NSLocalizedString(c.type, comment: "Cinema type")) · \(c.address)")
                             .font(.caption).foregroundStyle(.secondary).lineLimit(2)
                         if let n = showCount(c), n > 0 {
-                            Text("\(n) showtime\(n == 1 ? "" : "s") for this film")
-                                .font(.caption2.weight(.semibold)).foregroundStyle(Color.accentColor)
+                            Text(n == 1 ? String(localized: "1 showtime for this film") : String(localized: "\(n) showtimes for this film"))
+                                .font(.caption2.weight(.semibold)).foregroundStyle(Color.theme)
                         }
                     }
                     Spacer(minLength: 4)
@@ -106,7 +106,7 @@ struct CinemaPickerView: View {
                         Text(distanceText(distance(c, a))).font(.subheadline).foregroundStyle(.secondary).monospacedDigit()
                     }
                     if c.name == selected {
-                        Image(systemName: "checkmark").fontWeight(.semibold).foregroundStyle(Color.accentColor)
+                        Image(systemName: "checkmark").fontWeight(.semibold).foregroundStyle(Color.theme)
                     }
                 }
                 .contentShape(Rectangle())
@@ -118,7 +118,7 @@ struct CinemaPickerView: View {
                     .foregroundStyle(store.isPreferred(c.name) ? Color(hex: 0xE0A800) : Color.secondary)
             }
             .buttonStyle(.borderless)
-            .accessibilityLabel(store.isPreferred(c.name) ? "Remove from My cinemas" : "Add to My cinemas")
+            .accessibilityLabel(store.isPreferred(c.name) ? String(localized: "Remove from My cinemas") : String(localized: "Add to My cinemas"))
         }
     }
 
@@ -172,13 +172,13 @@ struct CinemaPickerView: View {
             anchor = nil
         case .me:
             anchor = nil
-            status = "Finding where you are…"
+            status = String(localized: "Finding where you are…")
             if let loc = await LocationFinder.shared.current() {
                 anchor = loc
-                status = "Sorted by distance from you."
+                status = String(localized: "Sorted by distance from you.")
                 nearby = await PlaceSearch.cinemas(near: loc.coordinate)
             } else {
-                status = "Your location isn't available. Allow it in Settings › Privacy & Security › Location Services, or use Near a place."
+                status = String(localized: "Your location isn't available. Allow it in Settings › Privacy & Security › Location Services, or use Near a place.")
             }
         case .place:
             anchor = nil
@@ -189,13 +189,13 @@ struct CinemaPickerView: View {
     private func findPlace() async {
         let q = placeQuery.trimmingCharacters(in: .whitespaces)
         guard !q.isEmpty else { return }
-        status = "Looking up \(q)…"
+        status = String(localized: "Looking up \(q)…")
         if let p = await PlaceSearch.place(q) {
             anchor = CLLocation(latitude: p.coordinate.latitude, longitude: p.coordinate.longitude)
-            status = "Sorted by distance from \(p.name)."
+            status = String(localized: "Sorted by distance from \(p.name).")
             nearby = await PlaceSearch.cinemas(near: p.coordinate)
         } else {
-            status = "Couldn't find “\(q)”. Try a street, a métro station or a postcode."
+            status = String(localized: "Couldn't find “\(q)”. Try a street, a métro station or a postcode.")
         }
     }
 
@@ -203,7 +203,7 @@ struct CinemaPickerView: View {
         searchingMaps = true
         mapResults = await PlaceSearch.cinemas(matching: query)
         searchingMaps = false
-        if mapResults.isEmpty { status = "No cinema called “\(query)” on Apple Maps." }
+        if mapResults.isEmpty { status = String(localized: "No cinema called “\(query)” on Apple Maps.") }
     }
 }
 

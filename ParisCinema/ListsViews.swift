@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 import UniformTypeIdentifiers
 
 // MARK: - My list (favourites and watch plans)
@@ -32,7 +33,7 @@ struct MyListView: View {
                                     FilmRow(film: item.0, showDate: true)
                                     Label("\(D.fmt(item.1.d, "EEE d MMM")) · \(item.1.t) · \(item.1.cn)", systemImage: "calendar")
                                         .font(.footnote.weight(.medium))
-                                        .foregroundStyle(item.1.d < D.today ? Color.red : Color.accentColor)
+                                        .foregroundStyle(item.1.d < D.today ? Color.red : Color.theme)
                                 }
                             }
                             .swipeActions { unfav(item.0) }
@@ -46,7 +47,7 @@ struct MyListView: View {
                                 .swipeActions { unfav(f) }
                         }
                         if open && total > Self.preview {
-                            Button(showAll.contains(g.year) ? "Show fewer" : "Show all \(total) films") {
+                            Button(showAll.contains(g.year) ? String(localized: "Show fewer") : String(localized: "Show all \(total) films")) {
                                 withAnimation {
                                     if showAll.contains(g.year) { showAll.remove(g.year) } else { showAll.insert(g.year) }
                                 }
@@ -72,9 +73,10 @@ struct MyListView: View {
                         }
                         .buttonStyle(.plain)
                         .textCase(nil)
-                        .accessibilityHint(open ? "Hides this year" : "Shows this year")
+                        .accessibilityHint(open ? String(localized: "Hides this year") : String(localized: "Shows this year"))
                     } footer: {
-                        Text("\(c.watched) watched in \(String(g.year)), \(c.total - c.watched) more planned. \(total) favourite\(total == 1 ? "" : "s").")
+                        Text(String(localized: "\(c.watched) watched in \(String(g.year)), \(c.total - c.watched) more planned.") + " "
+                             + (total == 1 ? String(localized: "1 favourite.") : String(localized: "\(total) favourites.")))
                     }
                 }
             }
@@ -177,12 +179,12 @@ struct WatchedView: View {
 
     private func watchedRow(_ id: String, _ s: SeenEntry) -> some View {
         let cat = Cat.from(s.c)
-        let title = s.t ?? store.index[id]?.title ?? "Film"
+        let title = s.t ?? store.index[id]?.title ?? String(localized: "Film")
         return HStack(spacing: 12) {
             PosterTile(title: title, cat: cat, width: 40, url: store.index[id]?.poster ?? s.p)
             VStack(alignment: .leading, spacing: 3) {
                 Text(title).font(.headline).lineLimit(2)
-                Text("Watched \(D.fmt(s.d, "d MMM"))" + (s.dir.map { " · \($0)" } ?? ""))
+                Text(String(localized: "Watched \(D.fmt(s.d, "d MMM"))") + (s.cn.map { " · \($0)" } ?? s.dir.map { " · \($0)" } ?? ""))
                     .font(.subheadline).foregroundStyle(.secondary).lineLimit(1)
                 Stars(rating: s.r)
             }
@@ -216,7 +218,7 @@ struct AddWatchedView: View {
                         PosterTile(title: title.isEmpty ? "?" : title, cat: cat, width: 64, url: poster)
                         VStack(alignment: .leading, spacing: 8) {
                             Button { Task { await findPosters() } } label: {
-                                Label(searching ? "Searching…" : "Find the poster", systemImage: "magnifyingglass")
+                                Label(searching ? String(localized: "Searching…") : String(localized: "Find the poster"), systemImage: "magnifyingglass")
                             }
                             .disabled(title.trimmingCharacters(in: .whitespaces).count < 2 || searching)
                             if poster != nil {
@@ -233,7 +235,7 @@ struct AddWatchedView: View {
                                     } label: {
                                         VStack(spacing: 4) {
                                             PosterTile(title: h.title, cat: cat, width: 70, url: h.poster)
-                                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(poster == h.poster ? Color.accentColor : .clear, lineWidth: 3))
+                                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(poster == h.poster ? Color.theme : .clear, lineWidth: 3))
                                             Text(h.year).font(.caption2).foregroundStyle(.secondary)
                                         }
                                     }
@@ -264,12 +266,12 @@ struct AddWatchedView: View {
                     }
                 }
             }
-            .navigationTitle(editingId == nil ? "Add a film" : "Edit")
+            .navigationTitle(editingId == nil ? String(localized: "Add a film") : String(localized: "Edit"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(editingId == nil ? "Add" : "Save") {
+                    Button(editingId == nil ? String(localized: "Add") : String(localized: "Save")) {
                         if let id = editingId {
                             store.updateCustomSeen(id, title: title, day: D.str(day), rating: rating, category: cat, poster: poster)
                         } else {
@@ -304,7 +306,7 @@ struct AddWatchedView: View {
     }
 }
 
-// MARK: - Data: import the export from the Claude page
+// MARK: - Settings
 
 struct DataView: View {
     @Environment(Store.self) private var store
@@ -313,11 +315,56 @@ struct DataView: View {
     @AppStorage("calSync") private var calOn = false
     @AppStorage("calId") private var calId = ""
     @AppStorage("tutorialSeen") private var tutorialSeen = true
+    @AppStorage("welcomeDone") private var welcomeDone = true
+    @AppStorage("userName") private var userName = ""
     @State private var calendarNote: String?
+
+    private var version: String {
+        let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let b = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        return "\(v) (\(b))"
+    }
 
     var body: some View {
         NavigationStack {
             Form {
+                // My profile
+                Section {
+                    NavigationLink {
+                        ProfileView()
+                    } label: {
+                        HStack(spacing: 12) {
+                            Text("🦥").font(.largeTitle)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(userName.isEmpty ? String(localized: "My profile") : userName).font(.headline)
+                                Text("Name, cinemas, habits and all-time stats").font(.caption).foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                } header: {
+                    Text("My profile")
+                }
+
+                // Manual refreshing
+                Section {
+                    Button {
+                        Task { await store.refreshFromFeed(force: true) }
+                    } label: {
+                        Label("Check for new films and times now", systemImage: "arrow.clockwise")
+                    }
+                    if let d = store.lastFeedCheck {
+                        LabeledContent("Last checked", value: d.formatted(date: .abbreviated, time: .shortened))
+                    }
+                    if let m = store.feedStatus { Text(m).font(.footnote).foregroundStyle(.secondary) }
+                    Text(store.dataSummary)
+                    if let e = D.when(store.exportedAt) { LabeledContent("Last change", value: e) }
+                } header: {
+                    Text("Refresh")
+                } footer: {
+                    Text("Every morning before 7, Claude collects the session times from the cinemas' websites and AlloCiné, with posters, ratings and running times. Every Tuesday evening it adds the new weeks. The app downloads them when you open it, or when you pull down on the Films list.")
+                }
+
+                // Calendar
                 Section {
                     Toggle("Save plans to my calendar", isOn: Binding(get: { calOn }, set: { on in
                         if on {
@@ -330,7 +377,7 @@ struct DataView: View {
                                     calendarNote = nil
                                 } else {
                                     calOn = false
-                                    calendarNote = "Calendar access is off. Allow it in iPhone Settings › Apps › Sloth Cinema › Calendars."
+                                    calendarNote = String(localized: "Calendar access is off. Allow it in iPhone Settings › Apps › Sloth Cinema › Calendars.")
                                 }
                             }
                         } else {
@@ -351,47 +398,88 @@ struct DataView: View {
                     Text("Confirmed plans are added, moved and removed automatically, with a reminder 2 hours before. For Google Calendar: on your iPhone go to Settings › Apps › Calendar › Calendar Accounts › Add Account › Google, then choose your Google calendar here.")
                 }
 
-                Section("Help") {
+                // Colours
+                Section {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 12) {
+                            ForEach(Theme.presets.indices, id: \.self) { i in
+                                let preset = Theme.presets[i]
+                                Button { Theme.shared.hex = preset.hex } label: {
+                                    Circle().fill(Color(hex: preset.hex))
+                                        .frame(width: 36, height: 36)
+                                        .overlay(Circle().stroke(Color.primary, lineWidth: Theme.shared.hex == preset.hex ? 3 : 0).padding(-4))
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel(LocalizedStringKey(preset.name))
+                            }
+                        }
+                        .padding(.vertical, 8).padding(.horizontal, 4)
+                    }
+                    ColorPicker("Any colour", selection: Theme.shared.binding, supportsOpacity: false)
+                    Picker("Appearance", selection: Binding(get: { Theme.shared.appearance }, set: { Theme.shared.appearance = $0 })) {
+                        Text("Automatic").tag(0)
+                        Text("Light").tag(1)
+                        Text("Dark").tag(2)
+                    }
+                    .pickerStyle(.segmented)
+                    if Theme.shared.hex != Theme.slothRed {
+                        Button("Back to Sloth red") { Theme.shared.hex = Theme.slothRed }
+                    }
+                } header: {
+                    Text("Colours")
+                } footer: {
+                    Text("The colour of buttons, the stage curtains and your stats.")
+                }
+
+                // Tutorial
+                Section {
                     Button { tutorialSeen = false; dismiss() } label: {
                         Label("Show the tutorial again", systemImage: "questionmark.circle")
                     }
-                }
-
-                Section("Loaded") {
-                    Text(store.dataSummary)
-                    if let e = D.when(store.exportedAt) { LabeledContent("Last change", value: e) }
-                }
-
-                Section {
-                    Button {
-                        Task { await store.refreshFromFeed(force: true) }
-                    } label: {
-                        Label("Check for new films now", systemImage: "arrow.clockwise")
+                    Button { welcomeDone = false; dismiss() } label: {
+                        Label("Set up again (name, cinemas, sorting)", systemImage: "sparkles")
                     }
-                    if let d = store.lastFeedCheck {
-                        LabeledContent("Last checked", value: d.formatted(date: .abbreviated, time: .shortened))
-                    }
-                    if let m = store.feedStatus { Text(m).font(.footnote).foregroundStyle(.secondary) }
-                    Link(destination: Feed.page) { Label("Open the data on GitHub", systemImage: "link") }
                 } header: {
-                    Text("Automatic updates")
-                } footer: {
-                    Text("Every Tuesday evening Claude adds the new weeks, producers and showtimes for your planned films to GitHub. The app downloads them when you open it, or when you pull down on the Films list.")
+                    Text("Tutorial")
                 }
 
+                // Information
+                Section {
+                    LabeledContent("Version", value: version)
+                    Button {
+                        if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+                    } label: {
+                        Label("Language and notifications", systemImage: "globe")
+                    }
+                    Link(destination: Feed.page) { Label("The data on GitHub", systemImage: "link") }
+                } header: {
+                    Text("Information")
+                } footer: {
+                    Text("Films, posters and ratings come from AlloCiné; session times from the cinemas' own websites (UGC, Le Grand Rex, Max Linder, Luminor, Le Louxor, Les 7 Parnassiens, Elysées Lincoln, Le Grand Action, Le Balzac, Studio 28) and AlloCiné; extra posters from Apple's film catalogue. The app follows your iPhone's language, English or French; change it in Settings › Apps › Sloth Cinema › Language.")
+                }
+
+                // Import
                 Section {
                     Button { importing = true } label: { Label("Import paris-cinema.json", systemImage: "square.and.arrow.down") }
                     if let m = store.message { Text(m).font(.footnote).foregroundStyle(.secondary) }
                 } header: {
-                    Text("Bring over your lists from the Claude page")
+                    Text("Import")
                 } footer: {
                     Text("On claude.ai, open Paris Cinema Weeks, tap Export for iPhone app, save the file to iCloud Drive and import it here. Your favourites, watched films and plans from the page are added to the app. Nothing is deleted.")
                 }
 
-                if FileManager.default.fileExists(atPath: store.userURL.path) {
-                    Section("Backup") {
+                // Share
+                Section {
+                    if FileManager.default.fileExists(atPath: store.userURL.path) {
                         ShareLink(item: store.userURL) { Label("Share my lists (favourites, watched, plans)", systemImage: "square.and.arrow.up") }
                     }
+                    ShareLink(item: Feed.page, subject: Text("Sloth Cinema"), message: Text("Every film out in Paris cinemas, week by week.")) {
+                        Label("Share Sloth Cinema", systemImage: "person.2")
+                    }
+                } header: {
+                    Text("Share")
+                } footer: {
+                    Text("Your lists are a file you can keep as a backup or open on another iPhone.")
                 }
             }
             .navigationTitle("Settings")

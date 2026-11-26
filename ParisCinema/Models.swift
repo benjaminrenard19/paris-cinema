@@ -9,7 +9,12 @@ enum Cat: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var label: String {
+    /// Shown in the app, in the iPhone's language.
+    var label: String { NSLocalizedString(englishLabel, comment: "Film category") }
+    var short: String { NSLocalizedString(englishShort, comment: "Film category, short") }
+
+    /// As written in the data files.
+    var englishLabel: String {
         switch self {
         case .B: return "Blockbuster"
         case .A: return "Animation & family"
@@ -24,7 +29,7 @@ enum Cat: String, CaseIterable, Identifiable {
         }
     }
 
-    var short: String {
+    var englishShort: String {
         switch self {
         case .B: return "Blockbuster"
         case .A: return "Animation"
@@ -73,7 +78,7 @@ enum Cat: String, CaseIterable, Identifiable {
         guard let s = s?.trimmingCharacters(in: .whitespaces), !s.isEmpty else { return .O }
         if let c = Cat(rawValue: s) { return c }
         let low = s.lowercased()
-        return Cat.allCases.first { $0.label.lowercased() == low } ?? .O
+        return Cat.allCases.first { $0.englishLabel.lowercased() == low } ?? .O
     }
 }
 
@@ -82,7 +87,9 @@ enum ReleaseSize: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var label: String {
+    var label: String { NSLocalizedString(englishLabel, comment: "Release size") }
+
+    var englishLabel: String {
         switch self {
         case .W: return "Wide"
         case .M: return "Mid"
@@ -104,7 +111,7 @@ enum ReleaseSize: String, CaseIterable, Identifiable {
         guard let s = s?.trimmingCharacters(in: .whitespaces), !s.isEmpty else { return .L }
         if let r = ReleaseSize(rawValue: s) { return r }
         let low = s.lowercased()
-        return ReleaseSize.allCases.first { $0.label.lowercased() == low } ?? .L
+        return ReleaseSize.allCases.first { $0.englishLabel.lowercased() == low } ?? .L
     }
 }
 
@@ -172,6 +179,26 @@ struct Film: Identifiable, Hashable, Codable {
     }
 
     var year: String { String(date.prefix(4)) }
+
+    /// Genres and countries in the app's language (the data is written in English).
+    var genreText: String? { genre.map { Film.localizedList($0, lowerAfterFirst: true) } }
+    var originText: String? { origin.map { Film.localizedList($0, lowerAfterFirst: false) } }
+
+    static func localizedList(_ s: String, lowerAfterFirst: Bool) -> String {
+        guard D.isFrench else { return s }
+        var out: [String] = []
+        for raw in s.components(separatedBy: CharacterSet(charactersIn: ",/")) {
+            let t = raw.trimmingCharacters(in: .whitespaces)
+            guard !t.isEmpty else { continue }
+            let fr = NSLocalizedString(t.lowercased(), tableName: "Data", value: t, comment: "Genre or country")
+            if out.isEmpty || !lowerAfterFirst {
+                out.append(fr.prefix(1).uppercased() + fr.dropFirst())
+            } else {
+                out.append(fr.lowercased())
+            }
+        }
+        return out.joined(separator: ", ")
+    }
 
     var category: Cat { Cat.from(cat) }
     var releaseSize: ReleaseSize { ReleaseSize.from(size) }
@@ -267,11 +294,15 @@ struct SeenEntry: Codable, Hashable {
     var o: String?
     var orig: String?
     var p: String?         // poster, for films added by hand
+    var cn: String?        // cinema where you saw it (from your plan)
+    var tm: String?        // session time, HH:mm (from your plan)
 
-    enum CodingKeys: String, CodingKey { case d, r, t, fd, c, dir, o, orig, p }
+    enum CodingKeys: String, CodingKey { case d, r, t, fd, c, dir, o, orig, p, cn, tm }
 
-    init(d: String, r: Int, t: String?, fd: String?, c: String?, dir: String?, o: String?, orig: String?, p: String? = nil) {
+    init(d: String, r: Int, t: String?, fd: String?, c: String?, dir: String?, o: String?, orig: String?,
+         p: String? = nil, cn: String? = nil, tm: String? = nil) {
         self.d = d; self.r = r; self.t = t; self.fd = fd; self.c = c; self.dir = dir; self.o = o; self.orig = orig; self.p = p
+        self.cn = cn; self.tm = tm
     }
 
     init(from decoder: Decoder) throws {
@@ -288,6 +319,8 @@ struct SeenEntry: Codable, Hashable {
         o = try? c.decodeIfPresent(String.self, forKey: .o)
         orig = try? c.decodeIfPresent(String.self, forKey: .orig)
         p = try? c.decodeIfPresent(String.self, forKey: .p)
+        cn = try? c.decodeIfPresent(String.self, forKey: .cn)
+        tm = try? c.decodeIfPresent(String.self, forKey: .tm)
     }
 }
 
@@ -398,7 +431,11 @@ enum D {
         return c
     }()
 
-    private static func formatter(_ pattern: String, locale: String = "en_GB") -> DateFormatter {
+    /// "fr" when the app runs in French, otherwise "en".
+    static let lang: String = (Bundle.main.preferredLocalizations.first ?? "en").hasPrefix("fr") ? "fr" : "en"
+    static var isFrench: Bool { lang == "fr" }
+
+    private static func formatter(_ pattern: String, locale: String = D.lang == "fr" ? "fr_FR" : "en_GB") -> DateFormatter {
         let f = DateFormatter()
         f.calendar = cal
         f.timeZone = paris
@@ -445,6 +482,37 @@ enum D {
         let f: DateFormatter
         if let x = cache[pattern] { f = x } else { f = formatter(pattern); cache[pattern] = f }
         return f.string(from: d)
+    }
+
+    /// Day name with a capital ("Samedi 28 novembre"), as at the top of a list.
+    static func fmtCap(_ s: String, _ pattern: String) -> String {
+        let t = fmt(s, pattern)
+        return t.prefix(1).uppercased() + t.dropFirst()
+    }
+
+    /// Short month name without the trailing dot French adds ("nov", "Nov").
+    static func monthShort(_ s: String) -> String {
+        fmt(s, "LLL").replacingOccurrences(of: ".", with: "")
+    }
+
+    /// Weekday number, 1 = Sunday … 7 = Saturday.
+    static func weekday(_ s: String) -> Int {
+        guard let d = date(s) else { return 1 }
+        return cal.component(.weekday, from: d)
+    }
+
+    /// The name of a weekday number (1 = Sunday), in the app's language.
+    static func weekdayName(_ n: Int) -> String {
+        let f = formatter("EEEE")
+        let names = f.weekdaySymbols ?? []
+        guard names.indices.contains(n - 1) else { return "" }
+        return names[n - 1]
+    }
+
+    /// Days between two "yyyy-MM-dd" strings (b − a).
+    static func daysBetween(_ a: String, _ b: String) -> Int? {
+        guard let x = date(a), let y = date(b) else { return nil }
+        return cal.dateComponents([.day], from: x, to: y).day
     }
 
     static func stamp(day: String, time: String) -> Date? { stampF.date(from: day + " " + time) }

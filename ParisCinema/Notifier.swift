@@ -26,8 +26,8 @@ final class Notifier: NSObject, UNUserNotificationCenterDelegate {
     func setUp() {
         let center = UNUserNotificationCenter.current()
         center.delegate = self
-        let watched = UNNotificationAction(identifier: "WATCHED", title: "I watched it: rate it", options: [.foreground])
-        let notYet = UNNotificationAction(identifier: "NOT_YET", title: "Not yet: pick a new day", options: [.foreground])
+        let watched = UNNotificationAction(identifier: "WATCHED", title: String(localized: "I watched it: rate it"), options: [.foreground])
+        let notYet = UNNotificationAction(identifier: "NOT_YET", title: String(localized: "Not yet: pick a new day"), options: [.foreground])
         let cat = UNNotificationCategory(identifier: Self.category, actions: [watched, notYet], intentIdentifiers: [], options: [])
         center.setNotificationCategories([cat])
     }
@@ -52,8 +52,8 @@ final class Notifier: NSObject, UNUserNotificationCenterDelegate {
         let now = Date()
         for a in alerts where a.end > now {
             let content = UNMutableNotificationContent()
-            content.title = "How was \(a.title)?"
-            content.body = "Did you watch it at \(a.cinema)? Rate it, or pick another day."
+            content.title = String(localized: "How was \(a.title)?")
+            content.body = String(localized: "Did you watch it at \(a.cinema)? Rate it, or pick another day.")
             content.sound = .default
             content.categoryIdentifier = Self.category
             content.userInfo = ["film": a.id]

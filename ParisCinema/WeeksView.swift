@@ -1,5 +1,19 @@
 import SwiftUI
 
+/// How the Films page orders a week (chosen at the first launch, changed with the ⇅ button).
+enum WeekSort: String, CaseIterable, Identifiable {
+    case standard = "Biggest releases first"
+    case az = "Name A–Z"
+    case za = "Name Z–A"
+    case press = "Critics rating"
+    case spect = "Audience rating"
+    case avg = "Average of both ratings"
+    case short = "Running time, shortest first"
+    case long = "Running time, longest first"
+    var id: String { rawValue }
+    var label: String { NSLocalizedString(rawValue, comment: "Sort order") }
+}
+
 struct WeeksView: View {
     @Environment(Store.self) private var store
     @State private var week = ""
@@ -7,19 +21,10 @@ struct WeeksView: View {
     @State private var favOnly = false
     @State private var query = ""
     @State private var showData = false
+    @State private var showStats = false
+    @State private var showInbox = false
     @AppStorage("weekSort") private var sortRaw = WeekSort.standard.rawValue
-
-    enum WeekSort: String, CaseIterable, Identifiable {
-        case standard = "Biggest releases first"
-        case az = "Name A–Z"
-        case za = "Name Z–A"
-        case press = "Critics rating"
-        case spect = "Audience rating"
-        case avg = "Average of both ratings"
-        case short = "Running time, shortest first"
-        case long = "Running time, longest first"
-        var id: String { rawValue }
-    }
+    @AppStorage("userName") private var userName = ""
 
     private var sort: WeekSort { WeekSort(rawValue: sortRaw) ?? .standard }
 
@@ -27,6 +32,11 @@ struct WeeksView: View {
         NavigationStack {
             List {
                 if query.isEmpty {
+                    Section {
+                        StageHeader(name: userName)
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
+                    }
                     Section { weekHeader }
                     Section {
                         filterBar
@@ -42,11 +52,11 @@ struct WeeksView: View {
                                 .swipeActions(edge: .trailing) { favButton(f) }
                         }
                     } header: {
-                        Text("\(visible.count) film\(visible.count == 1 ? "" : "s")" + (sort == .standard ? "" : " · " + sort.rawValue))
+                        Text((visible.count == 1 ? String(localized: "1 film") : String(localized: "\(visible.count) films")) + (sort == .standard ? "" : " · " + sort.label))
                     }
                 } else {
                     let results = store.search(query)
-                    Section("\(results.count) result\(results.count == 1 ? "" : "s")") {
+                    Section(results.count == 1 ? String(localized: "1 result") : String(localized: "\(results.count) results")) {
                         ForEach(results.prefix(150)) { f in
                             NavigationLink(value: f.id) { FilmRow(film: f, showDate: true) }
                         }
@@ -56,25 +66,44 @@ struct WeeksView: View {
             .listStyle(.insetGrouped)
             .refreshable { await store.refreshFromFeed(force: true) }
             .navigationTitle("Sloth Cinema")
+            .navigationBarTitleDisplayMode(.inline)
             .searchable(text: $query, prompt: "Title, director, actor")
             .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Menu {
                         Picker("Sort this week", selection: $sortRaw) {
-                            ForEach(WeekSort.allCases) { s in Text(s.rawValue).tag(s.rawValue) }
+                            ForEach(WeekSort.allCases) { s in Text(s.label).tag(s.rawValue) }
                         }
                     } label: {
                         Image(systemName: "arrow.up.arrow.down.circle")
                     }
                     .accessibilityLabel("Sort")
                 }
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .principal) {
+                    Button { showStats = true } label: {
+                        HStack(spacing: 5) {
+                            Image(systemName: "chart.bar.fill").font(.caption)
+                            Text(String(localized: "My \(D.monthShort(D.today)) Stats"))
+                                .font(.subheadline.weight(.semibold))
+                                .lineLimit(1)
+                        }
+                        .padding(.horizontal, 12).padding(.vertical, 6)
+                        .background(Color.theme.opacity(0.15), in: Capsule())
+                        .foregroundStyle(Color.theme)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityHint("Your month at the cinema, as a story to share")
+                }
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    InboxButton(count: store.inboxBadge) { showInbox = true }
                     Button { showData = true } label: { Image(systemName: "gearshape") }
                         .accessibilityLabel("Settings")
                 }
             }
             .sheet(isPresented: $showData) { DataView().environment(store) }
+            .sheet(isPresented: $showInbox) { InboxView().environment(store) }
+            .fullScreenCover(isPresented: $showStats) { StoryView(period: .thisMonth).environment(store) }
             .onAppear { if week.isEmpty || store.byWeek[week] == nil { week = store.defaultWeek } }
             .onChange(of: store.weeks) { _, _ in if store.byWeek[week] == nil { week = store.defaultWeek } }
         }
@@ -132,14 +161,15 @@ struct WeeksView: View {
                 ForEach(months, id: \.0) { item in
                     Menu(item.0) {
                         ForEach(item.1, id: \.self) { w in
-                            Button("\(D.fmt(w, "d MMM")) · \(store.films(in: w).count) films") { week = w }
+                            Button(String(localized: "\(D.fmt(w, "d MMM")) · \(store.films(in: w).count) films")) { week = w }
                         }
                     }
                 }
             } label: {
                 VStack(spacing: 2) {
-                    Text(week == store.currentWeek ? "This week" : "Week of \(D.fmt(week, "d MMMM yyyy"))")
-                        .font(.headline)
+                    Text(week == store.currentWeek ? String(localized: "This week") : String(localized: "Week of \(D.fmt(week, "d MMMM yyyy"))"))
+                        .font(.title2.weight(.bold))
+                        .lineLimit(1).minimumScaleFactor(0.7)
                     Text(D.weekRange(week)).font(.caption).foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity)

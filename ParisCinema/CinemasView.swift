@@ -32,17 +32,17 @@ struct CinemasView: View {
                         Picker("Type", selection: $type) {
                             Text("All cinemas").tag("")
                             Text("My cinemas").tag("My cinemas")
-                            ForEach(typeChoices, id: \.self) { t in Text(t).tag(t) }
+                            ForEach(typeChoices, id: \.self) { t in Text(LocalizedStringKey(t)).tag(t) }
                         }
                     } label: {
-                        Label(type.isEmpty ? "All" : type, systemImage: "line.3.horizontal.decrease.circle")
+                        Label(type.isEmpty ? String(localized: "All") : NSLocalizedString(type, comment: "Cinema type"), systemImage: "line.3.horizontal.decrease.circle")
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showList.toggle() } label: {
                         Image(systemName: showList ? "map" : "list.bullet")
                     }
-                    .accessibilityLabel(showList ? "Show map" : "Show list")
+                    .accessibilityLabel(showList ? String(localized: "Show map") : String(localized: "Show list"))
                 }
             }
             .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
@@ -91,9 +91,9 @@ struct CinemasView: View {
                 Section {
                     ForEach(store.allCinemas.filter { $0.type == t }) { c in listRow(c) }
                 } header: {
-                    Text(t)
+                    Text(LocalizedStringKey(t))
                 } footer: {
-                    Text(Cinema.typeBlurb(t))
+                    Text(LocalizedStringKey(Cinema.typeBlurb(t)))
                 }
             }
         }
@@ -123,7 +123,7 @@ struct CinemasView: View {
                 .foregroundStyle(store.isPreferred(c.name) ? Color(hex: 0xE0A800) : Color.secondary)
         }
         .buttonStyle(.borderless)
-        .accessibilityLabel(store.isPreferred(c.name) ? "Remove from My cinemas" : "Add to My cinemas")
+        .accessibilityLabel(store.isPreferred(c.name) ? String(localized: "Remove from My cinemas") : String(localized: "Add to My cinemas"))
     }
 
     private func card(_ c: Cinema) -> some View {
@@ -131,7 +131,7 @@ struct CinemasView: View {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(c.name).font(.headline)
-                    Text("\(c.type) · \(c.address)").font(.subheadline).foregroundStyle(.secondary)
+                    Text(verbatim: "\(NSLocalizedString(c.type, comment: "Cinema type")) · \(c.address)").font(.subheadline).foregroundStyle(.secondary)
                 }
                 Spacer()
                 starButton(c)

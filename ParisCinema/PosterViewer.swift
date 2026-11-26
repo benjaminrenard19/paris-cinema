@@ -99,7 +99,7 @@ struct PosterViewer: View {
     private func infoPage<Content: View>(_ title: String, @ViewBuilder _ content: () -> Content) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
-                Text(title).font(.title2.bold())
+                Text(LocalizedStringKey(title)).font(.title2.bold())
                 content()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -117,8 +117,8 @@ struct PosterViewer: View {
             rating("Audience", film.spect)
             if let a = film.average, film.press != nil, film.spect != nil { rating("Average", a) }
             fact("In cinemas", D.fmt(film.date, "EEEE d MMMM yyyy"), symbol: "calendar")
-            if let g = film.genre { fact("Genres", g, symbol: "theatermasks") }
-            if let o = film.origin { fact("Origin", o, symbol: "globe.europe.africa") }
+            if let g = film.genreText { fact("Genres", g, symbol: "theatermasks") }
+            if let o = film.originText { fact("Origin", o, symbol: "globe.europe.africa") }
             if film.press == nil && film.spect == nil {
                 Text("No ratings yet. They appear once the film is out.").font(.footnote).foregroundStyle(.white.opacity(0.6))
             }
@@ -127,7 +127,7 @@ struct PosterViewer: View {
 
     private var story: some View {
         infoPage("Story") {
-            Text(film.syn ?? "No synopsis yet. The Tuesday update adds one.")
+            Text(film.syn ?? String(localized: "No synopsis yet. The Tuesday update adds one."))
                 .font(.title3)
                 .lineSpacing(4)
             if let o = film.orig, !o.isEmpty { fact(film.category == .R ? "Year" : "Original title", o, symbol: "character.book.closed") }
@@ -138,7 +138,7 @@ struct PosterViewer: View {
         infoPage("Cast and crew") {
             if let d = film.dir { fact("Director", d, symbol: "megaphone") }
             if let c = film.cast { fact("Main actors", c, symbol: "person.2") }
-            fact("Producers", film.prod ?? "Not listed yet", symbol: "building.2")
+            fact("Producers", film.prod ?? String(localized: "Not listed yet"), symbol: "building.2")
         }
     }
 
@@ -146,7 +146,7 @@ struct PosterViewer: View {
         HStack(alignment: .top, spacing: 14) {
             Image(systemName: symbol).font(.title3).frame(width: 28).foregroundStyle(Color(hex: 0xFFD23F))
             VStack(alignment: .leading, spacing: 2) {
-                Text(label).font(.caption).foregroundStyle(.white.opacity(0.6))
+                Text(LocalizedStringKey(label)).font(.caption).foregroundStyle(.white.opacity(0.6))
                 Text(value).font(.body)
             }
         }
@@ -158,7 +158,7 @@ struct PosterViewer: View {
             HStack(spacing: 14) {
                 Image(systemName: "star.fill").font(.title3).frame(width: 28).foregroundStyle(Color(hex: 0xFFD23F))
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(label).font(.caption).foregroundStyle(.white.opacity(0.6))
+                    Text(LocalizedStringKey(label)).font(.caption).foregroundStyle(.white.opacity(0.6))
                     HStack(spacing: 8) {
                         Stars(rating: Int(v.rounded()), size: 16)
                         Text(String(format: "%.1f / 5", v)).font(.headline.monospacedDigit())

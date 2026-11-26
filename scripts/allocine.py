@@ -25,6 +25,7 @@ import re
 import sys
 import time
 import unicodedata
+import urllib.error
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -40,10 +41,22 @@ def slug(s):
     return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
 
 
-def get(url):
-    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Language": "fr-FR,fr;q=0.9"})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return r.read().decode("utf-8", "replace")
+def get(url, tries=5):
+    """Fetches a public page, trying up to 5 times (2, 4, 8, 16 s apart)."""
+    last = None
+    for attempt in range(tries):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Language": "fr-FR,fr;q=0.9"})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return r.read().decode("utf-8", "replace")
+        except urllib.error.HTTPError as ex:
+            if ex.code in (403, 404, 410):
+                raise
+            last = ex
+        except Exception as ex:
+            last = ex
+        time.sleep(2 ** (attempt + 1))
+    raise last
 
 
 def text(s):

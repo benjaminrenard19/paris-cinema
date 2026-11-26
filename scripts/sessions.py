@@ -7,13 +7,18 @@
   python3 scripts/sessions.py balzac        # Le Balzac (cinemabalzac.com)
   python3 scripts/sessions.py grandrex      # Le Grand Rex (legrandrex.com)
   python3 scripts/sessions.py studio28      # Studio 28 (cinema-studio28.fr)
+  python3 scripts/sessions.py webedia       # Max Linder, Luminor, Le Louxor, Les 7 Parnassiens,
+                                            # Elysées Lincoln: their pages fill in the times in the
+                                            # browser, so they are opened in headless Chrome
 
 Cinemas publish their programme a week at a time (Wednesday to Tuesday), usually on the
 Monday or Tuesday before, so these sources reach next Tuesday, plus special screenings
 further ahead. AlloCiné's cinema pages (scripts/allocine.py theaters) add today and tomorrow
-for every other cinema. Le Louxor, Max Linder, Luminor, Le Champo, Reflet Médicis, Escurial,
-Saint-André des Arts, Christine, Les 7 Parnassiens, Elysées Lincoln, Pathé and mk2 load their
-times in the browser from booking services rather than in the page, so they come from AlloCiné.
+for every other cinema (Pathé, mk2, Le Champo, Reflet Médicis, Escurial, Saint-André des Arts,
+Christine).
+
+Every page is tried up to 5 times before a source gives up on it; a cinema whose website
+fails is still covered by AlloCiné for today and tomorrow.
 
 Each day a source has read for a cinema replaces what was stored for that cinema and day;
 days it didn't read are kept; past days are dropped. Requests are spaced out (1.5 s).
@@ -23,10 +28,15 @@ import difflib
 import html
 import json
 import pathlib
+import concurrent.futures
 import re
+import shutil
+import subprocess
 import sys
+import threading
 import time
 import unicodedata
+import urllib.error
 import urllib.request
 import zoneinfo
 
@@ -46,15 +56,56 @@ def slug(s):
     return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
 
 
+TRIES = 5
+
+
 def get(url, encoding=None, referer=None):
+    """Fetches a page, trying up to 5 times (2, 4, 8, 16 s apart) before giving up."""
     headers = {"User-Agent": UA, "Accept-Language": "fr-FR,fr;q=0.9"}
     if referer:
         headers["Referer"] = referer
-    req = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(req, timeout=40) as r:
-        raw = r.read()
-        charset = encoding or r.headers.get_content_charset() or "utf-8"
-        return raw.decode(charset, "replace"), r.geturl()
+    last = None
+    for attempt in range(TRIES):
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=40) as r:
+                raw = r.read()
+                charset = encoding or r.headers.get_content_charset() or "utf-8"
+                return raw.decode(charset, "replace"), r.geturl()
+        except urllib.error.HTTPError as ex:
+            if ex.code in (403, 404, 410):     # refused or gone: retrying won't help
+                raise
+            last = ex
+        except Exception as ex:
+            last = ex
+        time.sleep(2 ** (attempt + 1))
+    raise last
+
+
+CHROME = shutil.which("google-chrome") or shutil.which("chromium") or shutil.which("chromium-browser")
+
+
+def render(url, wait_ms=15000, ok=None):
+    """Opens a page in headless Chrome like a visitor and returns the page once its scripts
+    have run. Tries up to 5 times; `ok(page)` says whether the page came out complete."""
+    if not CHROME:
+        raise RuntimeError("Chrome isn't installed here")
+    last = "empty page"
+    for attempt in range(TRIES):
+        try:
+            out = subprocess.run(
+                [CHROME, "--headless=new", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage",
+                 f"--virtual-time-budget={wait_ms + attempt * 5000}", "--lang=fr-FR",
+                 f"--user-agent={UA}", "--dump-dom", url],
+                capture_output=True, timeout=150, text=True, errors="replace")
+            page = out.stdout
+            if len(page) > 2000 and (ok is None or ok(page)):
+                return page
+            last = "page came out incomplete"
+        except Exception as ex:
+            last = str(ex)
+        time.sleep(2 ** (attempt + 1))
+    raise RuntimeError(f"{url}: {last} after {TRIES} tries")
 
 
 def text(s):
@@ -183,13 +234,19 @@ class Collector:
     def __init__(self, films):
         self.films = films
         self.scraped, self.covered, self.unmatched = {}, set(), set()
+        self.lock = threading.Lock()
 
     def add(self, cinema, day, hhmm, title=None, ac=None):
         fid = self.films.find(title, ac)
-        if not fid:
-            self.unmatched.add(title or str(ac))
-            return
-        self.scraped.setdefault((fid, cinema), {}).setdefault(day, set()).add(hhmm)
+        with self.lock:
+            if not fid:
+                self.unmatched.add(title or str(ac))
+                return
+            self.scraped.setdefault((fid, cinema), {}).setdefault(day, set()).add(hhmm)
+
+    def cover(self, cinema, day):
+        with self.lock:
+            self.covered.add((cinema, day))
 
     def report(self, label):
         n = sum(len(v) for t in self.scraped.values() for v in t.values())
@@ -209,52 +266,56 @@ UGC = [  # ugc.fr cinema id, name in the app (None: the name on ugc.fr)
 
 
 def ugc(col):
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+        list(pool.map(lambda item: ugc_cinema(col, *item), UGC))
+
+
+def ugc_cinema(col, cid, app_name):
     start = today()
-    for cid, app_name in UGC:
-        page_url = f"https://www.ugc.fr/cinema.html?id={cid}"
-        try:
-            page, _ = get(page_url)
-        except Exception as ex:
-            print(f"UGC {cid}: {ex}", file=sys.stderr)
-            time.sleep(PAUSE)
-            continue
-        time.sleep(PAUSE)
-        title = re.search(r"<title>(.*?)</title>", page, re.S)
-        name = app_name or (text(title.group(1)).split(",")[0] if title else f"UGC {cid}")
-        addr = re.search(r'(\d[^<>"]{3,80}?)\s+(750\d\d)\s+PARIS', page)
-        lat = re.search(r'latitude"\s*:\s*(-?\d+\.\d+)', page)
-        lng = re.search(r'longitude"\s*:\s*(-?\d+\.\d+)', page)
-        address = f"{text(addr.group(1))}, {addr.group(2)}" if addr else ""
+    page_url = f"https://www.ugc.fr/cinema.html?id={cid}"
+    try:
+        page, _ = get(page_url)
+    except Exception as ex:
+        print(f"UGC {cid}: {ex}", file=sys.stderr)
+        return
+    time.sleep(PAUSE)
+    title = re.search(r"<title>(.*?)</title>", page, re.S)
+    name = app_name or (text(title.group(1)).split(",")[0] if title else f"UGC {cid}")
+    addr = re.search(r'(\d[^<>"]{3,80}?)\s+(750\d\d)\s+PARIS', page)
+    lat = re.search(r'latitude"\s*:\s*(-?\d+\.\d+)', page)
+    lng = re.search(r'longitude"\s*:\s*(-?\d+\.\d+)', page)
+    address = f"{text(addr.group(1))}, {addr.group(2)}" if addr else ""
+    with col.lock:
         add_cinema(name, "Multiplex", address, float(lat.group(1)) if lat else None, float(lng.group(1)) if lng else None)
-        counts, low = [], 0
-        for i in range(21):
-            day = start + datetime.timedelta(days=i)
-            url = (f"https://www.ugc.fr/showingsCinemaAjaxAction!getShowingsForCinemaPage.action"
-                   f"?cinemaId={cid}&date={day.isoformat()}&page=30007")
-            try:
-                frag, _ = get(url, referer=page_url)
-            except Exception as ex:
-                print(f"{name} {day}: {ex}", file=sys.stderr)
-                time.sleep(PAUSE)
-                break
+    counts, low = [], 0
+    for i in range(21):
+        day = start + datetime.timedelta(days=i)
+        url = (f"https://www.ugc.fr/showingsCinemaAjaxAction!getShowingsForCinemaPage.action"
+               f"?cinemaId={cid}&date={day.isoformat()}&page=30007")
+        try:
+            frag, _ = get(url, referer=page_url)
+        except Exception as ex:
+            print(f"{name} {day}: {ex}", file=sys.stderr)
             time.sleep(PAUSE)
-            n = 0
-            for b in re.findall(r"<button[^>]*data-seanceHour=[^>]*>", frag):
-                hour = re.search(r'data-seanceHour="(\d\d:\d\d)"', b)
-                date = re.search(r'data-seanceDate="(\d\d)/(\d\d)/(\d{4})"', b)
-                film = re.search(r'data-film="([^"]*)"', b)
-                if not (hour and date and film):
-                    continue
-                d = f"{date.group(3)}-{date.group(2)}-{date.group(1)}"
-                col.add(name, d, hour.group(1), title=html.unescape(film.group(1)))
-                n += 1
-            col.covered.add((name, day.isoformat()))
-            counts.append(n)
-            # stop once the programme runs out (next week not published yet): two thin days in a row
-            low = low + 1 if i >= 2 and n < 0.25 * max(counts) else 0
-            if low >= 2:
-                break
-        print(f"{name}: {sum(counts)} sessions over {len(counts)} days")
+            break
+        time.sleep(PAUSE)
+        n = 0
+        for b in re.findall(r"<button[^>]*data-seanceHour=[^>]*>", frag):
+            hour = re.search(r'data-seanceHour="(\d\d:\d\d)"', b)
+            date = re.search(r'data-seanceDate="(\d\d)/(\d\d)/(\d{4})"', b)
+            film = re.search(r'data-film="([^"]*)"', b)
+            if not (hour and date and film):
+                continue
+            d = f"{date.group(3)}-{date.group(2)}-{date.group(1)}"
+            col.add(name, d, hour.group(1), title=html.unescape(film.group(1)))
+            n += 1
+        col.cover(name, day.isoformat())
+        counts.append(n)
+        # stop once the programme runs out (next week not published yet): two thin days in a row
+        low = low + 1 if i >= 2 and n < 0.25 * max(counts) else 0
+        if low >= 2:
+            break
+    print(f"{name}: {sum(counts)} sessions over {len(counts)} days")
 
 
 # ---------------------------------------------------------------- Le Grand Action
@@ -388,9 +449,114 @@ def studio28(col):
     print(f"{name}: {n} sessions over {len(days)} days")
 
 
+# ---------------------------------------------------------------- Webedia sites (headless Chrome)
+
+MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août",
+          "septembre", "octobre", "novembre", "décembre"]
+
+WEBEDIA = [  # name in the app, page listing every film's sessions for one day ({d} = YYYY-MM-DD)
+    ("Max Linder Panorama", "https://www.maxlinder.com/horaires/?date={d}"),
+    ("Luminor Hôtel de Ville", "https://www.luminor-hoteldeville.com/horaires/?date={d}"),
+    ("Les 7 Parnassiens", "https://www.multicine.fr/seances/?theater=C0025&date={d}"),
+    ("Elysées Lincoln", "https://www.multicine.fr/seances/?theater=C0108&date={d}"),
+]
+LOUXOR = ("Le Louxor", "https://www.cinemalouxor.fr")   # no day page: each film's page, per day
+
+
+def heading_day(heading, start):
+    """'Aujourd’hui' / 'Demain' / 'Samedi 28 novembre' -> date, or None."""
+    h = heading.strip().lower()
+    if h.startswith("aujourd"):
+        return start
+    if h.startswith("demain"):
+        return start + datetime.timedelta(days=1)
+    m = re.search(r"(\d{1,2})\s+([a-zéû]+)", h)
+    if not m or m.group(2) not in MONTHS:
+        return None
+    month, day = MONTHS.index(m.group(2)) + 1, int(m.group(1))
+    year = start.year + (1 if month < start.month - 6 else 0)
+    try:
+        return datetime.date(year, month, day)
+    except ValueError:
+        return None
+
+
+def webedia_sessions(page):
+    """{AlloCiné film id: {"HH:MM"}} and the days named in the page's headings."""
+    marks = [(m.start(), "film", m.group(1)) for m in re.finditer(r'href="/(?:films|movies)/(\d+)-', page)]
+    marks += [(m.start(), "time", m.group(1)) for m in re.finditer(r'aria-label="(\d\d:\d\d)(?: \([^)]*\))?"', page)]
+    marks.sort()
+    film, out = None, {}
+    for _, kind, value in marks:
+        if kind == "film":
+            film = int(value)
+        elif film:
+            out.setdefault(film, set()).add(value)
+    headings = re.findall(r'class="scheduleHeading[^"]*">([^<]+)<', page)
+    return out, headings
+
+
+def webedia(col, days=8):
+    if not CHROME:
+        print("webedia: Chrome isn't installed here, skipped (AlloCiné still covers these cinemas)", file=sys.stderr)
+        return
+    start = today()
+    jobs = []
+    for name, pattern in WEBEDIA:
+        for i in range(days):
+            d = start + datetime.timedelta(days=i)
+            jobs.append((name, d, pattern.format(d=d.isoformat()), None))
+    # Le Louxor: the films page lists the films; each film's page shows one day at a time
+    try:
+        listing = render(f"{LOUXOR[1]}/films/", ok=lambda p: "/films/" in p)
+        films = sorted(set(re.findall(r'href="(/films/(\d+)-[^"/?]+/?)', listing)))
+        for path, ac in films:
+            if not col.films.find(ac=int(ac)):
+                continue          # older films and events the app doesn't list
+            for i in range(days):
+                d = start + datetime.timedelta(days=i)
+                jobs.append((LOUXOR[0], d, f"{LOUXOR[1]}{path}?date={d.isoformat()}", int(ac)))
+    except Exception as ex:
+        print(f"{LOUXOR[0]}: {ex}", file=sys.stderr)
+
+    def run(job):
+        name, d, url, only = job
+        try:
+            page = render(url, ok=lambda p: "scheduleHeading" in p or "aucune s" in p.lower().replace("\u00a0", " "))
+        except Exception as ex:
+            return job, None, str(ex)
+        return job, page, None
+
+    counts, failed = {}, {}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+        for (name, d, url, only), page, err in pool.map(run, jobs):
+            if err:
+                failed[name] = failed.get(name, 0) + 1
+                continue
+            sessions, headings = webedia_sessions(page)
+            if only:   # a film's own page: every session on it is that film's
+                sessions = {only: set(re.findall(r'aria-label="(\d\d:\d\d)(?: \([^)]*\))?"', page))}
+            named = {heading_day(h, start) for h in headings} - {None}
+            if named and d not in named:
+                failed[name] = failed.get(name, 0) + 1     # the site showed another day: don't trust it
+                continue
+            for ac, hours in sessions.items():
+                if only and ac != only:
+                    continue
+                for hhmm in hours:
+                    col.add(name, d.isoformat(), hhmm, ac=ac)
+                    counts[name] = counts.get(name, 0) + 1
+            if not only:
+                col.cover(name, d.isoformat())
+    for name in [n for n, _ in WEBEDIA] + [LOUXOR[0]]:
+        extra = f", {failed[name]} pages failed after {TRIES} tries" if name in failed else ""
+        print(f"{name}: {counts.get(name, 0)} sessions{extra}")
+
+
 # ----------------------------------------------------------------
 
-SOURCES = {"ugc": ugc, "grandaction": grandaction, "balzac": balzac, "grandrex": grandrex, "studio28": studio28}
+SOURCES = {"ugc": ugc, "grandaction": grandaction, "balzac": balzac, "grandrex": grandrex, "studio28": studio28,
+           "webedia": webedia}
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""

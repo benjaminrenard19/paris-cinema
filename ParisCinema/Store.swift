@@ -95,7 +95,7 @@ final class Store {
         do {
             let data = try Data(contentsOf: url)
             let f = try decode(data)
-            guard !f.films.isEmpty else { message = "That file has no films in it."; return false }
+            guard !f.films.isEmpty else { message = String(localized: "That file has no films in it."); return false }
             try data.write(to: dataURL, options: .atomic)
             apply(f)
             usingBundledData = false
@@ -105,10 +105,10 @@ final class Store {
                 UserDefaults.standard.set(url.lastPathComponent, forKey: "linkedName")
                 linkedFileName = url.lastPathComponent
             }
-            message = "Loaded \(films.count) films across \(weeks.count) weeks."
+            message = String(localized: "Loaded \(films.count) films across \(weeks.count) weeks.")
             return true
         } catch {
-            message = "This file couldn't be read. Export it again from the Claude page."
+            message = String(localized: "This file couldn't be read. Export it again from the Claude page.")
             return false
         }
     }
@@ -126,7 +126,7 @@ final class Store {
             raw = try? Data(contentsOf: u)
         }
         guard let data = raw, let f = try? decode(data), !f.films.isEmpty else {
-            if force { message = "The linked file couldn't be opened. Import it again." }
+            if force { message = String(localized: "The linked file couldn't be opened. Import it again.") }
             return
         }
         if force || (f.exportedAt ?? "") > (exportedAt ?? "") {
@@ -134,9 +134,9 @@ final class Store {
             apply(f)
             usingBundledData = false
             if let u = f.user { merge(u) }
-            message = "Updated: \(films.count) films."
+            message = String(localized: "Updated: \(films.count) films.")
         } else if force {
-            message = "Already up to date."
+            message = String(localized: "Already up to date.")
         }
         if stale, let fresh = try? url.bookmarkData(options: .minimalBookmark, includingResourceValuesForKeys: nil, relativeTo: nil) {
             UserDefaults.standard.set(fresh, forKey: bookmarkKey)
@@ -156,7 +156,7 @@ final class Store {
         do {
             let (data, resp) = try await URLSession.shared.data(for: req)
             guard (resp as? HTTPURLResponse)?.statusCode == 200 else {
-                feedStatus = "GitHub didn't answer. Try again later."
+                feedStatus = String(localized: "GitHub didn't answer. Try again later.")
                 return
             }
             let f = try decode(data)
@@ -168,12 +168,12 @@ final class Store {
                 try? data.write(to: dataURL, options: .atomic)
                 apply(f)
                 usingBundledData = false
-                feedStatus = "Up to date: \(films.count) films."
+                feedStatus = String(localized: "Up to date: \(films.count) films.")
             } else {
-                feedStatus = "Already up to date."
+                feedStatus = String(localized: "Already up to date.")
             }
         } catch {
-            feedStatus = "Couldn't reach GitHub. Check your connection."
+            feedStatus = String(localized: "Couldn't reach GitHub. Check your connection.")
         }
     }
 
@@ -223,7 +223,7 @@ final class Store {
         let alerts: [PlanAlert] = plans.compactMap { entry -> PlanAlert? in
             let p = entry.value
             guard p.ok == true, let end = planEnd(entry.key, p) else { return nil }
-            return PlanAlert(id: entry.key, title: p.title ?? index[entry.key]?.title ?? "your film", cinema: p.cn, end: end)
+            return PlanAlert(id: entry.key, title: p.title ?? index[entry.key]?.title ?? String(localized: "your film"), cinema: p.cn, end: end)
         }
         Notifier.shared.schedule(alerts)
     }
@@ -241,14 +241,14 @@ final class Store {
                                 start: start,
                                 end: start.addingTimeInterval(TimeInterval(minutes * 60)),
                                 location: address.isEmpty ? p.cn : p.cn + ", " + address,
-                                notes: [film?.dir.map { "Directed by " + $0 }, film?.syn, "Planned in Sloth Cinema"].compactMap { $0 }.joined(separator: "\n\n"))
+                                notes: [film?.dir.map { String(localized: "Directed by \($0)") }, film?.syn, String(localized: "Planned in Sloth Cinema")].compactMap { $0 }.joined(separator: "\n\n"))
         }
         CalendarSync.shared.sync(items)
     }
 
     // MARK: Showtimes
 
-    private func sameCinema(_ a: String, _ b: String) -> Bool {
+    func sameCinema(_ a: String, _ b: String) -> Bool {
         let x = a.folded, y = b.folded
         guard !x.isEmpty, !y.isEmpty else { return false }
         return x == y || x.contains(y) || y.contains(x)
@@ -350,10 +350,12 @@ final class Store {
         saveUser()
     }
 
-    /// Your cinemas first (one that suits the film if possible), otherwise a typical one.
+    /// Your cinemas first (one that suits the film if possible), then the ones you go to most,
+    /// otherwise a typical one.
     func defaultCinema(for f: Film) -> Cinema {
         let mine = myCinemas.compactMap { cinema(named: $0) }
         if let c = mine.first(where: { $0.type == f.venueType }) ?? mine.first { return c }
+        if let c = habits.cinemas.lazy.compactMap({ self.cinema(named: $0) }).first { return c }
         return cinemas.first { $0.type == f.venueType } ?? cinemas.first ?? Cinema.defaults[0]
     }
 
@@ -384,12 +386,19 @@ final class Store {
         saveUser()
     }
 
-    /// A favourite you haven't seen gets a provisional Saturday-evening plan.
+    /// A favourite you haven't seen gets a provisional plan: the day and time you usually go
+    /// (Saturday evening until the app knows your habits), at your usual cinema.
     func ensurePlan(_ f: Film) {
         guard seen[f.id] == nil, plans[f.id] == nil else { return }
         let start = f.date > D.today ? f.date : D.today
         let c = defaultCinema(for: f)
-        plans[f.id] = Plan(d: D.saturdayAfter(start), t: "20:00", cn: c.name, ca: c.address, title: f.title, fd: f.date)
+        let h = habits
+        let day = h.nextUsualDay(from: start)
+        var time = h.usualTime ?? "20:00"
+        // A known session close to your usual time beats a guess.
+        let times = showtimes(for: f.id, at: c.name)[day] ?? []
+        if let best = Habits.closest(times, to: time) { time = best }
+        plans[f.id] = Plan(d: day, t: time, cn: c.name, ca: c.address, title: f.title, fd: f.date)
     }
 
     /// Any change you make to a plan confirms it.
@@ -402,8 +411,20 @@ final class Store {
     }
 
     func setSeen(_ f: Film, rating: Int, on day: String) {
+        // Where and when you went (from your plan) teaches the app your habits.
+        let p = plans[f.id]
+        let old = seen[f.id]
         plans[f.id] = nil
-        seen[f.id] = SeenEntry(d: day, r: max(0, min(5, rating)), t: f.title, fd: f.date, c: f.cat, dir: f.dir, o: f.origin, orig: f.orig)
+        seen[f.id] = SeenEntry(d: day, r: max(0, min(5, rating)), t: f.title, fd: f.date, c: f.cat, dir: f.dir, o: f.origin, orig: f.orig,
+                               cn: p?.cn ?? old?.cn, tm: p?.t ?? old?.tm)
+        saveUser()
+    }
+
+    /// Records where you saw a film (from its page, when there was no plan).
+    func setSeenCinema(_ id: String, _ name: String?) {
+        guard var s = seen[id] else { return }
+        s.cn = name?.nilIfEmpty
+        seen[id] = s
         saveUser()
     }
 
@@ -480,14 +501,14 @@ final class Store {
         var out: [Showing] = []
         for c in list {
             for (day, times) in c.times ?? [:] where day >= today {
-                for t in times { out.append(Showing(day: day, time: t, cinema: c.name ?? "Cinema", address: c.address ?? "")) }
+                for t in times { out.append(Showing(day: day, time: t, cinema: c.name ?? String(localized: "Cinema"), address: c.address ?? "")) }
             }
         }
         return out.sorted { ($0.day + $0.time) < ($1.day + $1.time) }
     }
 
     var dataSummary: String {
-        guard let first = weeks.first, let last = weeks.last else { return "No films loaded." }
-        return "\(films.count) films · \(weeks.count) weeks · \(D.fmt(first, "d MMM yyyy")) to \(D.fmt(last, "d MMM yyyy"))"
+        guard let first = weeks.first, let last = weeks.last else { return String(localized: "No films loaded.") }
+        return String(localized: "\(films.count) films · \(weeks.count) weeks · \(D.fmt(first, "d MMM yyyy")) to \(D.fmt(last, "d MMM yyyy"))")
     }
 }
