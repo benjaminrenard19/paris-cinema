@@ -20,7 +20,22 @@ final class Theme {
 
     /// 0: like the iPhone, 1: light, 2: dark.
     var appearance: Int {
-        didSet { UserDefaults.standard.set(appearance, forKey: "appearance") }
+        didSet {
+            UserDefaults.standard.set(appearance, forKey: "appearance")
+            apply()
+        }
+    }
+
+    /// Sets light, dark or automatic on the app's windows. (SwiftUI's preferredColorScheme
+    /// doesn't go back to automatic once light or dark has been set, so the window's own
+    /// style is used instead.) Call on the main thread.
+    func apply() {
+        let style: UIUserInterfaceStyle = appearance == 1 ? .light : appearance == 2 ? .dark : .unspecified
+        MainActor.assumeIsolated {
+            for case let scene as UIWindowScene in UIApplication.shared.connectedScenes {
+                for window in scene.windows { window.overrideUserInterfaceStyle = style }
+            }
+        }
     }
 
     private init() {

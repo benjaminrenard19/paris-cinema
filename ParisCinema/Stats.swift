@@ -505,7 +505,7 @@ struct StoryView: View {
             }
             .task(id: period.id) { await prepare() }
         }
-        .preferredColorScheme(.dark)
+        .environment(\.colorScheme, .dark)
     }
 
     private func card(_ p: StoryPage, _ s: StatsSummary) -> StoryCard {

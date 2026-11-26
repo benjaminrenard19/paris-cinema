@@ -63,7 +63,7 @@ struct PosterViewer: View {
             .padding(.top, 8)
             .accessibilityLabel("Close")
         }
-        .preferredColorScheme(.dark)
+        .environment(\.colorScheme, .dark)
         .statusBarHidden()
     }
 

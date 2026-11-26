@@ -23,6 +23,7 @@ struct ParisCinemaApp: App {
         .onChange(of: scenePhase, initial: true) { _, phase in
             if phase == .background { store.scheduleBackgroundRefresh() }
             guard phase == .active else { return }
+            Theme.shared.apply()
             store.refreshFromLinkedFile()
             Task { @MainActor in await store.refreshFromFeed() }
         }
@@ -67,7 +68,7 @@ struct ContentView: View {
                 .tabItem { Label("Cinemas", systemImage: "map") }
         }
         .tint(theme.color)
-        .preferredColorScheme(theme.scheme)
+        .onAppear { theme.apply() }
         .sheet(item: $model.checkIn) { c in
             CheckInView(checkIn: c).environment(store)
         }
