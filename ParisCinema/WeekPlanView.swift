@@ -141,7 +141,7 @@ struct WeekPlanView: View {
     }
 }
 
-// MARK: - Add or change a plan
+// MARK: - Add or change a plan: film, then day, then cinema and session
 
 struct AddPlanView: View {
     @Environment(Store.self) private var store
@@ -149,11 +149,41 @@ struct AddPlanView: View {
     let target: PlanTarget
 
     @State private var filmId: String?
-    @State private var start = Date()
+    @State private var day = D.today
+    @State private var time = "20:00"
     @State private var cinemaName = ""
+    @State private var showCalendar = false
     @State private var ready = false
 
     private var film: Film? { filmId.flatMap { store.index[$0] } }
+    private var days: [String] { (0..<14).map { D.addDays(D.today, $0) } }
+
+    /// Your first three starred cinemas, then the chosen cinema if it's another one.
+    private var suggested: [Cinema] {
+        var list = Array(store.myCinemas.compactMap { store.cinema(named: $0) }.prefix(3))
+        if list.count < 3, let f = film {
+            // Fill up with cinemas that show the film, then typical ones.
+            let showing = (store.showtimes[f.id]?.cinemas ?? []).compactMap { $0.name }.compactMap { store.cinema(named: $0) }
+            for c in showing + [store.defaultCinema(for: f)] where list.count < 3 && !list.contains(c) { list.append(c) }
+        }
+        if !cinemaName.isEmpty, !list.contains(where: { $0.name == cinemaName }), let c = store.cinema(named: cinemaName) {
+            list.append(c)
+        }
+        return list
+    }
+
+    private func sessions(_ c: Cinema, _ d: String) -> [String] {
+        guard let f = film else { return [] }
+        let now = D.stampString(Date()).time
+        return (store.showtimes(for: f.id, at: c.name)[d] ?? []).filter { d > D.today || $0 >= now }
+    }
+
+    private func hasSessions(_ d: String) -> Bool { suggested.contains { !sessions($0, d).isEmpty } }
+
+    private var chosenHasSessions: Bool {
+        guard let c = store.cinema(named: cinemaName) else { return false }
+        return !sessions(c, day).isEmpty
+    }
 
     var body: some View {
         NavigationStack {
@@ -167,7 +197,8 @@ struct AddPlanView: View {
                                 PosterTile(title: f.title, cat: f.category, width: 40, url: f.poster)
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(f.title).font(.headline)
-                                    Text("In cinemas from \(D.fmt(f.date, "d MMM"))").font(.caption).foregroundStyle(.secondary)
+                                    Text([("In cinemas from " + D.fmt(f.date, "d MMM")), f.durationText].compactMap { $0 }.joined(separator: " · "))
+                                        .font(.caption).foregroundStyle(.secondary)
                                 }
                             }
                         } else {
@@ -176,44 +207,66 @@ struct AddPlanView: View {
                     }
                 }
 
-                Section {
-                    DatePicker("Day and time", selection: $start, displayedComponents: [.date, .hourAndMinute])
-                        .environment(\.timeZone, D.paris)
-                    if let f = film {
-                        let day = D.stampString(start).day
-                        let shows = store.showings(for: f.id).filter { $0.day == day }
-                        if !shows.isEmpty {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    ForEach(shows) { s in
-                                        Button {
-                                            start = D.stamp(day: s.day, time: s.time) ?? start
-                                            cinemaName = s.cinema
-                                        } label: {
-                                            VStack(alignment: .leading, spacing: 2) {
-                                                Text(s.time).font(.subheadline.weight(.semibold))
-                                                Text(s.cinema).font(.caption2).lineLimit(1)
-                                            }
-                                            .padding(.horizontal, 10).padding(.vertical, 6)
-                                            .background(Color.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
-                                        }
-                                        .buttonStyle(.plain)
+                if film != nil {
+                    Section {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                ForEach(days, id: \.self) { d in
+                                    Button { pickDay(d) } label: {
+                                        DayChip(day: d, selected: d == day, available: hasSessions(d))
                                     }
+                                    .buttonStyle(.plain)
                                 }
                             }
+                            .padding(.vertical, 4)
+                        }
+                        DisclosureGroup("Calendar", isExpanded: $showCalendar) {
+                            DatePicker("Day", selection: Binding(get: { D.date(day) ?? Date() }, set: { pickDay(D.str($0)) }),
+                                       in: Date()..., displayedComponents: .date)
+                                .datePickerStyle(.graphical)
+                                .environment(\.timeZone, D.paris)
+                        }
+                    } header: {
+                        Text("1. Day · \(D.fmt(day, "EEEE d MMMM"))")
+                    } footer: {
+                        Text("A green dot means one of your cinemas below shows the film that day.")
+                    }
+
+                    Section {
+                        ForEach(suggested) { c in cinemaRow(c) }
+                        NavigationLink {
+                            CinemaPickerView(film: film, selected: $cinemaName)
+                        } label: {
+                            Label("Another cinema", systemImage: "magnifyingglass")
+                        }
+                    } header: {
+                        Text("2. Cinema and session")
+                    } footer: {
+                        if store.myCinemas.isEmpty {
+                            Text("Star your cinemas in the Cinemas tab: your first three appear here, with their session times.")
+                        } else {
+                            Text("Tap a session time to choose it. Session times come from the daily check at 7 am.")
                         }
                     }
-                } header: {
-                    Text("When")
-                } footer: {
-                    Text("After the film you'll get a notification to say how it was, or to pick another day.")
-                }
 
-                Section("Where") {
-                    NavigationLink {
-                        CinemaPickerView(film: film, selected: $cinemaName)
-                    } label: {
-                        LabeledContent("Cinema", value: cinemaName.isEmpty ? "Choose" : cinemaName)
+                    if !chosenHasSessions {
+                        Section {
+                            DatePicker("Time", selection: Binding(get: { D.stamp(day: day, time: time) ?? Date() },
+                                                                  set: { time = D.stampString($0).time }),
+                                       displayedComponents: .hourAndMinute)
+                                .environment(\.timeZone, D.paris)
+                        } header: {
+                            Text("3. Time")
+                        } footer: {
+                            Text("No session times known for \(cinemaName.isEmpty ? "this cinema" : cinemaName) that day, so pick a time yourself.")
+                        }
+                    }
+
+                    Section {
+                        Label("\(D.fmt(day, "EEE d MMM")) at \(time)\(cinemaName.isEmpty ? "" : " · " + cinemaName)", systemImage: "ticket")
+                            .font(.headline)
+                    } footer: {
+                        Text("After the film you'll get a notification to say how it was, or to pick another day.")
                     }
                 }
             }
@@ -226,28 +279,132 @@ struct AddPlanView: View {
                 }
             }
             .onAppear(perform: setUp)
-            .onChange(of: filmId) { _, _ in
-                if cinemaName.isEmpty, let f = film { cinemaName = store.defaultCinema(for: f).name }
+            .onChange(of: filmId) { old, _ in
+                // The first change is the film this sheet opened with; setUp already handled it.
+                if old != nil || target.filmId == nil { suggestDay() }
             }
+        }
+    }
+
+    private func cinemaRow(_ c: Cinema) -> some View {
+        let times = sessions(c, day)
+        let chosen = c.name == cinemaName
+        return VStack(alignment: .leading, spacing: 8) {
+            Button {
+                cinemaName = c.name
+                if let first = times.first, !times.contains(time) { time = times.first { $0 >= "18:00" } ?? first }
+            } label: {
+                HStack(spacing: 6) {
+                    if store.isPreferred(c.name) {
+                        Image(systemName: "star.fill").font(.caption).foregroundStyle(Color(hex: 0xE0A800))
+                    }
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(c.name).font(.headline).foregroundStyle(.primary)
+                        Text(c.address).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                    }
+                    Spacer()
+                    if chosen { Image(systemName: "checkmark.circle.fill").foregroundStyle(Color.accentColor) }
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            if times.isEmpty {
+                Text("No session times known for this day")
+                    .font(.caption).foregroundStyle(.secondary)
+            } else {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 66), spacing: 8)], alignment: .leading, spacing: 8) {
+                    ForEach(times, id: \.self) { t in
+                        Button {
+                            cinemaName = c.name
+                            time = t
+                        } label: {
+                            TimeChip(time: t, selected: chosen && t == time)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+        .padding(.vertical, 4)
+    }
+
+    private func pickDay(_ d: String) {
+        day = d
+        if let c = store.cinema(named: cinemaName) {
+            let times = sessions(c, d)
+            if !times.isEmpty && !times.contains(time) { time = times.first { $0 >= "18:00" } ?? times[times.count - 1] }
+        }
+    }
+
+    /// Suggests the first day one of your cinemas shows the film, else the release day or the chosen day.
+    private func suggestDay() {
+        guard let f = film else { return }
+        if let d = days.first(where: { hasSessions($0) }) {
+            day = d
+            if let c = suggested.first(where: { !sessions($0, d).isEmpty }) {
+                cinemaName = c.name
+                let times = sessions(c, d)
+                time = times.first { $0 >= "18:00" } ?? times[times.count - 1]
+            }
+        } else {
+            if f.date > day { day = f.date }
+            if cinemaName.isEmpty { cinemaName = suggested.first?.name ?? store.defaultCinema(for: f).name }
         }
     }
 
     private func setUp() {
         guard !ready else { return }
         ready = true
+        day = max(target.day, D.today)
         filmId = target.filmId
-        let existing = target.filmId.flatMap { store.plans[$0] }
-        start = D.stamp(day: existing?.d ?? target.day, time: existing?.t ?? "20:00") ?? Date()
-        if let e = existing { cinemaName = e.cn }
-        else if let f = film { cinemaName = store.defaultCinema(for: f).name }
-        else if let first = store.myCinemas.first { cinemaName = first }
+        if let id = target.filmId, let existing = store.plans[id], existing.ok == true {
+            day = existing.d
+            time = existing.t
+            cinemaName = existing.cn
+        } else {
+            suggestDay()
+        }
     }
 
     private func save() {
         guard let f = film else { return }
-        let s = D.stampString(start)
-        store.planFilm(f, day: s.day, time: s.time, cinemaName: cinemaName)
+        store.planFilm(f, day: day, time: time, cinemaName: cinemaName)
         dismiss()
+    }
+}
+
+struct DayChip: View {
+    let day: String
+    let selected: Bool
+    let available: Bool
+
+    var body: some View {
+        VStack(spacing: 3) {
+            Text(day == D.today ? "Today" : D.fmt(day, "EEE")).font(.caption2)
+            Text(D.fmt(day, "d")).font(.headline)
+            Circle().fill(available ? Color.green : Color.clear).frame(width: 6, height: 6)
+        }
+        .frame(width: 50, height: 62)
+        .background(selected ? Color.accentColor : Color.secondary.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
+        .foregroundStyle(selected ? Color.white : Color.primary)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(D.fmt(day, "EEEE d MMMM") + (available ? ", sessions available" : ""))
+        .accessibilityAddTraits(selected ? .isSelected : [])
+    }
+}
+
+struct TimeChip: View {
+    let time: String
+    let selected: Bool
+
+    var body: some View {
+        Text(time)
+            .font(.subheadline.weight(.semibold).monospacedDigit())
+            .frame(minWidth: 58)
+            .padding(.horizontal, 8).padding(.vertical, 8)
+            .background(selected ? Color.accentColor : Color.accentColor.opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
+            .foregroundStyle(selected ? Color.white : Color.accentColor)
+            .accessibilityAddTraits(selected ? .isSelected : [])
     }
 }
 
