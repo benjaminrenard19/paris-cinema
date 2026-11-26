@@ -5,11 +5,15 @@
   python3 scripts/sessions.py ugc           # UGC's Paris cinemas (ugc.fr), every published day
   python3 scripts/sessions.py grandaction   # Le Grand Action (legrandaction.com)
   python3 scripts/sessions.py balzac        # Le Balzac (cinemabalzac.com)
+  python3 scripts/sessions.py grandrex      # Le Grand Rex (legrandrex.com)
+  python3 scripts/sessions.py studio28      # Studio 28 (cinema-studio28.fr)
 
 Cinemas publish their programme a week at a time (Wednesday to Tuesday), usually on the
 Monday or Tuesday before, so these sources reach next Tuesday, plus special screenings
 further ahead. AlloCiné's cinema pages (scripts/allocine.py theaters) add today and tomorrow
-for every other cinema.
+for every other cinema. Le Louxor, Max Linder, Luminor, Le Champo, Reflet Médicis, Escurial,
+Saint-André des Arts, Christine, Les 7 Parnassiens, Elysées Lincoln, Pathé and mk2 load their
+times in the browser from booking services rather than in the page, so they come from AlloCiné.
 
 Each day a source has read for a cinema replaces what was stored for that cinema and day;
 days it didn't read are kept; past days are dropped. Requests are spaced out (1.5 s).
@@ -76,7 +80,7 @@ class Films:
     NOISE = [
         r"\bavant[- ]premi[eè]re\b.*$", r"\bavp\b.*$", r"\(?\b(vf|vost|vostfr|vo)\b\)?",
         r"\(?\b(4k|3d|imax|4dx|screenx|dolby( cinema)?|version (longue|restaur[ée]e))\b\)?",
-        r"\s+-\s+(partie|part)\s+\d+.*$", r"\s*\(\d{4}\)$",
+        r"\s+-\s+(partie|part)\s+\d+.*$", r"\s*\([^)]*\)\s*$",
     ]
 
     def __init__(self):
@@ -324,9 +328,69 @@ def balzac(col):
     cotecine(col, "Le Balzac", "https://www.cinemabalzac.com/horaires/")
 
 
+# ---------------------------------------------------------------- Le Grand Rex
+
+def grandrex(col):
+    name = "Le Grand Rex"
+    try:
+        page, _ = get("https://www.legrandrex.com/cinema/")
+    except Exception as ex:
+        print(f"{name}: {ex}", file=sys.stderr)
+        return
+    time.sleep(PAUSE)
+    days = sorted(set(re.findall(r'href="/cinema/\?date=(\d{4}-\d\d-\d\d)"\s+data-jour', page)))
+    n = 0
+    for day in days:
+        try:
+            page, _ = get(f"https://www.legrandrex.com/cinema/?date={day}")
+        except Exception as ex:
+            print(f"{name} {day}: {ex}", file=sys.stderr)
+            time.sleep(PAUSE)
+            continue
+        time.sleep(PAUSE)
+        for card in re.findall(r'<article class="carte[^"]*"[^>]*>(.*?)</article>', page, re.S):
+            if f"?date={day}" not in card:
+                continue
+            title = re.search(r'carte__libelle">(.*?)</span>', card, re.S)
+            seances = " ".join(re.findall(r'class="carte__seances"[^>]*>(.*?)</span>', card, re.S))
+            for hhmm in sorted(set(re.findall(r"\b([01]\d|2[0-3]):([0-5]\d)\b", text(seances)))):
+                col.add(name, day, f"{hhmm[0]}:{hhmm[1]}", title=text(title.group(1)) if title else None)
+                n += 1
+        col.covered.add((name, day))
+    print(f"{name}: {n} sessions over {len(days)} days")
+
+
+# ---------------------------------------------------------------- Studio 28
+
+def studio28(col):
+    name = "Studio 28"
+    try:
+        page, _ = get("https://www.cinema-studio28.fr/tous-les-films/")
+    except Exception as ex:
+        print(f"{name}: {ex}", file=sys.stderr)
+        return
+    time.sleep(PAUSE)
+    days, n = set(), 0
+    for art in re.findall(r'<article class="mec-[^"]*event-article[^"]*">(.*?)</article>', page, re.S):
+        day = re.search(r"occurrence=(\d{4}-\d\d-\d\d)", art)
+        hour = re.search(r"mec-event-time[^>]*>(?:\s*<i[^>]*></i>)?\s*(\d{1,2})\s*h\s*(\d{2})", art)
+        title = re.search(r'aria-label="([^"]+)"', art)
+        if not (day and hour and title) or day.group(1) < today().isoformat():
+            continue
+        days.add(day.group(1))
+        col.add(name, day.group(1), f"{int(hour.group(1)):02d}:{hour.group(2)}", title=html.unescape(title.group(1)))
+        n += 1
+    if days:
+        d, last = today(), datetime.date.fromisoformat(max(days))
+        while d <= last:
+            col.covered.add((name, d.isoformat()))
+            d += datetime.timedelta(days=1)
+    print(f"{name}: {n} sessions over {len(days)} days")
+
+
 # ----------------------------------------------------------------
 
-SOURCES = {"ugc": ugc, "grandaction": grandaction, "balzac": balzac}
+SOURCES = {"ugc": ugc, "grandaction": grandaction, "balzac": balzac, "grandrex": grandrex, "studio28": studio28}
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""

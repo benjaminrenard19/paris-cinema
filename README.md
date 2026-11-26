@@ -5,9 +5,9 @@ Every film released in Paris cinemas since January 2026, week by week, plus an i
 - `data/`: the film database. There is one file per French cinema week (Wednesday to Tuesday) in `data/weeks/`, plus producers and synopses (`details.json`), showtimes (`showtimes.json`), links to official posters (`posters.json`) and the Paris cinemas the app lists (`cinemas.json`).
 - `data/extras.json`: posters, critics and audience ratings and running times, read from AlloCiné's public pages by `scripts/allocine.py`.
 - `data/showtimes.json`: session times, refreshed every morning from two kinds of source:
-  - the cinemas' own websites, by `python3 scripts/sessions.py sites`: UGC's 11 Paris cinemas (ugc.fr), Le Grand Action and Le Balzac. These list every day the cinema has published, normally up to next Tuesday (the new week comes out on Monday or Tuesday), plus special screenings further ahead;
+  - the cinemas' own websites, by `python3 scripts/sessions.py sites`: UGC's 11 Paris cinemas (ugc.fr), Le Grand Rex, Le Grand Action, Le Balzac and Studio 28. These list every day the cinema has published, normally up to next Tuesday (the new week comes out on Monday or Tuesday), plus special screenings further ahead;
   - each cinema's public AlloCiné page, by `python3 scripts/allocine.py theaters` (cinemas and codes in `data/theaters.json`), which gives today and tomorrow everywhere else, including Pathé, mk2 and Gaumont Disney Village.
-  Pathé's and mk2's websites load their times in the browser rather than in the page, so they come through AlloCiné. Past days are dropped.
+  Pathé, mk2, Le Louxor, Max Linder, Luminor, Le Champo, Reflet Médicis, Escurial, Saint-André des Arts, Christine, Les 7 Parnassiens and Elysées Lincoln load their times in the browser from booking services rather than in the page, so they come through AlloCiné. Past days are dropped.
 - `data/paris-cinema.json`: everything combined into one file. This is the file the app downloads. It is built by `scripts/build.py`.
 - `ParisCinema/` and `ParisCinema.xcodeproj`: the SwiftUI iPhone app.
 
