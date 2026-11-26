@@ -40,13 +40,13 @@ You need a Mac with Xcode 16 or later, and an iPhone on iOS 17 or later.
 
 With a free Apple ID, the app stops opening after 7 days. Plug the iPhone in and press ▶ again; your lists are kept.
 
-To get a new version of the app (not needed for new films, posters or showtimes, which download by themselves):
+New versions of the app install themselves: every time you press ▶, Xcode first gets the latest version from GitHub (a pre-action in the shared "ParisCinema" scheme), keeping your signing team. If a build fails just after an update that added new files, press ▶ once more. To update by hand instead:
 
 ```sh
-cd ~/Desktop/paris-cinema && git stash && git pull && git stash pop
+cd ~/Desktop/paris-cinema && git pull --rebase --autostash
 ```
 
-Then press ▶ in Xcode. `git stash` keeps your signing team while the update comes in.
+New films, posters and showtimes don't need Xcode at all: the app downloads them by itself.
 
 To bring over the favourites, watched films and plans you made on the Claude page: on the page, tap **Export for iPhone app** and save the file to iCloud Drive. In the app, tap **⟳** on the Films tab and choose **Import**.
 
