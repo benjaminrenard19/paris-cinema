@@ -360,6 +360,12 @@ struct FilmDetailView: View {
         return out
     }
 
+    private func seenDate(_ f: Film) -> Binding<Date> {
+        Binding(
+            get: { store.seen[f.id].flatMap { D.date($0.d) } ?? Date() },
+            set: { store.setSeenDate(f.id, D.str($0)) })
+    }
+
     private func planDate(_ f: Film, _ p: Plan) -> Binding<Date> {
         Binding(
             get: { D.stamp(day: p.d, time: p.t) ?? Date() },
