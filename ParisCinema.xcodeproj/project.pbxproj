@@ -198,6 +198,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "Adds your planned cinema outings to your calendar.";
 				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "Adds your planned cinema outings to your calendar.";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Keeps your planned cinema outings in the calendar you choose, and moves or removes them when your plans change.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Shows where you are on the cinema map.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -231,6 +232,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "Adds your planned cinema outings to your calendar.";
 				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "Adds your planned cinema outings to your calendar.";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Keeps your planned cinema outings in the calendar you choose, and moves or removes them when your plans change.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Shows where you are on the cinema map.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

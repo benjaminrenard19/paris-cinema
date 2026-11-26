@@ -9,6 +9,9 @@ struct FilmDetailView: View {
 
     @State private var watchedOn = Date()
     @State private var calendarEvent: CalendarDraft?
+    @State private var alt: ArtworkHit?
+    @State private var viewer: Film?
+    @State private var showCalendar = false
 
     var body: some View {
         if let f = store.index[id] {
@@ -85,6 +88,14 @@ struct FilmDetailView: View {
                 .accessibilityLabel(store.isFav(f.id) ? "Remove from favourites" : "Add to favourites")
             }
         }
+        .fullScreenCover(item: $viewer) { film in
+            PosterViewer(film: film, posters: posters(film), minutes: alt?.minutes)
+        }
+        .task(id: id) {
+            if let film = store.index[id], film.poster == nil || film.duration == nil {
+                alt = await Artwork.shared.lookup(film)
+            }
+        }
         .sheet(item: $calendarEvent) { draft in
             EventEditor(draft: draft) { calendarEvent = nil }
                 .ignoresSafeArea()
@@ -93,7 +104,10 @@ struct FilmDetailView: View {
 
     private func header(_ f: Film) -> some View {
         HStack(alignment: .top, spacing: 16) {
-            PosterTile(title: f.title, cat: f.category, width: 110, url: f.poster)
+            PosterTile(title: f.title, cat: f.category, width: 110, url: f.poster ?? alt?.poster)
+                .onTapGesture { viewer = f }
+                .accessibilityAddTraits(.isButton)
+                .accessibilityLabel("Show the poster full screen")
                 .overlay(alignment: .topTrailing) {
                     Button { store.toggleFav(f) } label: {
                         Image(systemName: store.isFav(f.id) ? "star.fill" : "star")
@@ -117,6 +131,10 @@ struct FilmDetailView: View {
                 }
                 Text("In cinemas from \(D.fmt(f.date, "EEEE d MMMM yyyy"))")
                     .font(.subheadline)
+                if let line = facts(f) {
+                    Text(line).font(.subheadline.weight(.medium)).foregroundStyle(.secondary)
+                }
+                Text("Tap the poster for more").font(.caption2).foregroundStyle(.tertiary)
             }
         }
         .padding(.vertical, 8)
@@ -142,47 +160,65 @@ struct FilmDetailView: View {
         }
     }
 
-    // MARK: Plan to watch
+    // MARK: Plan to watch: cinema, then day, then time
 
     @ViewBuilder
     private func planSection(_ f: Film, _ p: Plan) -> some View {
-        let showings = store.showings(for: f.id)
+        let byDay = store.showtimes(for: f.id, at: p.cn)
         Section {
-            if !showings.isEmpty {
+            NavigationLink {
+                CinemaPickerView(film: f, selected: planCinema(f, p))
+            } label: {
+                LabeledContent {
+                    HStack(spacing: 4) {
+                        if store.isPreferred(p.cn) { Image(systemName: "star.fill").font(.caption).foregroundStyle(Color(hex: 0xE0A800)) }
+                        Text(p.cn)
+                    }
+                } label: {
+                    step(1, "Cinema")
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 10) {
+                step(2, "Day")
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
-                        ForEach(showings.prefix(20)) { s in
-                            let on = s.day == p.d && s.time == p.t && s.cinema == p.cn
-                            Button {
-                                store.updatePlan(f.id, Plan(d: s.day, t: s.time, cn: s.cinema, ca: s.address, title: f.title, fd: f.date))
-                            } label: {
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text("\(D.fmt(s.day, "EEE d")) · \(s.time)").font(.subheadline.weight(.semibold))
-                                    Text(s.cinema).font(.caption2).lineLimit(1)
-                                }
-                                .padding(.horizontal, 10).padding(.vertical, 6)
-                                .background(on ? Color.accentColor : Color.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
-                                .foregroundStyle(on ? Color.white : Color.accentColor)
+                        ForEach(nextDays, id: \.self) { day in
+                            Button { setDay(f, p, day) } label: {
+                                dayChip(day, selected: day == p.d, available: byDay[day] != nil)
                             }
                             .buttonStyle(.plain)
                         }
                     }
                 }
+                Text(byDay.isEmpty
+                     ? "No showtimes known yet for this cinema. Pick any day, or check the calendar."
+                     : "A green dot means this cinema shows the film that day.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            .padding(.vertical, 4)
+
+            DisclosureGroup("Calendar", isExpanded: $showCalendar) {
+                DatePicker("Day", selection: planDay(f, p), in: Date()..., displayedComponents: .date)
+                    .datePickerStyle(.graphical)
+                    .environment(\.timeZone, D.paris)
             }
 
-            DatePicker("Day and time", selection: planDate(f, p), in: Date()..., displayedComponents: [.date, .hourAndMinute])
-                .environment(\.timeZone, D.paris)
-
-            NavigationLink {
-                CinemaPickerView(film: f, selected: planCinema(f, p))
-            } label: {
-                LabeledContent("Cinema") {
-                    HStack(spacing: 4) {
-                        if store.isPreferred(p.cn) { Image(systemName: "star.fill").font(.caption).foregroundStyle(Color(hex: 0xE0A800)) }
-                        Text(p.cn)
+            VStack(alignment: .leading, spacing: 10) {
+                step(3, "Time")
+                if let times = byDay[p.d], !times.isEmpty {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 66), spacing: 8)], alignment: .leading, spacing: 8) {
+                        ForEach(times, id: \.self) { t in
+                            Button { setTime(f, p, t) } label: { timeChip(t, selected: t == p.t) }
+                                .buttonStyle(.plain)
+                        }
                     }
+                } else {
+                    DatePicker("Time", selection: planTime(f, p), displayedComponents: .hourAndMinute)
+                        .environment(\.timeZone, D.paris)
                 }
             }
+            .padding(.vertical, 4)
 
             if p.ok != true {
                 Button { store.confirmPlan(f.id) } label: {
@@ -202,24 +238,126 @@ struct FilmDetailView: View {
             Text("Plan to watch")
         } footer: {
             VStack(alignment: .leading, spacing: 4) {
+                Text("\(D.fmt(p.d, "EEEE d MMMM")) at \(p.t), \(p.cn).")
                 if p.ok == true {
-                    Text("After the film you'll get a notification to say how it was, or to pick another day.")
+                    Text(CalendarSync.shared.enabled
+                         ? "Saved to your calendar automatically. After the film you'll get a notification to say how it was."
+                         : "After the film you'll get a notification to say how it was, or to pick another day.")
                 } else {
-                    Text("Provisional plan. Confirm it, or change the day, time or cinema, to get a notification after the film.")
+                    Text("Provisional plan. Confirm it, or change the cinema, day or time, to get a notification after the film.")
                 }
-                if showings.isEmpty {
-                    Text("Real showtimes appear here after the Tuesday update, once cinemas publish the week.")
-                } else if let when = D.when(store.showtimes[f.id]?.updatedAt) {
-                    Text("Showtimes checked \(when). Tap one to plan it.")
+                if let when = D.when(store.showtimes[f.id]?.updatedAt) { Text("Showtimes checked \(when).") }
+            }
+        }
+
+        let today = store.todayScreenings(f.id)
+        if !today.rows.isEmpty {
+            Section {
+                Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 12) {
+                    ForEach(today.rows, id: \.cinema) { row in
+                        GridRow {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(row.cinema).font(.subheadline.weight(.semibold)).lineLimit(2)
+                                if let c = store.cinema(named: row.cinema) {
+                                    Text(c.address).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                                }
+                            }
+                            .frame(width: 120, alignment: .leading)
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 6) {
+                                    ForEach(row.times, id: \.self) { t in
+                                        Button {
+                                            store.updatePlan(f.id, Plan(d: D.today, t: t, cn: row.cinema,
+                                                                        ca: store.cinema(named: row.cinema)?.address,
+                                                                        title: f.title, fd: f.date))
+                                        } label: {
+                                            timeChip(t, selected: p.d == D.today && p.t == t && p.cn == row.cinema)
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
+                .padding(.vertical, 4)
+            } header: {
+                Text(today.mine ? "Today at your cinemas" : "Today in Paris")
+            } footer: {
+                Text(today.mine ? "Tap a time to plan it." : "Star your cinemas in the Cinemas tab to see only those here. Tap a time to plan it.")
             }
         }
     }
 
-    private func seenDate(_ f: Film) -> Binding<Date> {
-        Binding(
-            get: { store.seen[f.id].flatMap { D.date($0.d) } ?? Date() },
-            set: { store.setSeenDate(f.id, D.str($0)) })
+    private var nextDays: [String] { (0..<14).map { D.addDays(D.today, $0) } }
+
+    private func step(_ n: Int, _ title: String) -> some View {
+        HStack(spacing: 8) {
+            Text("\(n)")
+                .font(.caption.weight(.bold))
+                .foregroundStyle(.white)
+                .frame(width: 20, height: 20)
+                .background(Color.accentColor, in: Circle())
+            Text(title).font(.subheadline.weight(.semibold))
+        }
+    }
+
+    private func dayChip(_ day: String, selected: Bool, available: Bool) -> some View {
+        VStack(spacing: 3) {
+            Text(day == D.today ? "Today" : D.fmt(day, "EEE")).font(.caption2)
+            Text(D.fmt(day, "d")).font(.headline)
+            Circle().fill(available ? Color.green : Color.clear).frame(width: 6, height: 6)
+        }
+        .frame(width: 50, height: 62)
+        .background(selected ? Color.accentColor : Color.secondary.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
+        .foregroundStyle(selected ? Color.white : Color.primary)
+    }
+
+    private func timeChip(_ t: String, selected: Bool) -> some View {
+        Text(t)
+            .font(.subheadline.weight(.semibold).monospacedDigit())
+            .frame(minWidth: 58)
+            .padding(.horizontal, 8).padding(.vertical, 8)
+            .background(selected ? Color.accentColor : Color.accentColor.opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
+            .foregroundStyle(selected ? Color.white : Color.accentColor)
+    }
+
+    private func setDay(_ f: Film, _ p: Plan, _ day: String) {
+        var np = store.plans[f.id] ?? p
+        np.d = day
+        let times = store.showtimes(for: f.id, at: np.cn)[day] ?? []
+        if !times.isEmpty && !times.contains(np.t) {
+            np.t = times.first { $0 >= "18:00" } ?? times[times.count - 1]
+        }
+        store.updatePlan(f.id, np)
+    }
+
+    private func setTime(_ f: Film, _ p: Plan, _ t: String) {
+        var np = store.plans[f.id] ?? p
+        np.t = t
+        store.updatePlan(f.id, np)
+    }
+
+    private func planDay(_ f: Film, _ p: Plan) -> Binding<Date> {
+        Binding(get: { D.date(p.d) ?? Date() }, set: { setDay(f, p, D.str($0)) })
+    }
+
+    private func planTime(_ f: Film, _ p: Plan) -> Binding<Date> {
+        Binding(get: { D.stamp(day: p.d, time: p.t) ?? Date() }, set: { setTime(f, p, D.stampString($0).time) })
+    }
+
+    private func facts(_ f: Film) -> String? {
+        var parts: [String] = []
+        if let d = f.durationText ?? alt?.minutes.map({ $0 >= 60 ? "\($0 / 60)h \(String(format: "%02d", $0 % 60))" : "\($0) min" }) { parts.append(d) }
+        if let p = f.press { parts.append(String(format: "Critics %.1f", p)) }
+        if let s = f.spect { parts.append(String(format: "Audience %.1f", s)) }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
+
+    private func posters(_ f: Film) -> [String] {
+        var out: [String] = []
+        for u in [f.poster, alt?.poster].compactMap({ $0 }) where !out.contains(u) { out.append(u) }
+        return out
     }
 
     private func planDate(_ f: Film, _ p: Plan) -> Binding<Date> {

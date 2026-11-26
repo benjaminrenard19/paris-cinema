@@ -5,6 +5,9 @@ import UniformTypeIdentifiers
 
 struct MyListView: View {
     @Environment(Store.self) private var store
+    @State private var expanded: Set<Int> = [Calendar.current.component(.year, from: Date())]
+    @State private var showAll: Set<Int> = []
+    private static let preview = 6
 
     var body: some View {
         NavigationStack {
@@ -16,8 +19,14 @@ struct MyListView: View {
                 }
                 ForEach(groups, id: \.year) { g in
                     let c = store.yearCounts(g.year)
+                    let open = expanded.contains(g.year)
+                    let limit = showAll.contains(g.year) ? Int.max : Self.preview
+                    let planned = Array(g.planned.prefix(open ? limit : 0))
+                    let unplanned = Array(g.unplanned.prefix(open ? max(0, limit - planned.count) : 0))
+                    let watched = Array(g.watched.prefix(open ? max(0, limit - planned.count - unplanned.count) : 0))
+                    let total = g.planned.count + g.unplanned.count + g.watched.count
                     Section {
-                        ForEach(g.planned, id: \.0.id) { item in
+                        ForEach(planned, id: \.0.id) { item in
                             NavigationLink(value: item.0.id) {
                                 VStack(alignment: .leading, spacing: 4) {
                                     FilmRow(film: item.0, showDate: true)
@@ -28,23 +37,44 @@ struct MyListView: View {
                             }
                             .swipeActions { unfav(item.0) }
                         }
-                        ForEach(g.unplanned) { f in
+                        ForEach(unplanned) { f in
                             NavigationLink(value: f.id) { FilmRow(film: f, showDate: true) }
                                 .swipeActions { unfav(f) }
                         }
-                        ForEach(g.watched) { f in
+                        ForEach(watched) { f in
                             NavigationLink(value: f.id) { FilmRow(film: f, showDate: true) }
                                 .swipeActions { unfav(f) }
+                        }
+                        if open && total > Self.preview {
+                            Button(showAll.contains(g.year) ? "Show fewer" : "Show all \(total) films") {
+                                withAnimation {
+                                    if showAll.contains(g.year) { showAll.remove(g.year) } else { showAll.insert(g.year) }
+                                }
+                            }
+                            .font(.subheadline.weight(.semibold))
                         }
                     } header: {
-                        HStack {
-                            Text(String(g.year)).font(.title3.weight(.bold)).foregroundStyle(.primary)
-                            Spacer()
-                            Text("\(c.watched) (\(c.total))").font(.headline.monospacedDigit()).foregroundStyle(.primary)
+                        Button {
+                            withAnimation {
+                                if open { expanded.remove(g.year) } else { expanded.insert(g.year) }
+                            }
+                        } label: {
+                            HStack(spacing: 8) {
+                                Image(systemName: "chevron.right")
+                                    .font(.subheadline.weight(.bold))
+                                    .rotationEffect(.degrees(open ? 90 : 0))
+                                Text(String(g.year)).font(.title3.weight(.bold))
+                                Spacer()
+                                Text("\(c.watched) (\(c.total))").font(.headline.monospacedDigit())
+                            }
+                            .foregroundStyle(.primary)
+                            .contentShape(Rectangle())
                         }
+                        .buttonStyle(.plain)
                         .textCase(nil)
+                        .accessibilityHint(open ? "Hides this year" : "Shows this year")
                     } footer: {
-                        Text("\(c.watched) watched in \(String(g.year)), \(c.total - c.watched) more planned.")
+                        Text("\(c.watched) watched in \(String(g.year)), \(c.total - c.watched) more planned. \(total) favourite\(total == 1 ? "" : "s").")
                     }
                 }
             }
@@ -149,7 +179,7 @@ struct WatchedView: View {
         let cat = Cat.from(s.c)
         let title = s.t ?? store.index[id]?.title ?? "Film"
         return HStack(spacing: 12) {
-            PosterTile(title: title, cat: cat, width: 40, url: store.index[id]?.poster)
+            PosterTile(title: title, cat: cat, width: 40, url: store.index[id]?.poster ?? s.p)
             VStack(alignment: .leading, spacing: 3) {
                 Text(title).font(.headline).lineLimit(2)
                 Text("Watched \(D.fmt(s.d, "d MMM"))" + (s.dir.map { " · \($0)" } ?? ""))
@@ -172,11 +202,52 @@ struct AddWatchedView: View {
     @State private var rating = 0
     @State private var cat: Cat = .D
     @State private var ready = false
+    @State private var poster: String?
+    @State private var hits: [ArtworkHit] = []
+    @State private var searching = false
 
     var body: some View {
         NavigationStack {
             Form {
                 TextField("Title", text: $title)
+                    .onSubmit { Task { await findPosters() } }
+                Section {
+                    HStack(spacing: 14) {
+                        PosterTile(title: title.isEmpty ? "?" : title, cat: cat, width: 64, url: poster)
+                        VStack(alignment: .leading, spacing: 8) {
+                            Button { Task { await findPosters() } } label: {
+                                Label(searching ? "Searching…" : "Find the poster", systemImage: "magnifyingglass")
+                            }
+                            .disabled(title.trimmingCharacters(in: .whitespaces).count < 2 || searching)
+                            if poster != nil {
+                                Button("Remove poster", role: .destructive) { poster = nil }.font(.footnote)
+                            }
+                        }
+                    }
+                    if !hits.isEmpty {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 10) {
+                                ForEach(hits) { h in
+                                    Button {
+                                        poster = h.poster
+                                    } label: {
+                                        VStack(spacing: 4) {
+                                            PosterTile(title: h.title, cat: cat, width: 70, url: h.poster)
+                                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(poster == h.poster ? Color.accentColor : .clear, lineWidth: 3))
+                                            Text(h.year).font(.caption2).foregroundStyle(.secondary)
+                                        }
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                            .padding(.vertical, 4)
+                        }
+                    }
+                } header: {
+                    Text("Poster")
+                } footer: {
+                    Text("Posters come from Apple's film catalogue. Tap one to use it.")
+                }
                 DatePicker("Watched on", selection: $day, in: ...Date(), displayedComponents: .date)
                 Picker("Category", selection: $cat) {
                     ForEach(Cat.allCases) { c in Text(c.label).tag(c) }
@@ -200,9 +271,9 @@ struct AddWatchedView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(editingId == nil ? "Add" : "Save") {
                         if let id = editingId {
-                            store.updateCustomSeen(id, title: title, day: D.str(day), rating: rating, category: cat)
+                            store.updateCustomSeen(id, title: title, day: D.str(day), rating: rating, category: cat, poster: poster)
                         } else {
-                            store.addCustomSeen(title: title, day: D.str(day), rating: rating, category: cat)
+                            store.addCustomSeen(title: title, day: D.str(day), rating: rating, category: cat, poster: poster)
                         }
                         dismiss()
                     }
@@ -217,9 +288,19 @@ struct AddWatchedView: View {
                     day = D.date(s.d) ?? Date()
                     rating = s.r
                     cat = Cat.from(s.c)
+                    poster = s.p
                 }
             }
         }
+    }
+
+    private func findPosters() async {
+        let t = title.trimmingCharacters(in: .whitespaces)
+        guard t.count >= 2 else { return }
+        searching = true
+        hits = await Artwork.shared.search(t)
+        searching = false
+        if poster == nil { poster = hits.first?.poster }
     }
 }
 
@@ -229,10 +310,53 @@ struct DataView: View {
     @Environment(Store.self) private var store
     @Environment(\.dismiss) private var dismiss
     @State private var importing = false
+    @AppStorage("calSync") private var calOn = false
+    @AppStorage("calId") private var calId = ""
+    @AppStorage("tutorialSeen") private var tutorialSeen = true
+    @State private var calendarNote: String?
 
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    Toggle("Save plans to my calendar", isOn: Binding(get: { calOn }, set: { on in
+                        if on {
+                            Task {
+                                let ok = await CalendarSync.shared.requestAccess()
+                                if ok {
+                                    if calId.isEmpty { calId = CalendarSync.shared.defaultCalendarId ?? "" }
+                                    calOn = true
+                                    store.syncCalendar()
+                                    calendarNote = nil
+                                } else {
+                                    calOn = false
+                                    calendarNote = "Calendar access is off. Allow it in iPhone Settings › Apps › Sloth Cinema › Calendars."
+                                }
+                            }
+                        } else {
+                            calOn = false
+                        }
+                    }))
+                    if calOn && CalendarSync.shared.authorized {
+                        Picker("Calendar", selection: Binding(get: { calId }, set: { calId = $0; store.syncCalendar() })) {
+                            ForEach(CalendarSync.shared.calendars(), id: \.calendarIdentifier) { c in
+                                Text("\(c.title) · \(c.source.title)").tag(c.calendarIdentifier)
+                            }
+                        }
+                    }
+                    if let n = calendarNote { Text(n).font(.footnote).foregroundStyle(.red) }
+                } header: {
+                    Text("Calendar")
+                } footer: {
+                    Text("Confirmed plans are added, moved and removed automatically, with a reminder 2 hours before. For Google Calendar: on your iPhone go to Settings › Apps › Calendar › Calendar Accounts › Add Account › Google, then choose your Google calendar here.")
+                }
+
+                Section("Help") {
+                    Button { tutorialSeen = false; dismiss() } label: {
+                        Label("Show the tutorial again", systemImage: "questionmark.circle")
+                    }
+                }
+
                 Section("Loaded") {
                     Text(store.dataSummary)
                     if let e = D.when(store.exportedAt) { LabeledContent("Last change", value: e) }
@@ -270,7 +394,7 @@ struct DataView: View {
                     }
                 }
             }
-            .navigationTitle("Films data")
+            .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
             .fileImporter(isPresented: $importing, allowedContentTypes: [.json]) { result in

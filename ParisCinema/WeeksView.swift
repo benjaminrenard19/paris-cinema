@@ -7,6 +7,21 @@ struct WeeksView: View {
     @State private var favOnly = false
     @State private var query = ""
     @State private var showData = false
+    @AppStorage("weekSort") private var sortRaw = WeekSort.standard.rawValue
+
+    enum WeekSort: String, CaseIterable, Identifiable {
+        case standard = "Biggest releases first"
+        case az = "Name A–Z"
+        case za = "Name Z–A"
+        case press = "Critics rating"
+        case spect = "Audience rating"
+        case avg = "Average of both ratings"
+        case short = "Running time, shortest first"
+        case long = "Running time, longest first"
+        var id: String { rawValue }
+    }
+
+    private var sort: WeekSort { WeekSort(rawValue: sortRaw) ?? .standard }
 
     var body: some View {
         NavigationStack {
@@ -27,7 +42,7 @@ struct WeeksView: View {
                                 .swipeActions(edge: .trailing) { favButton(f) }
                         }
                     } header: {
-                        Text("\(visible.count) film\(visible.count == 1 ? "" : "s")")
+                        Text("\(visible.count) film\(visible.count == 1 ? "" : "s")" + (sort == .standard ? "" : " · " + sort.rawValue))
                     }
                 } else {
                     let results = store.search(query)
@@ -44,9 +59,19 @@ struct WeeksView: View {
             .searchable(text: $query, prompt: "Title, director, actor")
             .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Menu {
+                        Picker("Sort this week", selection: $sortRaw) {
+                            ForEach(WeekSort.allCases) { s in Text(s.rawValue).tag(s.rawValue) }
+                        }
+                    } label: {
+                        Image(systemName: "arrow.up.arrow.down.circle")
+                    }
+                    .accessibilityLabel("Sort")
+                }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { showData = true } label: { Image(systemName: "arrow.triangle.2.circlepath") }
-                        .accessibilityLabel("Update films")
+                    Button { showData = true } label: { Image(systemName: "gearshape") }
+                        .accessibilityLabel("Settings")
                 }
             }
             .sheet(isPresented: $showData) { DataView().environment(store) }
@@ -56,8 +81,40 @@ struct WeeksView: View {
     }
 
     private var visible: [Film] {
-        store.films(in: week).filter { f in
+        sorted(store.films(in: week).filter { f in
             (cats.isEmpty || cats.contains(f.category)) && (!favOnly || store.isFav(f.id))
+        })
+    }
+
+    /// Films without the value being sorted on go last.
+    private func sorted(_ list: [Film]) -> [Film] {
+        func highFirst(_ key: (Film) -> Double?) -> [Film] {
+            list.sorted { a, b in
+                switch (key(a), key(b)) {
+                case let (x?, y?): return x > y
+                case (.some, .none): return true
+                default: return false
+                }
+            }
+        }
+        func lowFirst(_ key: (Film) -> Double?) -> [Film] {
+            list.sorted { a, b in
+                switch (key(a), key(b)) {
+                case let (x?, y?): return x < y
+                case (.some, .none): return true
+                default: return false
+                }
+            }
+        }
+        switch sort {
+        case .standard: return list
+        case .az: return list.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+        case .za: return list.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedDescending }
+        case .press: return highFirst { $0.press }
+        case .spect: return highFirst { $0.spect }
+        case .avg: return highFirst { $0.average }
+        case .short: return lowFirst { $0.duration.map { Double($0) } }
+        case .long: return highFirst { $0.duration.map { Double($0) } }
         }
     }
 

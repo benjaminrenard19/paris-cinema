@@ -126,9 +126,13 @@ struct Film: Identifiable, Hashable, Codable {
     var syn: String?
     var prod: String?
     var poster: String?
+    var press: Double?      // AlloCiné press rating out of 5
+    var spect: Double?      // AlloCiné audience rating out of 5
+    var duration: Int?      // minutes
+    var ac: Int?            // AlloCiné film id
 
     enum CodingKeys: String, CodingKey {
-        case id, week, date, title, cat, genre, origin, size, dir, cast, orig, note, syn, prod, poster
+        case id, week, date, title, cat, genre, origin, size, dir, cast, orig, note, syn, prod, poster, press, spect, duration, ac
     }
 
     init(from decoder: Decoder) throws {
@@ -150,7 +154,24 @@ struct Film: Identifiable, Hashable, Codable {
         syn = try c.decodeIfPresent(String.self, forKey: .syn)
         prod = try c.decodeIfPresent(String.self, forKey: .prod)
         poster = try? c.decodeIfPresent(String.self, forKey: .poster)
+        press = try? c.decodeIfPresent(Double.self, forKey: .press)
+        spect = try? c.decodeIfPresent(Double.self, forKey: .spect)
+        duration = try? c.decodeIfPresent(Int.self, forKey: .duration)
+        ac = try? c.decodeIfPresent(Int.self, forKey: .ac)
     }
+
+    /// Average of the press and audience ratings that exist.
+    var average: Double? {
+        let r = [press, spect].compactMap { $0 }
+        return r.isEmpty ? nil : r.reduce(0, +) / Double(r.count)
+    }
+
+    var durationText: String? {
+        guard let d = duration else { return nil }
+        return d >= 60 ? "\(d / 60)h \(String(format: "%02d", d % 60))" : "\(d) min"
+    }
+
+    var year: String { String(date.prefix(4)) }
 
     var category: Cat { Cat.from(cat) }
     var releaseSize: ReleaseSize { ReleaseSize.from(size) }
@@ -180,7 +201,10 @@ struct Film: Identifiable, Hashable, Codable {
         return URL.with("https://www.youtube.com/results", ["search_query": title + suffix])
     }
 
-    var allocineURL: URL? { URL.with("https://www.allocine.fr/rechercher/", ["q": title]) }
+    var allocineURL: URL? {
+        if let ac { return URL(string: "https://www.allocine.fr/film/fichefilm_gen_cfilm=\(ac).html") }
+        return URL.with("https://www.allocine.fr/rechercher/", ["q": title])
+    }
 
     var showtimesSearchURL: URL? { URL.with("https://www.google.com/search", ["q": title + " séances Paris"]) }
 }
@@ -242,11 +266,12 @@ struct SeenEntry: Codable, Hashable {
     var dir: String?
     var o: String?
     var orig: String?
+    var p: String?         // poster, for films added by hand
 
-    enum CodingKeys: String, CodingKey { case d, r, t, fd, c, dir, o, orig }
+    enum CodingKeys: String, CodingKey { case d, r, t, fd, c, dir, o, orig, p }
 
-    init(d: String, r: Int, t: String?, fd: String?, c: String?, dir: String?, o: String?, orig: String?) {
-        self.d = d; self.r = r; self.t = t; self.fd = fd; self.c = c; self.dir = dir; self.o = o; self.orig = orig
+    init(d: String, r: Int, t: String?, fd: String?, c: String?, dir: String?, o: String?, orig: String?, p: String? = nil) {
+        self.d = d; self.r = r; self.t = t; self.fd = fd; self.c = c; self.dir = dir; self.o = o; self.orig = orig; self.p = p
     }
 
     init(from decoder: Decoder) throws {
@@ -262,6 +287,7 @@ struct SeenEntry: Codable, Hashable {
         dir = try? c.decodeIfPresent(String.self, forKey: .dir)
         o = try? c.decodeIfPresent(String.self, forKey: .o)
         orig = try? c.decodeIfPresent(String.self, forKey: .orig)
+        p = try? c.decodeIfPresent(String.self, forKey: .p)
     }
 }
 

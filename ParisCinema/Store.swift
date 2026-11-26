@@ -4,6 +4,11 @@ import Observation
 /// Holds the film database and your lists (favourites, watched, plans).
 /// Film data comes from the export of the Claude page "Paris Cinema Weeks";
 /// your lists are saved on the phone in Documents/user.json.
+struct ScreeningRow {
+    let cinema: String
+    let times: [String]
+}
+
 @MainActor
 @Observable
 final class Store {
@@ -203,27 +208,84 @@ final class Store {
         enc.outputFormatting = [.prettyPrinted, .sortedKeys]
         if let data = try? enc.encode(u) { try? data.write(to: userURL, options: .atomic) }
         syncNotifications()
+        syncCalendar()
     }
 
     // MARK: Plans and notifications
 
-    /// A film ends about 2 h 30 after the session starts (trailers included).
-    func planEnd(_ p: Plan) -> Date? { D.stamp(day: p.d, time: p.t)?.addingTimeInterval(150 * 60) }
+    /// When the film should be over: its running time (or 2 h 10) plus 20 minutes of trailers.
+    func planEnd(_ id: String, _ p: Plan) -> Date? {
+        let minutes = (index[id]?.duration ?? 130) + 20
+        return D.stamp(day: p.d, time: p.t)?.addingTimeInterval(TimeInterval(minutes * 60))
+    }
 
     private func syncNotifications() {
         let alerts: [PlanAlert] = plans.compactMap { entry -> PlanAlert? in
             let p = entry.value
-            guard p.ok == true, let end = planEnd(p) else { return nil }
+            guard p.ok == true, let end = planEnd(entry.key, p) else { return nil }
             return PlanAlert(id: entry.key, title: p.title ?? index[entry.key]?.title ?? "your film", cinema: p.cn, end: end)
         }
         Notifier.shared.schedule(alerts)
+    }
+
+    /// Mirrors confirmed plans into the calendar chosen in Settings (when turned on).
+    func syncCalendar() {
+        let items: [CalendarItem] = plans.compactMap { entry -> CalendarItem? in
+            let p = entry.value
+            guard p.ok == true, seen[entry.key] == nil, let start = D.stamp(day: p.d, time: p.t) else { return nil }
+            let film = index[entry.key]
+            let address = p.ca ?? cinema(named: p.cn)?.address ?? ""
+            let minutes = (film?.duration ?? 130) + 20
+            return CalendarItem(id: entry.key,
+                                title: "🎬 " + (p.title ?? film?.title ?? "Cinema"),
+                                start: start,
+                                end: start.addingTimeInterval(TimeInterval(minutes * 60)),
+                                location: address.isEmpty ? p.cn : p.cn + ", " + address,
+                                notes: [film?.dir.map { "Directed by " + $0 }, film?.syn, "Planned in Sloth Cinema"].compactMap { $0 }.joined(separator: "\n\n"))
+        }
+        CalendarSync.shared.sync(items)
+    }
+
+    // MARK: Showtimes
+
+    private func sameCinema(_ a: String, _ b: String) -> Bool {
+        let x = a.folded, y = b.folded
+        guard !x.isEmpty, !y.isEmpty else { return false }
+        return x == y || x.contains(y) || y.contains(x)
+    }
+
+    /// Showtimes of a film at one cinema, from today on: [day: [times]].
+    func showtimes(for id: String, at cinemaName: String) -> [String: [String]] {
+        guard let list = showtimes[id]?.cinemas else { return [:] }
+        let today = D.today
+        var out: [String: Set<String>] = [:]
+        for c in list where sameCinema(c.name ?? "", cinemaName) {
+            for (day, times) in c.times ?? [:] where day >= today {
+                out[day, default: []].formUnion(times)
+            }
+        }
+        return out.mapValues { $0.sorted() }
+    }
+
+    /// Today's remaining screenings of a film, at your cinemas if any show it, else anywhere.
+    func todayScreenings(_ id: String) -> (rows: [ScreeningRow], mine: Bool) {
+        guard let list = showtimes[id]?.cinemas else { return ([], false) }
+        let today = D.today
+        let now = D.stampString(Date()).time
+        let rows: [ScreeningRow] = list.compactMap { c -> ScreeningRow? in
+            guard let name = c.name, let times = c.times?[today] else { return nil }
+            let left = times.filter { $0 >= now }.sorted()
+            return left.isEmpty ? nil : ScreeningRow(cinema: name, times: left)
+        }
+        let mine = rows.filter { r in myCinemas.contains { sameCinema($0, r.cinema) } }
+        return mine.isEmpty ? (Array(rows.prefix(8)), false) : (mine, true)
     }
 
     /// Plans you confirmed whose film has finished: time to say how it was.
     var duePlans: [(Film, Plan)] {
         let now = Date()
         return plannedFilms.filter { item in
-            guard item.1.ok == true, let end = planEnd(item.1) else { return false }
+            guard item.1.ok == true, let end = planEnd(item.0.id, item.1) else { return false }
             return end < now
         }
     }
@@ -267,9 +329,10 @@ final class Store {
         saveUser()
     }
 
-    func updateCustomSeen(_ id: String, title: String, day: String, rating: Int, category: Cat) {
+    func updateCustomSeen(_ id: String, title: String, day: String, rating: Int, category: Cat, poster: String? = nil) {
         guard var s = seen[id] else { return }
         s.t = title; s.d = day; s.r = max(0, min(5, rating)); s.c = category.rawValue
+        if let poster { s.p = poster }
         seen[id] = s
         saveUser()
     }
@@ -344,11 +407,11 @@ final class Store {
         saveUser()
     }
 
-    func addCustomSeen(title: String, day: String, rating: Int, category: Cat) {
+    func addCustomSeen(title: String, day: String, rating: Int, category: Cat, poster: String? = nil) {
         let t = title.trimmingCharacters(in: .whitespaces)
         guard !t.isEmpty else { return }
         let id = "custom_" + slug(t) + "_" + day
-        seen[id] = SeenEntry(d: day, r: max(0, min(5, rating)), t: t, fd: nil, c: category.rawValue, dir: nil, o: nil, orig: nil)
+        seen[id] = SeenEntry(d: day, r: max(0, min(5, rating)), t: t, fd: nil, c: category.rawValue, dir: nil, o: nil, orig: nil, p: poster)
         saveUser()
     }
 

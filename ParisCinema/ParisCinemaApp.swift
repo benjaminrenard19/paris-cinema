@@ -31,6 +31,7 @@ struct ParisCinemaApp: App {
 
 struct ContentView: View {
     @Environment(Store.self) private var store
+    @AppStorage("tutorialSeen") private var tutorialSeen = false
 
     var body: some View {
         @Bindable var model = store
@@ -48,6 +49,9 @@ struct ContentView: View {
         }
         .sheet(item: $model.checkIn) { c in
             CheckInView(checkIn: c).environment(store)
+        }
+        .fullScreenCover(isPresented: Binding(get: { !tutorialSeen }, set: { if !$0 { tutorialSeen = true } })) {
+            TutorialView { tutorialSeen = true }
         }
     }
 }
@@ -139,6 +143,9 @@ struct FilmRow: View {
                     Text(film.releaseSize.label).font(.caption2).foregroundStyle(.secondary)
                     if let s = store.seen[film.id] { Stars(rating: s.r, size: 9) }
                 }
+                if let facts {
+                    Text(facts).font(.caption2.weight(.medium)).foregroundStyle(.secondary)
+                }
             }
             Spacer(minLength: 0)
             Button { store.toggleFav(film) } label: {
@@ -152,6 +159,14 @@ struct FilmRow: View {
             .accessibilityLabel(store.isFav(film.id) ? "Remove from favourites" : "Add to favourites")
         }
         .padding(.vertical, 2)
+    }
+
+    private var facts: String? {
+        var parts: [String] = []
+        if let d = film.durationText { parts.append(d) }
+        if let p = film.press { parts.append(String(format: "Critics %.1f", p)) }
+        if let s = film.spect { parts.append(String(format: "Audience %.1f", s)) }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
 
     private var subtitle: String? {
