@@ -144,7 +144,13 @@ def main():
         films.append({k: v for k, v in f.items() if v is not None})
         rep_count += 1
 
-    body = {"format": "paris-cinema-weeks/1", "films": films, "showtimes": showtimes, "cinemas": cinemas}
+    # France admissions week by week, for the app's fun facts.
+    ids = {f["id"] for f in films}
+    boxoffice = {k: v["weeks"] for k, v in sorted(load(DATA / "boxoffice.json", {}).items())
+                 if k in ids and v.get("weeks")}
+
+    body = {"format": "paris-cinema-weeks/1", "films": films, "showtimes": showtimes, "cinemas": cinemas,
+            "boxoffice": boxoffice}
     digest = hashlib.sha256(json.dumps(body, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
     old = load(OUT, {})
     if old.get("digest") == digest and old.get("exportedAt"):
@@ -152,7 +158,7 @@ def main():
     else:
         stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     feed = {"format": body["format"], "exportedAt": stamp, "digest": digest, "films": films,
-            "showtimes": showtimes, "cinemas": cinemas}
+            "showtimes": showtimes, "cinemas": cinemas, "boxoffice": boxoffice}
     raw = json.dumps(feed, ensure_ascii=False, separators=(",", ":"))
     OUT.write_text(raw, encoding="utf-8")
     APP_COPY.write_text(raw, encoding="utf-8")
@@ -162,7 +168,7 @@ def main():
           f"{len(details)} detail records, {sum(1 for f in films if f.get('poster'))} posters, "
           f"{sum(1 for f in films if f.get('press') or f.get('spect'))} rated, "
           f"{sum(1 for f in films if f.get('duration'))} running times, "
-          f"{len(showtimes)} showtime lists, {rep_count} classics showing. exportedAt {stamp}")
+          f"{len(showtimes)} showtime lists, {rep_count} classics showing, {len(boxoffice)} box-office records. exportedAt {stamp}")
     for p in problems:
         print("warning:", p, file=sys.stderr)
 

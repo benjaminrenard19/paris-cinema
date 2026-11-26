@@ -10,6 +10,7 @@ Every film released in Paris cinemas since January 2026, week by week, plus an i
   Each session records its version when the source gives it: VF, VO or VOST (`"ver"` in `showtimes.json`).
 - `data/repertory.json`: the classics and older films the independent cinemas show, found on their AlloCiné pages, with poster, year, director, running time, ratings and synopsis from each film's public page. They appear in the app's "Showing this week" list and in search, not in the weekly releases.
   Pathé, mk2, Le Champo, Reflet Médicis, Escurial, Saint-André des Arts and Christine load their times from booking services that can't be read page by page, so they come through AlloCiné (today and tomorrow). Past days are dropped.
+- `data/boxoffice.json`: France admissions week by week for each film (CBO Box-Office, from AlloCiné's public box-office pages), read by `python3 scripts/allocine.py boxoffice`. The app uses them for "early bird" stats: how early you saw a film compared with everyone in France.
 - `data/paris-cinema.json`: everything combined into one file. This is the file the app downloads. It is built by `scripts/build.py`.
 - `ParisCinema/` and `ParisCinema.xcodeproj`: the SwiftUI iPhone app.
 
@@ -25,9 +26,9 @@ Claude adds new weeks every Tuesday evening, once cinemas have published the new
 | **Invite** | From a film page or a plan in My week: a picture of the poster with the day, time and cinema, and "Would you join me…?" with the address, to send in Messages, WhatsApp or any app. |
 | **Calendar** | In Settings, turn on "Save plans to my calendar" and pick a calendar. Confirmed plans are added, moved and removed automatically. For Google Calendar, add your Google account in iPhone Settings › Apps › Calendar › Calendar Accounts first. |
 | **My week** | The week from Wednesday to Tuesday, day by day: which film, when and where. Add a film to any day, confirm provisional plans, and plan your favourites. |
-| **Notifications** | After a confirmed plan, the app asks how the film was. Every week (Tuesday 20:00 by default, change it in Settings) a notification opens a slideshow of the new releases. When you've seen every film at a cinema, you hear when a new one arrives there. |
+| **Notifications** | After a confirmed plan, the app asks how the film was. Every week (Tuesday 20:00 by default, change it in Settings) a notification opens a slideshow of the new releases. For each of your cinemas (starring one adds it), choose Off, New films (a film you haven't seen starts there) or Film changes (for one-film cinemas like the Max Linder). |
 | **My list** | Your favourites grouped by year. Tap a year to fold or unfold it; long years show 6 films and a "Show all" button. Each year shows films watched and, in brackets, watched plus still planned, for example 25 (28). |
-| **Watched** | Your watched films by year, with ratings and your average. Add or edit films you saw elsewhere, with their poster. |
+| **Watched** | Your watched films by year, with ratings and your average. Add or edit films you saw elsewhere, with their poster. **Import from a screen recording**: record your screen while scrolling a list in another film app; the app reads each title, year and your stars on the phone, matches them with its films, and adds them without a cinema (you can add it later). |
 | **Tutorial** | Shown on first launch, can be skipped at any time and shown again from Settings. |
 | **Cinemas** | A map and a list of 80 Paris cinemas, with a search bar to add them to My cinemas. Tap a cinema for its films, sorted like the Films page, with the sessions left today; 🎉 when you've seen them all. |
 

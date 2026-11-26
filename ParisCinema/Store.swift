@@ -18,6 +18,8 @@ final class Store {
     private(set) var byWeek: [String: [Film]] = [:]
     private(set) var index: [String: Film] = [:]
     private(set) var showtimes: [String: Showtimes] = [:]
+    /// France admissions week by week, per film.
+    private(set) var boxOffice: [String: [BOWeek]] = [:]
     private(set) var cinemas: [Cinema] = Cinema.defaults
     private(set) var exportedAt: String?
     private(set) var usingBundledData = true
@@ -87,6 +89,7 @@ final class Store {
         weeks = byWeek.keys.sorted()
         index = Dictionary(list.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
         showtimes = f.showtimes ?? [:]
+        boxOffice = f.boxoffice ?? [:]
         if let c = f.cinemas, !c.isEmpty { cinemas = c }
         exportedAt = f.exportedAt
     }
@@ -175,6 +178,7 @@ final class Store {
                 usingBundledData = false
                 feedStatus = String(localized: "Up to date: \(films.count) films.")
                 updateDoneCinemas(notify: true)
+                updateCinemaAlerts(notify: true)
             } else {
                 feedStatus = String(localized: "Already up to date.")
             }
@@ -462,6 +466,7 @@ final class Store {
         } else {
             if cinema(named: c.name) == nil { extraCinemas.append(c) }
             myCinemas.append(c.name)
+            AlertPrefs.setCinemaMode(c.name, 1)    // a starred cinema joins the notification list
         }
         saveUser()
     }

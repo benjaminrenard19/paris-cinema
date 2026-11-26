@@ -395,6 +395,20 @@ struct UserData: Codable {
     }
 }
 
+/// One week of France admissions (CBO Box-Office, via AlloCiné): ["week start", that week, total so far].
+struct BOWeek: Decodable, Hashable {
+    let start: String
+    let entries: Int
+    let total: Int
+
+    init(from decoder: Decoder) throws {
+        var c = try decoder.unkeyedContainer()
+        start = try c.decode(String.self)
+        entries = try c.decode(Int.self)
+        total = try c.decode(Int.self)
+    }
+}
+
 struct ExportFile: Decodable {
     var format: String?
     var exportedAt: String?
@@ -402,8 +416,9 @@ struct ExportFile: Decodable {
     var showtimes: [String: Showtimes]?
     var cinemas: [Cinema]?
     var user: UserData?
+    var boxoffice: [String: [BOWeek]]?
 
-    enum CodingKeys: String, CodingKey { case format, exportedAt, films, showtimes, cinemas, user }
+    enum CodingKeys: String, CodingKey { case format, exportedAt, films, showtimes, cinemas, user, boxoffice }
 
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
@@ -413,6 +428,7 @@ struct ExportFile: Decodable {
         showtimes = (try? c.decodeIfPresent([String: Lossy<Showtimes>].self, forKey: .showtimes))?.compactMapValues { $0.value }
         cinemas = (try? c.decodeIfPresent([Lossy<Cinema>].self, forKey: .cinemas))?.compactMap { $0.value }
         user = try? c.decodeIfPresent(UserData.self, forKey: .user)
+        boxoffice = try? c.decodeIfPresent([String: [BOWeek]].self, forKey: .boxoffice)
     }
 }
 

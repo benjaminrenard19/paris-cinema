@@ -69,6 +69,28 @@ struct WatchedFilm: Identifiable {
     var daysAfterRelease: Int? { release.flatMap { D.daysBetween($0, entry.d) } }
 }
 
+/// How early you saw a film compared with everyone in France (CBO admissions, week by week).
+struct EarlyBird {
+    let title: String
+    let poster: String?
+    let week: Int          // 0: its first week
+    let weekEntries: Int   // admissions in France the week you went
+    let percent: Int       // you were among the first …% of its viewers so far
+    let total: Int         // its admissions in France so far
+    let weeks: Int         // weeks of figures
+
+    /// "26%", and "74%" for those who saw it after you (kept out of the translated text).
+    var pct: String { "\(percent)%" }
+    var afterPct: String { "\(100 - percent)%" }
+
+    var text: String {
+        let people = weekEntries.formatted(), all = total.formatted()
+        return week == 0
+            ? String(localized: "You saw \(title) in its first week, one of \(people) people in France. That's the first \(pct) of its \(all) viewers so far 🐦")
+            : String(localized: "You saw \(title) before \(afterPct) of the \(all) people in France who've seen it so far 🐦")
+    }
+}
+
 struct StatsSummary {
     let period: StatsPeriod
     var films: [WatchedFilm] = []
@@ -81,6 +103,7 @@ struct StatsSummary {
     var months: [(month: Int, count: Int)] = []
     var planned = 0
     var facts: [String] = []
+    var early: EarlyBird?
 
     var count: Int { films.count }
     var hours: Int { Int((Double(minutes) / 60).rounded()) }
@@ -109,8 +132,27 @@ extension Store {
         s.weekdays = ranked(s.films.map { D.weekday($0.entry.d) }).map { (day: $0.0, count: $0.1) }
         let monthCounts = Dictionary(s.films.compactMap { Int($0.entry.d.dropFirst(5).prefix(2)) }.map { ($0, 1) }, uniquingKeysWith: +)
         s.months = (1...12).map { (month: $0, count: monthCounts[$0] ?? 0) }
+        s.early = earlyBird(s)
         s.facts = funFacts(s)
+        if let e = s.early { s.facts.insert(e.text, at: 0) }
         return s
+    }
+
+    /// The film you saw earliest in its run, measured against France's weekly admissions.
+    private func earlyBird(_ s: StatsSummary) -> EarlyBird? {
+        var best: EarlyBird?
+        var bestShare = 2.0
+        for w in s.films {
+            guard let weeks = boxOffice[w.id], let last = weeks.last, last.total >= 1000 else { continue }
+            guard let i = weeks.firstIndex(where: { w.entry.d >= $0.start && w.entry.d <= D.addDays($0.start, 6) }) else { continue }
+            let share = Double(weeks[i].total) / Double(last.total)
+            if share < bestShare {
+                bestShare = share
+                best = EarlyBird(title: w.title, poster: w.poster, week: i, weekEntries: weeks[i].entries,
+                                 percent: max(1, Int((share * 100).rounded(.up))), total: last.total, weeks: weeks.count)
+            }
+        }
+        return bestShare <= 0.6 ? best : nil
     }
 
     /// Fun facts from your own outings and AlloCiné's ratings.
@@ -171,7 +213,7 @@ extension Store {
 // MARK: - Story (Instagram story format, 9:16)
 
 enum StoryPage: Hashable {
-    case intro, numbers, topFilm, cinemas, genres, fact(Int), months, recap
+    case intro, numbers, topFilm, earlyBird, cinemas, genres, fact(Int), months, recap
 }
 
 /// One 9:16 card of the story. Posters are passed as images so the card can be saved as a picture.
@@ -272,6 +314,33 @@ struct StoryCard: View {
                 Spacer()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+        case .earlyBird:
+            VStack(alignment: .leading, spacing: 18) {
+                Spacer()
+                Text("Early bird").font(.system(size: 16, weight: .bold)).textCase(.uppercase).tracking(3)
+                    .foregroundStyle(Color(hex: 0xFFD27A))
+                if let e = stats.early {
+                    Text(e.week == 0 ? String(localized: "You saw \(e.title) in its first week") : String(localized: "You saw \(e.title) early"))
+                        .font(.system(size: 30, weight: .heavy, design: .rounded))
+                        .fixedSize(horizontal: false, vertical: true)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(e.weekEntries.formatted()).font(.system(size: 52, weight: .black, design: .rounded))
+                            .foregroundStyle(Color(hex: 0xFFD27A)).minimumScaleFactor(0.5)
+                        Text(e.week == 0 ? String(localized: "people in France saw it that week. You were one of them.")
+                                         : String(localized: "people in France saw it the week you did."))
+                            .font(.system(size: 17, weight: .medium)).opacity(0.9)
+                    }
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(String(localized: "first \(e.pct)")).font(.system(size: 52, weight: .black, design: .rounded))
+                            .foregroundStyle(Color(hex: 0xFFD27A)).minimumScaleFactor(0.5)
+                        Text(String(localized: "of the \(e.total.formatted()) people who've seen it in France so far"))
+                            .font(.system(size: 17, weight: .medium)).opacity(0.9)
+                    }
+                    Text("Admissions: CBO Box-Office, via AlloCiné").font(.caption).opacity(0.7)
+                }
+                Spacer()
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         case .fact(let i):
             VStack(spacing: 20) {
                 Spacer()
@@ -365,10 +434,11 @@ struct StoryView: View {
         var out: [StoryPage] = [.intro, .numbers]
         if s.count > 0 {
             out.append(.topFilm)
+            if s.early != nil { out.append(.earlyBird) }
             out.append(.cinemas)
             if s.categories.count > 1 { out.append(.genres) }
             if case .month = period {} else if s.count > 2 { out.append(.months) }
-            for i in s.facts.indices.prefix(3) { out.append(.fact(i)) }
+            for i in s.facts.indices.filter({ s.facts[$0] != s.early?.text }).prefix(3) { out.append(.fact(i)) }
             out.append(.recap)
         }
         return out

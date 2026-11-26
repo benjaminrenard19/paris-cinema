@@ -124,6 +124,7 @@ struct WatchedView: View {
     @Environment(Store.self) private var store
     @State private var year = Calendar.current.component(.year, from: Date())
     @State private var adding = false
+    @State private var importing = false
     @State private var editing: String?
 
     var body: some View {
@@ -166,11 +167,15 @@ struct WatchedView: View {
             .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button { adding = true } label: { Image(systemName: "plus") }
-                        .accessibilityLabel("Add a film you watched")
+                    Menu {
+                        Button { adding = true } label: { Label("Add a film you watched", systemImage: "plus") }
+                        Button { importing = true } label: { Label("Import from a screen recording", systemImage: "video.badge.plus") }
+                    } label: { Image(systemName: "plus") }
+                        .accessibilityLabel("Add films you watched")
                 }
             }
             .sheet(isPresented: $adding) { AddWatchedView().environment(store) }
+            .sheet(isPresented: $importing) { VideoImportView().environment(store) }
             .sheet(item: Binding(get: { editing.map { EditTarget(id: $0) } }, set: { editing = $0?.id })) { t in
                 AddWatchedView(editingId: t.id).environment(store)
             }
@@ -320,6 +325,7 @@ struct DataView: View {
     @AppStorage("versionPref") private var versionPref = "any"
     @AppStorage("versionMust") private var versionMust = false
     @AppStorage("hideSeen") private var hideSeen = true
+    @State private var importingVideo = false
     @State private var calendarNote: String?
 
     private var versionSummary: String {
@@ -491,6 +497,7 @@ struct DataView: View {
 
                 // Import
                 Section {
+                    Button { importingVideo = true } label: { Label("Import from a screen recording", systemImage: "video.badge.plus") }
                     Button { importing = true } label: { Label("Import paris-cinema.json", systemImage: "square.and.arrow.down") }
                     if let m = store.message { Text(m).font(.footnote).foregroundStyle(.secondary) }
                 } header: {
@@ -517,6 +524,7 @@ struct DataView: View {
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
+            .sheet(isPresented: $importingVideo) { VideoImportView().environment(store) }
             .fileImporter(isPresented: $importing, allowedContentTypes: [.json]) { result in
                 if case .success(let url) = result { store.importFile(at: url, link: false) }
             }

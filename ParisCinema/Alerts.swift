@@ -13,6 +13,18 @@ enum AlertPrefs {
     static var cinemasOn: Bool { UserDefaults.standard.object(forKey: "doneCinemasOn") as? Bool ?? true }
 
     static let refreshTask = "com.benjaminrenard.pariscinema.refresh"
+
+    /// What you hear about each of your cinemas: 0 nothing, 1 new films you haven't seen,
+    /// 2 every change of programme (for cinemas that show one film at a time). Starred cinemas start at 1.
+    static func cinemaMode(_ name: String) -> Int {
+        (UserDefaults.standard.dictionary(forKey: "cinemaAlerts") as? [String: Int])?[name] ?? 1
+    }
+
+    static func setCinemaMode(_ name: String, _ mode: Int) {
+        var all = UserDefaults.standard.dictionary(forKey: "cinemaAlerts") as? [String: Int] ?? [:]
+        all[name] = mode
+        UserDefaults.standard.set(all, forKey: "cinemaAlerts")
+    }
 }
 
 extension Store {
@@ -77,7 +89,8 @@ extension Store {
                 if isPreferred(c.name) || showing.count >= 3 { done[c.name] = showing.map(\.id) }
             } else if let was = done[c.name] {
                 let fresh = unseen.filter { !was.contains($0.id) }
-                if notify, AlertPrefs.cinemasOn, let first = fresh.first {
+                let coveredByMine = isPreferred(c.name) && AlertPrefs.cinemaMode(c.name) > 0
+                if notify, AlertPrefs.cinemasOn, !coveredByMine, let first = fresh.first {
                     let n = fresh.count - 1
                     let body = n == 0
                         ? String(localized: "\(first.title) is showing there, and you haven't seen it yet.")
@@ -91,6 +104,50 @@ extension Store {
             }
         }
         doneCinemas = done
+    }
+
+    /// Films seen showing at each of your cinemas, with the last day they were (kept 30 days).
+    var cinemaKnown: [String: [String: String]] {
+        get { UserDefaults.standard.dictionary(forKey: "cinemaKnown") as? [String: [String: String]] ?? [:] }
+        set { UserDefaults.standard.set(newValue, forKey: "cinemaKnown") }
+    }
+
+    /// After new session times arrive: tells you about new films at your cinemas, as set in Settings
+    /// (new films you haven't seen, or every change). A cinema just starred is only remembered.
+    func updateCinemaAlerts(notify: Bool) {
+        var known = cinemaKnown
+        let today = D.today
+        let cutoff = D.addDays(today, -30)
+        for name in myCinemas {
+            let showing = filmsShowing(at: name)
+            guard !showing.isEmpty else { continue }
+            let isNew = known[name] == nil
+            var k = (known[name] ?? [:]).filter { $0.value >= cutoff }
+            let fresh = showing.filter { k[$0.id] == nil }
+            let mode = AlertPrefs.cinemaMode(name)
+            if notify, !isNew, mode > 0 {
+                let list = mode == 1 ? fresh.filter { seen[$0.id] == nil } : fresh
+                if let f = list.first {
+                    let day = D.fmt(nextSessions(f.id, at: name)?.day ?? today, "EEEE d MMMM")
+                    let n = list.count - 1
+                    let title = mode == 1 ? String(localized: "New at \(name)") : String(localized: "Programme change at \(name)")
+                    let body: String
+                    if n > 0 {
+                        body = mode == 1 ? String(localized: "\(f.title) and \(n) more you haven't seen, from \(day).")
+                                         : String(localized: "\(f.title) and \(n) other films, from \(day).")
+                    } else if mode == 1 || seen[f.id] == nil {
+                        body = String(localized: "\(f.title) from \(day). You haven't seen it yet.")
+                    } else {
+                        body = String(localized: "\(f.title) from \(day). You've seen it.")
+                    }
+                    Notifier.shared.notifyNow(id: "mine-" + name, title: title, body: body,
+                                              info: ["type": "cinema", "cinema": name])
+                }
+            }
+            for f in showing { k[f.id] = today }
+            known[name] = k
+        }
+        cinemaKnown = known.filter { myCinemas.contains($0.key) }
     }
 
     /// Runs when iOS wakes the app in the background: new times, then the alerts that depend on them.
@@ -228,6 +285,7 @@ struct ReleasesSlideshowView: View {
 
 struct NotificationSettings: View {
     @Environment(Store.self) private var store
+    @State private var modes: [String: Int] = [:]
     @AppStorage("releasesOn") private var releasesOn = true
     @AppStorage("releasesDay") private var releasesDay = 3
     @AppStorage("releasesTime") private var releasesTime = 20 * 60
@@ -241,6 +299,11 @@ struct NotificationSettings: View {
             let c = D.cal.dateComponents([.hour, .minute], from: d)
             releasesTime = (c.hour ?? 20) * 60 + (c.minute ?? 0)
         })
+    }
+
+    private func mode(_ name: String) -> Binding<Int> {
+        Binding(get: { modes[name] ?? AlertPrefs.cinemaMode(name) },
+                set: { modes[name] = $0; AlertPrefs.setCinemaMode(name, $0) })
     }
 
     var body: some View {
@@ -261,6 +324,33 @@ struct NotificationSettings: View {
                 Label("See this week's releases", systemImage: "play.rectangle.on.rectangle")
             }
             .fullScreenCover(item: $preview) { t in ReleasesSlideshowView(week: t.id).environment(store) }
+        } header: {
+            Text("Notifications")
+        } footer: {
+            Text("A slideshow of the posters out on Wednesday. Turn it off to hear only about your cinemas.")
+        }
+        Section {
+            if store.myCinemas.isEmpty {
+                NavigationLink {
+                    FavouriteCinemasList(intro: String(localized: "Star the cinemas you go to. They come first everywhere, with their session times."))
+                        .navigationTitle("My cinemas")
+                } label: {
+                    Text("Star the cinemas you go to: they appear here.")
+                }
+            }
+            ForEach(store.myCinemas, id: \.self) { name in
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(name).font(.headline)
+                    Picker(name, selection: mode(name)) {
+                        Text("Off").tag(0)
+                        Text("New films").tag(1)
+                        Text("Film changes").tag(2)
+                    }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                }
+                .padding(.vertical, 2)
+            }
             Toggle("New film at a cinema you've finished", isOn: $cinemasOn)
             Button {
                 if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
@@ -268,9 +358,9 @@ struct NotificationSettings: View {
                 Label("Allow notifications in iPhone Settings", systemImage: "bell.badge")
             }
         } header: {
-            Text("Notifications")
+            Text("Your cinemas")
         } footer: {
-            Text("A slideshow of the new films, every week on the day you choose. When you've seen every film at a cinema, you also hear when a new one arrives there. After each confirmed plan, a notification asks how the film was.")
+            Text("Every cinema you star joins this list, set to New films. New films: a film you haven't seen starts there. Film changes: for cinemas like the Max Linder that show one film at a time, you hear when it changes. After each confirmed plan, a notification asks how the film was.")
         }
     }
 }

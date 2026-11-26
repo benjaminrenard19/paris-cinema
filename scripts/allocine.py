@@ -356,6 +356,72 @@ def theaters():
     sessions.merge(col.scraped, col.covered, addresses, col.versions)
 
 
+BOXOFFICE = DATA / "boxoffice.json"
+
+
+def parse_boxoffice(page):
+    """[[week start "YYYY-MM-DD", admissions that week, total so far]] from a film's public box-office page (France)."""
+    import base64
+    part = page.split("Box Office France", 1)[-1].split("</table>", 1)[0]
+    weeks = []
+    for row in re.findall(r"<tr class=\"responsive-table-row\">(.*?)</tr>", part, re.S):
+        cells = re.findall(r"<td[^>]*>(.*?)</td>", row, re.S)
+        if len(cells) < 3:
+            continue
+        m = re.search(r'class="(ACr[A-Za-z0-9+/=]+)', cells[0])
+        start = None
+        if m:
+            try:
+                path = base64.b64decode(m.group(1).replace("ACr", "") + "===").decode("utf-8", "ignore")
+                d = re.search(r"sem-(\d{4}-\d\d-\d\d)", path)
+                start = d.group(1) if d else None
+            except Exception:
+                start = None
+        nums = [re.sub(r"\D", "", text(c)) for c in cells[1:3]]
+        if start and all(nums):
+            weeks.append([start, int(nums[0]), int(nums[1])])
+    return weeks
+
+
+def boxoffice(limit=400, recent_weeks=10):
+    """France admissions week by week (CBO, via AlloCiné's public box-office pages) into data/boxoffice.json.
+    Films out in the last `recent_weeks` weeks are read again every day; older ones once, then monthly if empty."""
+    feed = json.loads((DATA / "paris-cinema.json").read_text(encoding="utf-8"))
+    bo = json.loads(BOXOFFICE.read_text(encoding="utf-8")) if BOXOFFICE.exists() else {}
+    today = datetime.date.today()
+    recent = (today - datetime.timedelta(weeks=recent_weeks)).isoformat()
+    todo = []
+    for f in feed["films"]:
+        if not f.get("ac") or f.get("rep") or f["date"] > today.isoformat() or f.get("cat") == "E":
+            continue
+        e = bo.get(f["id"], {})
+        checked = e.get("checked", "")
+        if f["date"] >= recent:
+            due = checked < today.isoformat()
+        elif e.get("weeks"):
+            due = not checked
+        else:
+            due = checked < (today - datetime.timedelta(days=30)).isoformat()
+        if due:
+            todo.append(f)
+    todo.sort(key=lambda f: f["date"], reverse=True)
+    done = found = 0
+    for f in todo[:limit]:
+        try:
+            page = get(f"https://www.allocine.fr/film/fichefilm-{f['ac']}/box-office/")
+            weeks = parse_boxoffice(page)
+            bo[f["id"]] = {"checked": today.isoformat(), "weeks": weeks}
+            done += 1
+            found += bool(weeks)
+        except Exception as ex:
+            print(f"{f['title']}: {ex}", file=sys.stderr)
+        time.sleep(PAUSE)
+        if done % 25 == 0:
+            BOXOFFICE.write_text(json.dumps(dict(sorted(bo.items())), ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+    BOXOFFICE.write_text(json.dumps(dict(sorted(bo.items())), ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+    print(f"data/boxoffice.json: {done} films read, {found} with admissions ({len(todo) - done} left for next time)")
+
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(__doc__)
@@ -370,5 +436,7 @@ if __name__ == "__main__":
         durations(int(sys.argv[2]) if len(sys.argv) > 2 else 100)
     elif cmd == "theaters":
         theaters()
+    elif cmd == "boxoffice":
+        boxoffice(int(sys.argv[2]) if len(sys.argv) > 2 else 400)
     else:
         print(__doc__)
