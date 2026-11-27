@@ -95,6 +95,7 @@ struct ContentView: View {
             InvitationReceivedView(invite: i).environment(store).tint(theme.color)
         }
         .onOpenURL { store.openInvitation($0) }
+        .onChange(of: store.inboxBadge, initial: true) { _, n in store.updateIconBadge(n) }
     }
 }
 

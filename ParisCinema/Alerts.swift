@@ -171,6 +171,7 @@ extension Store {
         case "cinema":
             if !tap.value.isEmpty { openCinema = EditTarget(id: tap.value) }
         default:
+            if tap.action == "MARK_SEEN" { markSeenFromInbox(tap.film); return }
             if !tap.film.isEmpty { openCheckIn(tap.film, action: tap.action) }
         }
     }

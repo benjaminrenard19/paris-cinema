@@ -89,11 +89,23 @@ struct WeekPlanView: View {
                     }
                 }
             }
-            .navigationTitle("My week")
+            .navigationTitle(weekTitle)
             .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
             .sheet(item: $target) { t in AddPlanView(target: t).environment(store) }
             .sheet(item: $inviting) { t in InviteSheet(filmId: t.id).environment(store) }
         }
+    }
+
+    /// "My week", "Next week", "Last week", else "Week of 9 – 15 Dec".
+    private var weekTitle: String {
+        let now = D.weekOf(D.today)
+        if week == now { return String(localized: "My week") }
+        if week == D.addDays(now, 7) { return String(localized: "Next week") }
+        if week == D.addDays(now, -7) { return String(localized: "Last week") }
+        let end = D.addDays(week, 6)
+        let range = D.fmt(week, "MMM") == D.fmt(end, "MMM")
+            ? "\(D.fmt(week, "d")) – \(D.fmt(end, "d MMM"))" : "\(D.fmt(week, "d MMM")) – \(D.fmt(end, "d MMM"))"
+        return String(localized: "Week of \(range)")
     }
 
     private var weekHeader: some View {
@@ -104,8 +116,10 @@ struct WeekPlanView: View {
             .accessibilityLabel("Previous week")
             Spacer()
             VStack(spacing: 2) {
-                Text(week == D.weekOf(D.today) ? String(localized: "This week") : String(localized: "Week of \(D.fmt(week, "d MMMM"))")).font(.title3.weight(.bold))
-                Text(D.weekRange(week)).font(.caption).foregroundStyle(.secondary)
+                Text(D.weekRange(week)).font(.subheadline.weight(.semibold))
+                if week != D.weekOf(D.today) {
+                    Button("Back to my week") { week = D.weekOf(D.today) }.font(.caption)
+                }
             }
             Spacer()
             Button { week = D.addDays(week, 7) } label: {

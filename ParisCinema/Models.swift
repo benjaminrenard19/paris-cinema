@@ -321,6 +321,16 @@ struct Cinema: Codable, Hashable, Identifiable {
     var id: String { name }
     var coordinate: CLLocationCoordinate2D { CLLocationCoordinate2D(latitude: lat, longitude: lng) }
 
+    /// The company running the cinema (Gaumont cinemas are Pathé's), or Independent.
+    var company: String {
+        let n = name.folded
+        if n.hasPrefix("ugc") { return "UGC" }
+        if n.hasPrefix("pathe") || n.hasPrefix("gaumont") { return "Pathé" }
+        if n.hasPrefix("mk2") { return "mk2" }
+        return "Independent"
+    }
+    static let companies = ["UGC", "Pathé", "mk2", "Independent"]
+
     var directionsURL: URL? {
         URL.with("https://maps.apple.com/", ["daddr": "\(lat),\(lng)", "q": name, "dirflg": "r"])
     }

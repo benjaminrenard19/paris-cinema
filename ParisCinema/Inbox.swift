@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import UserNotifications
 
 /// What's waiting for you, behind the 🎥 button on the Films page.
 struct InboxItem: Identifiable {
@@ -12,6 +13,32 @@ struct InboxItem: Identifiable {
 }
 
 extension Store {
+    /// The same number as the 🎥 button, on the app icon.
+    func updateIconBadge(_ n: Int? = nil) {
+        UNUserNotificationCenter.current().setBadgeCount(n ?? inboxBadge) { _ in }
+    }
+
+    /// Items you hid from the list (the week's releases), by id.
+    var hiddenInbox: Set<String> {
+        get { Set(UserDefaults.standard.stringArray(forKey: "inboxHidden") ?? []) }
+        set { UserDefaults.standard.set(Array(newValue.suffix(60)), forKey: "inboxHidden") }
+    }
+
+    /// "Mark as seen" on a film in What's new (or on its notification): watched, on the planned day.
+    func markSeenFromInbox(_ id: String) {
+        guard let f = index[id], seen[id] == nil else { return }
+        let day = min(plans[id]?.d ?? D.today, D.today)
+        setSeen(f, rating: 0, on: day)
+        updateIconBadge()
+    }
+
+    func hideInboxItem(_ id: String) {
+        var h = hiddenInbox
+        h.insert(id)
+        hiddenInbox = h
+        updateIconBadge()
+    }
+
     var inbox: [InboxItem] {
         var out: [InboxItem] = []
         let today = D.today
@@ -55,7 +82,8 @@ extension Store {
                                                      : String(localized: "\(fresh) films out this week"),
                                  detail: String(localized: "Swipe through the posters")))
         }
-        return out
+        let hidden = hiddenInbox
+        return out.filter { !hidden.contains($0.id) }
     }
 
     /// The number on the 🎥 button: films to rate, plans today and plans to confirm.
@@ -104,6 +132,22 @@ struct InboxView: View {
         if !items.isEmpty {
             Section(title) {
                 ForEach(items) { item in
+                    entry(item, emoji: emoji)
+                        .swipeActions(edge: .trailing) {
+                            if let id = item.filmId {
+                                Button { store.markSeenFromInbox(id) } label: { Label("Mark as seen", systemImage: "checkmark.circle") }
+                                    .tint(.green)
+                            } else {
+                                Button { store.hideInboxItem(item.id) } label: { Label("Hide", systemImage: "eye.slash") }
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func entry(_ item: InboxItem, emoji: String) -> some View {
                     if item.kind == .rate, let id = item.filmId {
                         Button {
                             dismiss()
@@ -126,9 +170,6 @@ struct InboxView: View {
                     } else {
                         row(item, emoji: emoji)
                     }
-                }
-            }
-        }
     }
 
     private func row(_ item: InboxItem, emoji: String) -> some View {
@@ -141,6 +182,17 @@ struct InboxView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.title).font(.headline).foregroundStyle(.primary)
                 Text(item.detail).font(.caption).foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 4)
+            if let id = item.filmId, item.kind != .rate {
+                Button { store.markSeenFromInbox(id) } label: {
+                    Text("Mark as seen")
+                        .font(.caption.weight(.semibold))
+                        .padding(.horizontal, 9).padding(.vertical, 5)
+                        .background(Color.green.opacity(0.15), in: Capsule())
+                        .foregroundStyle(.green)
+                }
+                .buttonStyle(.borderless)
             }
         }
     }

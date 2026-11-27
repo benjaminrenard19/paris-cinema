@@ -8,6 +8,7 @@ struct CinemasView: View {
         span: MKCoordinateSpan(latitudeDelta: 0.09, longitudeDelta: 0.09)))
     @State private var selected: String?
     @State private var type: String = ""
+    @AppStorage("cinemaGroup") private var groupBy = "type"
     @State private var showList = false
     @State private var query = ""
     @State private var askToAdd = false
@@ -17,8 +18,15 @@ struct CinemasView: View {
     private var shown: [Cinema] {
         store.allCinemas.filter { c in
             type.isEmpty || c.type == type || (type == "My cinemas" && store.isPreferred(c.name))
+                || (type.hasPrefix("co:") && c.company == String(type.dropFirst(3)))
         }
     }
+    private var filterLabel: String {
+        if type.isEmpty { return String(localized: "All") }
+        if type.hasPrefix("co:") { return NSLocalizedString(String(type.dropFirst(3)), comment: "Cinema company") }
+        return NSLocalizedString(type, comment: "Cinema type")
+    }
+
     private var typeChoices: [String] {
         Cinema.types + (store.extraCinemas.isEmpty ? [] : ["Other"])
     }
@@ -38,10 +46,19 @@ struct CinemasView: View {
                         Picker("Type", selection: $type) {
                             Text("All cinemas").tag("")
                             Text("My cinemas").tag("My cinemas")
-                            ForEach(typeChoices, id: \.self) { t in Text(LocalizedStringKey(t)).tag(t) }
+                            Section("Type") {
+                                ForEach(typeChoices, id: \.self) { t in Text(LocalizedStringKey(t)).tag(t) }
+                            }
+                            Section("Company") {
+                                ForEach(Cinema.companies, id: \.self) { co in Text(LocalizedStringKey(co)).tag("co:" + co) }
+                            }
+                        }
+                        Picker("Group the list by", selection: $groupBy) {
+                            Label("Type", systemImage: "square.grid.2x2").tag("type")
+                            Label("Company", systemImage: "building.2").tag("company")
                         }
                     } label: {
-                        Label(type.isEmpty ? String(localized: "All") : NSLocalizedString(type, comment: "Cinema type"), systemImage: "line.3.horizontal.decrease.circle")
+                        Label(filterLabel, systemImage: "line.3.horizontal.decrease.circle")
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
@@ -150,13 +167,29 @@ struct CinemasView: View {
                     Text("My cinemas")
                 }
             }
-            ForEach(typeChoices.filter { type.isEmpty || $0 == type }, id: \.self) { t in
-                Section {
-                    ForEach(store.allCinemas.filter { $0.type == t }) { c in listRow(c) }
-                } header: {
-                    Text(LocalizedStringKey(t))
-                } footer: {
-                    Text(LocalizedStringKey(Cinema.typeBlurb(t)))
+            if groupBy == "company" {
+                ForEach(Cinema.companies, id: \.self) { co in
+                    let rows = shown.filter { $0.company == co }
+                    if !rows.isEmpty && type != "My cinemas" {
+                        Section {
+                            ForEach(rows) { c in listRow(c) }
+                        } header: {
+                            Text(LocalizedStringKey(co))
+                        }
+                    }
+                }
+            } else {
+                ForEach(typeChoices, id: \.self) { t in
+                    let rows = shown.filter { $0.type == t }
+                    if !rows.isEmpty && type != "My cinemas" {
+                        Section {
+                            ForEach(rows) { c in listRow(c) }
+                        } header: {
+                            Text(LocalizedStringKey(t))
+                        } footer: {
+                            Text(LocalizedStringKey(Cinema.typeBlurb(t)))
+                        }
+                    }
                 }
             }
         }

@@ -622,3 +622,12 @@
 "Show all %lld cinemas" = "Voir les %lld cinémas";
 "No sessions known yet" = "Pas encore de séances connues";
 "Pull down on the Films page to get the latest showtimes." = "Tirez vers le bas sur la page Films pour avoir les dernières séances.";
+
+/* Cinemas by company, My week titles, What's new */
+"Company" = "Enseigne";
+"Independent" = "Indépendants";
+"Group the list by" = "Classer la liste par";
+"Last week" = "La semaine dernière";
+"Back to my week" = "Revenir à ma semaine";
+"Mark as seen" = "Marquer comme vu";
+"Hide" = "Masquer";

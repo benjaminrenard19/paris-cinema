@@ -36,7 +36,8 @@ final class Notifier: NSObject, UNUserNotificationCenterDelegate {
         center.delegate = self
         let watched = UNNotificationAction(identifier: "WATCHED", title: String(localized: "I watched it: rate it"), options: [.foreground])
         let notYet = UNNotificationAction(identifier: "NOT_YET", title: String(localized: "Not yet: pick a new day"), options: [.foreground])
-        let cat = UNNotificationCategory(identifier: Self.category, actions: [watched, notYet], intentIdentifiers: [], options: [])
+        let markSeen = UNNotificationAction(identifier: "MARK_SEEN", title: String(localized: "Mark as seen"), options: [])
+        let cat = UNNotificationCategory(identifier: Self.category, actions: [watched, notYet, markSeen], intentIdentifiers: [], options: [])
         center.setNotificationCategories([cat])
     }
 
