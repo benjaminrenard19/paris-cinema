@@ -541,17 +541,7 @@ def cineastes(col):
         return
     time.sleep(PAUSE)
     start = today()
-    # The day menu lists every day the programme covers (Wednesday to Tuesday, or further)
     covered = set()
-    menu = re.search(r'<select name="day">(.*?)</select>', page, re.S)
-    for label in re.findall(r'<option value="\d+">(.*?)</option>', menu.group(1) if menu else ""):
-        m = re.search(r"(\d{1,2})", label)
-        if m:
-            for k in range(0, 10):
-                d = start + datetime.timedelta(days=k)
-                if d.day == int(m.group(1)):
-                    covered.add(d)
-                    break
     n = 0
     for mid in dict.fromkeys(re.findall(r"/movies/show/(\d+)", page)):
         try:
@@ -568,8 +558,11 @@ def cineastes(col):
             col.add(name, day.isoformat(), hhmm, title=title, ver=ver)
             covered.add(day)
             n += 1
-    for d in covered:
-        col.covered.add((name, d.isoformat()))
+    if covered:   # every day from today to the last day with a session
+        d, last = start, max(covered)
+        while d <= last:
+            col.covered.add((name, d.isoformat()))
+            d += datetime.timedelta(days=1)
     print(f"{name}: {n} sessions over {len(covered)} days")
 
 

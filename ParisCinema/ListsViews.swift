@@ -542,7 +542,7 @@ struct DataView: View {
                 } header: {
                     Text("Information")
                 } footer: {
-                    Text("Films, posters and ratings come from AlloCiné; session times from the cinemas' own websites (UGC, Le Grand Rex, Max Linder, Luminor, Le Louxor, Les 7 Parnassiens, Les 5 Caumartin, Elysées Lincoln, Le Grand Action, Le Balzac, Studio 28) and AlloCiné, with the classics the independent cinemas show; extra posters from Apple's film catalogue. The app follows your iPhone's language, English or French; change it in Settings › Apps › Sloth Cinema › Language.")
+                    Text("Films, posters and ratings come from AlloCiné; session times from the cinemas' own websites (UGC, Le Grand Rex, Max Linder, Luminor, Le Louxor, Les 7 Parnassiens, Les 5 Caumartin, Elysées Lincoln, Le Grand Action, Le Balzac, Studio 28, Le Cinéma des Cinéastes) and AlloCiné, with the classics the independent cinemas show; extra posters from Apple's film catalogue. The app follows your iPhone's language, English or French; change it in Settings › Apps › Sloth Cinema › Language.")
                 }
 
                 HistorySettings()
