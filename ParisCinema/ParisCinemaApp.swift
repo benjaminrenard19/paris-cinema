@@ -32,7 +32,10 @@ struct ParisCinemaApp: App {
             guard phase == .active else { return }
             Theme.shared.apply()
             store.refreshFromLinkedFile()
-            Task { @MainActor in await store.refreshFromFeed() }
+            Task { @MainActor in
+                await store.refreshFromFeed()
+                await store.loadHistory()
+            }
         }
         .backgroundTask(.appRefresh(AlertPrefs.refreshTask)) {
             await store.backgroundRefresh()

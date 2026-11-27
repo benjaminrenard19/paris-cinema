@@ -163,7 +163,7 @@ extension Store {
         let key = slug(title)
         let y = Int(year) ?? 0
         func nearYear(_ f: Film) -> Bool { abs((Int(f.date.prefix(4)) ?? 0) - y) <= 1 || y == 0 }
-        let candidates = films.filter(nearYear)
+        let candidates = films.filter(nearYear) + history.filter { !currentIds.contains($0.id) && nearYear($0) }
         func sameTitle(_ f: Film) -> Bool {
             if slug(f.title) == key { return true }
             guard let o = f.orig, !o.allSatisfy(\.isNumber) else { return false }
@@ -392,6 +392,10 @@ struct VideoImportView: View {
                     default: day = min(f.date, today)
                     }
                     store.setSeen(f, rating: r.rating, on: day)
+                    // Imported films get no cinema, unless you chose one in Settings › Film history.
+                    if store.seen[id]?.cn == nil, let c = UserDefaults.standard.string(forKey: "importCinema"), !c.isEmpty {
+                        store.setSeenCinema(id, c)
+                    }
                 }
             } else if r.asIs {
                 let day = dateRule == 2 || r.read.year.isEmpty ? today : min("\(r.read.year)-01-01", today)

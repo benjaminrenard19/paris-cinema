@@ -482,7 +482,7 @@
 "Show 1 film you've seen" = "Afficher 1 film déjà vu";
 "Showing again in Paris" = "De nouveau à l'affiche à Paris";
 "Showing this week" = "À l'affiche";
-"Sloth Cinema: every film in Paris cinemas with today's session times, VO or VF. It's a free iPhone app you can install from this page with a Mac and Xcode." = "Sloth Cinema : tous les films des cinémas parisiens avec les séances du jour, en VO ou en VF. C'est une app iPhone gratuite à installer depuis cette page avec un Mac et Xcode.";
+"Sloth Cinema: every film in Paris cinemas with today's session times, VO or VF. Open it in your browser:" = "Sloth Cinema : tous les films des cinémas de Paris avec les séances du jour, en VO ou en VF. À ouvrir dans le navigateur :";
 "Sort films" = "Trier les films";
 "Swipe through the posters" = "Faites défiler les affiches";
 "Swipe through this week's posters" = "Faire défiler les affiches de la semaine";
@@ -504,7 +504,7 @@
 "Yes, only VF" = "Oui, uniquement la VF";
 "Yes, only the original version" = "Oui, uniquement la VO";
 "You'll get a notification when a new film comes to this cinema." = "Vous recevrez une notification quand un nouveau film arrivera dans ce cinéma.";
-"Your lists are a file you can keep as a backup or open on another iPhone. To install the app on a friend's iPhone without a Mac, Apple requires TestFlight or the App Store, which need a paid Apple Developer account (99 € a year). Until then, the link points to the code on GitHub." = "Vos listes sont un fichier à garder en sauvegarde ou à ouvrir sur un autre iPhone. Pour installer l'app sur l'iPhone d'un ami sans Mac, Apple impose TestFlight ou l'App Store, qui demandent un compte Apple Developer payant (99 € par an). En attendant, le lien mène au code sur GitHub.";
+"Your lists are a file you can keep as a backup or open on another iPhone. To install the app on a friend's iPhone without a Mac, Apple requires TestFlight or the App Store, which need a paid Apple Developer account (99 € a year). Until then, the link opens Sloth Cinema in the browser." = "Vos listes sont un fichier à garder en sauvegarde ou à ouvrir sur un autre iPhone. Pour installer l'app sur l'iPhone d'un ami sans Mac, Apple impose TestFlight ou l'App Store, qui demandent un compte Apple Developer payant (99 € par an). En attendant, le lien ouvre Sloth Cinema dans le navigateur.";
 "Your version comes first, the others after" = "Votre version d'abord, les autres ensuite";
 
 /* Video import, cinema notifications, box office */
@@ -652,3 +652,21 @@
 "Your animal and birthday" = "Votre animal et votre anniversaire";
 "Your birthday" = "Votre anniversaire";
 "🎂 Sloth Cinema 🎈" = "🎂 Sloth Cinema 🎈";
+
+/* Hall of Fame: same ratings in your order; films since 2015 */
+"Order films with the same rating" = "Classer les films à égalité";
+"Films with the same rating: drag them into the order you like. The podium and the top 10 follow." = "Films avec la même note : faites-les glisser dans l'ordre que vous préférez. Le podium et le top 10 suivent.";
+"Back to the usual order (latest watched first)" = "Revenir à l'ordre habituel (derniers vus en premier)";
+"Same ratings · %@" = "À égalité · %@";
+"Same ratings · All time" = "À égalité · Depuis toujours";
+"Film history" = "Historique des films";
+"Films since 2015" = "Films depuis 2015";
+"Older films" = "Films plus anciens";
+"Downloading…" = "Téléchargement…";
+"Cinema for imported films" = "Cinéma des films importés";
+"None" = "Aucun";
+"Not set" = "Non renseigné";
+"Every film released in France from 2015 to 2025, with posters and ratings. They're used for search, imports and your watched films. The Films page stays on this year. Imported films get no cinema unless you pick one here; you can set it on each film's page." = "Tous les films sortis en France de 2015 à 2025, avec affiches et notes. Ils servent à la recherche, aux imports et à vos films vus. La page Films reste sur cette année. Les films importés n'ont pas de cinéma, sauf si vous en choisissez un ici ; vous pouvez le renseigner sur la page de chaque film.";
+"Not in cinemas now. Released %@." = "Plus au cinéma. Sorti le %@.";
+"Since 2015 · not in cinemas now" = "Depuis 2015 · plus au cinéma";
+"The 60 most recent. Add a word to narrow it down." = "Les 60 plus récents. Ajoutez un mot pour affiner.";

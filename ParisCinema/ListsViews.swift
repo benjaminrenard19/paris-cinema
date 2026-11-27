@@ -496,6 +496,8 @@ struct DataView: View {
                     Text("Films, posters and ratings come from AlloCiné; session times from the cinemas' own websites (UGC, Le Grand Rex, Max Linder, Luminor, Le Louxor, Les 7 Parnassiens, Les 5 Caumartin, Elysées Lincoln, Le Grand Action, Le Balzac, Studio 28) and AlloCiné, with the classics the independent cinemas show; extra posters from Apple's film catalogue. The app follows your iPhone's language, English or French; change it in Settings › Apps › Sloth Cinema › Language.")
                 }
 
+                HistorySettings()
+
                 // Import
                 Section {
                     Button { importingVideo = true } label: { Label("Import from a screen recording", systemImage: "video.badge.plus") }
@@ -512,14 +514,14 @@ struct DataView: View {
                     if FileManager.default.fileExists(atPath: store.userURL.path) {
                         ShareLink(item: store.userURL) { Label("Share my lists (favourites, watched, plans)", systemImage: "square.and.arrow.up") }
                     }
-                    ShareLink(item: Feed.page, subject: Text("Sloth Cinema"),
-                              message: Text("Sloth Cinema: every film in Paris cinemas with today's session times, VO or VF. It's a free iPhone app you can install from this page with a Mac and Xcode.")) {
+                    ShareLink(item: Feed.web, subject: Text("Sloth Cinema"),
+                              message: Text("Sloth Cinema: every film in Paris cinemas with today's session times, VO or VF. Open it in your browser:")) {
                         Label("Share this app with…", systemImage: "person.2")
                     }
                 } header: {
                     Text("Share")
                 } footer: {
-                    Text("Your lists are a file you can keep as a backup or open on another iPhone. To install the app on a friend's iPhone without a Mac, Apple requires TestFlight or the App Store, which need a paid Apple Developer account (99 € a year). Until then, the link points to the code on GitHub.")
+                    Text("Your lists are a file you can keep as a backup or open on another iPhone. To install the app on a friend's iPhone without a Mac, Apple requires TestFlight or the App Store, which need a paid Apple Developer account (99 € a year). Until then, the link opens Sloth Cinema in the browser.")
                 }
             }
             .navigationTitle("Settings")

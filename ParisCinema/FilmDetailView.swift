@@ -47,6 +47,7 @@ struct FilmDetailView: View {
                 ratingRow(f)
                 if store.seen[f.id] != nil {
                     CompanionPicker(selected: Binding(get: { store.seen[f.id]?.w ?? [] }, set: { store.setCompanions(f.id, $0) }))
+                    SeenCinemaPicker(id: f.id)
                     DatePicker("Watched on", selection: seenDate(f), in: ...Date(), displayedComponents: .date)
                         .environment(\.timeZone, D.paris)
                     Button("Remove from watched", role: .destructive) { store.removeSeen(f.id) }
@@ -63,7 +64,12 @@ struct FilmDetailView: View {
                 planSection(f, p)
             }
 
-            if store.seen[f.id] == nil {
+            if store.isOld(f.id) {
+                Section {
+                    Label("Not in cinemas now. Released \(D.fmt(f.date, "EEEE d MMMM yyyy")).", systemImage: "film.stack")
+                        .font(.subheadline).foregroundStyle(.secondary)
+                }
+            } else if store.seen[f.id] == nil {
                 let showing = !store.cinemaListing(f.id).isEmpty
                 if showing || !store.isFav(f.id) {
                     Section {
@@ -88,7 +94,7 @@ struct FilmDetailView: View {
             Section("Credits") {
                 row("Director", f.dir)
                 row("Cast", f.cast)
-                if !f.isRepertory { row("Producers", f.prod ?? String(localized: "Not listed yet. The Tuesday update adds them.")) }
+                if !f.isRepertory && !store.isOld(f.id) { row("Producers", f.prod ?? String(localized: "Not listed yet. The Tuesday update adds them.")) }
                 row("Genres", f.genreText)
                 row("Origin", f.originText)
                 if let n = f.note, !n.isEmpty { row("Note", n) }

@@ -200,6 +200,19 @@ struct WeeksView: View {
                             }
                         }
                     }
+                    // Older films (since 2015): not in cinemas now, but there to find, rate and mark as seen.
+                    let older = store.searchHistory(query)
+                    if !older.isEmpty {
+                        Section {
+                            ForEach(older.prefix(60)) { f in
+                                NavigationLink(value: f.id) { FilmRow(film: f, showDate: true) }
+                            }
+                        } header: {
+                            Text("Since 2015 · not in cinemas now")
+                        } footer: {
+                            if older.count > 60 { Text("The 60 most recent. Add a word to narrow it down.") }
+                        }
+                    }
                 }
             }
             .listStyle(.insetGrouped)

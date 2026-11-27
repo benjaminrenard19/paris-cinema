@@ -17,6 +17,10 @@ final class Store {
     private(set) var weeks: [String] = []
     private(set) var byWeek: [String: [Film]] = [:]
     private(set) var index: [String: Film] = [:]
+    /// Films since 2015 (History.swift): in `index` for pages, search and imports, never on the Films page.
+    private(set) var history: [Film] = []
+    @ObservationIgnored var historyIds: Set<String> = []
+    @ObservationIgnored var currentIds: Set<String> = []
     private(set) var showtimes: [String: Showtimes] = [:]
     /// France admissions week by week, per film.
     private(set) var boxOffice: [String: [BOWeek]] = [:]
@@ -31,6 +35,10 @@ final class Store {
     /// The people you usually go with, to tick when you mark a film as seen.
     var companions: [String] = UserDefaults.standard.stringArray(forKey: "companions") ?? [] {
         didSet { UserDefaults.standard.set(companions, forKey: "companions") }
+    }
+    /// Your own order for films with the same rating in the Hall of Fame: "all" for all time, or a year ("2026").
+    var hallOrder: [String: [String]] = (UserDefaults.standard.data(forKey: "hallOrder").flatMap { try? JSONDecoder().decode([String: [String]].self, from: $0) }) ?? [:] {
+        didSet { UserDefaults.standard.set(try? JSONEncoder().encode(hallOrder), forKey: "hallOrder") }
     }
     var extraCinemas: [Cinema] = []
 
@@ -93,11 +101,25 @@ final class Store {
         films = list
         byWeek = Dictionary(grouping: list.filter { !$0.isRepertory }, by: { $0.week })
         weeks = byWeek.keys.sorted()
-        index = Dictionary(list.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
+        rebuildIndex()
         showtimes = f.showtimes ?? [:]
         boxOffice = f.boxoffice ?? [:]
         if let c = f.cinemas, !c.isEmpty { cinemas = c }
         exportedAt = f.exportedAt
+    }
+
+    /// This year's films, then the older ones they don't already cover.
+    private func rebuildIndex() {
+        var idx = Dictionary(films.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
+        currentIds = Set(idx.keys)
+        for f in history where idx[f.id] == nil { idx[f.id] = f }
+        index = idx
+    }
+
+    func setHistory(_ list: [Film]) {
+        history = list
+        historyIds = Set(list.map(\.id))
+        rebuildIndex()
     }
 
     // MARK: Import

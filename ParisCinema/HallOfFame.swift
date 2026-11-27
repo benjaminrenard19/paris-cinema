@@ -132,12 +132,14 @@ struct HallOfFameView: View {
     @State private var adding = false
     @State private var importing = false
     @State private var editing: String?
+    @State private var reordering = false
 
-    private var items: [(String, SeenEntry)] {
-        store.seen
-            .filter { year == nil || $0.value.d.hasPrefix(String(year ?? 0)) }
-            .sorted { a, b in a.value.value != b.value.value ? a.value.value > b.value.value : a.value.d > b.value.d }
-            .map { ($0.key, $0.value) }
+    private var items: [(String, SeenEntry)] { store.hallRanking(year: year) }
+
+    /// Some films share a rating, so their order is yours to choose.
+    private var hasTies: Bool {
+        let values = items.map { $0.1.value }
+        return Set(values).count < values.count
     }
 
     private var years: [Int] {
@@ -188,6 +190,12 @@ struct HallOfFameView: View {
             .navigationTitle("Hall of Fame")
             .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
             .toolbar {
+                if hasTies {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button { reordering = true } label: { Image(systemName: "arrow.up.arrow.down") }
+                            .accessibilityLabel("Order films with the same rating")
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Button { adding = true } label: { Label("Add a film you watched", systemImage: "plus") }
@@ -197,6 +205,7 @@ struct HallOfFameView: View {
                 }
             }
             .sheet(isPresented: $adding) { AddWatchedView().environment(store) }
+            .sheet(isPresented: $reordering) { HallTiesView(year: year).environment(store) }
             .sheet(isPresented: $importing) { VideoImportView().environment(store) }
             .sheet(item: Binding(get: { editing.map { EditTarget(id: $0) } }, set: { editing = $0?.id })) { t in
                 AddWatchedView(editingId: t.id).environment(store)
@@ -280,6 +289,91 @@ struct HallOfFameView: View {
                     .font(.caption).foregroundStyle(.secondary).lineLimit(1)
                 RatingStars(value: s.value, size: 11)
             }
+        }
+    }
+}
+
+// MARK: - Same rating: your order
+
+extension Store {
+    /// Your watched films for a year (nil: all time), best first. Films with the same rating follow
+    /// your own order for that period, then the most recently watched first.
+    func hallRanking(year: Int?) -> [(String, SeenEntry)] {
+        let key = year.map { String($0) } ?? "all"
+        var pos: [String: Int] = [:]
+        for (i, id) in (hallOrder[key] ?? []).enumerated() where pos[id] == nil { pos[id] = i }
+        return seen
+            .filter { year == nil || $0.value.d.hasPrefix(key) }
+            .sorted { a, b in
+                if a.value.value != b.value.value { return a.value.value > b.value.value }
+                let pa = pos[a.key] ?? Int.max, pb = pos[b.key] ?? Int.max
+                if pa != pb { return pa < pb }
+                return a.value.d != b.value.d ? a.value.d > b.value.d : a.key < b.key
+            }
+            .map { ($0.key, $0.value) }
+    }
+
+    /// Moves films within one rating, for that period only.
+    func moveInHall(year: Int?, rating: Double, from: IndexSet, to: Int) {
+        let key = year.map { String($0) } ?? "all"
+        var group = hallRanking(year: year).filter { $0.1.value == rating }.map(\.0)
+        group.move(fromOffsets: from, toOffset: to)
+        var order = (hallOrder[key] ?? []).filter { !group.contains($0) }
+        order.append(contentsOf: group)
+        hallOrder[key] = order
+    }
+
+    func resetHallOrder(year: Int?) {
+        hallOrder[year.map { String($0) } ?? "all"] = nil
+    }
+}
+
+/// Drag films that share a rating into the order you like; the podium and top 10 follow.
+struct HallTiesView: View {
+    @Environment(Store.self) private var store
+    @Environment(\.dismiss) private var dismiss
+    let year: Int?
+
+    var body: some View {
+        let ranking = store.hallRanking(year: year)
+        let values = Array(Set(ranking.map { $0.1.value })).sorted(by: >)
+        let groups = values.map { v in (v, ranking.filter { $0.1.value == v }) }.filter { $0.1.count > 1 }
+        NavigationStack {
+            List {
+                Section {
+                    Text("Films with the same rating: drag them into the order you like. The podium and the top 10 follow.")
+                        .font(.subheadline).foregroundStyle(.secondary)
+                }
+                ForEach(groups, id: \.0) { group in
+                    Section {
+                        ForEach(group.1, id: \.0) { item in
+                            HStack(spacing: 12) {
+                                PosterTile(title: store.index[item.0]?.title ?? item.1.t ?? "?", cat: Cat.from(item.1.c), width: 30,
+                                           url: store.index[item.0]?.poster ?? item.1.p)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(store.index[item.0]?.title ?? item.1.t ?? "?").font(.subheadline.weight(.semibold))
+                                    Text(D.fmt(item.1.d, "d MMM yyyy")).font(.caption).foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                        .onMove { from, to in store.moveInHall(year: year, rating: group.0, from: from, to: to) }
+                    } header: {
+                        HStack {
+                            RatingStars(value: group.0, size: 11)
+                            Text("\(group.1.count) films")
+                        }
+                    }
+                }
+                if store.hallOrder[year.map { String($0) } ?? "all"] != nil {
+                    Section {
+                        Button("Back to the usual order (latest watched first)", role: .destructive) { store.resetHallOrder(year: year) }
+                    }
+                }
+            }
+            .environment(\.editMode, .constant(.active))
+            .navigationTitle(year.map { String(localized: "Same ratings · \(String($0))") } ?? String(localized: "Same ratings · All time"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
         }
     }
 }
