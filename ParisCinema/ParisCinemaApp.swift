@@ -261,7 +261,10 @@ struct FilmRow: View {
 
     private var subtitle: String? {
         var parts: [String] = []
-        if !film.isRepertory && (showDate || film.date != film.week) { parts.append(D.fmt(film.date, "EEE d MMM")) }
+        if !film.isRepertory && (showDate || film.date != film.week) {
+            // Older films (since 2015) show their year too.
+            parts.append(D.fmt(film.date, film.date.hasPrefix(String(D.today.prefix(4))) ? "EEE d MMM" : "d MMM yyyy"))
+        }
         if let d = film.dir, !d.isEmpty { parts.append(d) }
         if let o = film.origin, !o.isEmpty { parts.append(o) }
         if film.category == .R, let y = film.orig, !y.isEmpty { parts.append(y) }
