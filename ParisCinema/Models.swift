@@ -371,6 +371,7 @@ struct Plan: Codable, Hashable {
     var title: String?
     var fd: String?        // release date
     var ok: Bool? = nil    // confirmed by you (provisional plans get no notification)
+    var w: [String]? = nil // who's coming
 }
 
 /// Decodes what it can and skips a malformed entry instead of failing the whole file.

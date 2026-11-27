@@ -43,15 +43,17 @@ struct HalfStarPicker: View {
 struct CompanionPicker: View {
     @Environment(Store.self) private var store
     @Binding var selected: [String]
+    var title: LocalizedStringKey = "Seen with"
     @State private var adding = false
     @State private var newName = ""
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Seen with").font(.subheadline).foregroundStyle(.secondary)
+            Text(title).font(.subheadline).foregroundStyle(.secondary)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    ForEach(store.companions, id: \.self) { name in
+                    // Your usual people, then anyone ticked who isn't in that list (from an invitation, say)
+                    ForEach(store.companions + selected.filter { !store.companions.contains($0) }, id: \.self) { name in
                         let on = selected.contains(name)
                         Button {
                             if on { selected.removeAll { $0 == name } } else { selected.append(name) }
@@ -80,7 +82,7 @@ struct CompanionPicker: View {
             Button("Add") {
                 let n = newName.trimmingCharacters(in: .whitespaces)
                 guard !n.isEmpty else { return }
-                if !store.companions.contains(n) { store.companions.append(n) }
+                store.addCompanion(n)
                 if !selected.contains(n) { selected.append(n) }
             }
             Button("Cancel", role: .cancel) {}

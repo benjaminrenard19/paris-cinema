@@ -15,7 +15,38 @@ final class Theme {
     ]
 
     var hex: UInt32 {
-        didSet { UserDefaults.standard.set(Int(hex), forKey: "accentHex") }
+        didSet {
+            UserDefaults.standard.set(Int(hex), forKey: "accentHex")
+            scheduleIcon()
+        }
+    }
+
+    @ObservationIgnored private var iconTask: Task<Void, Never>?
+
+    /// The app icon follows the colour, a moment after the last change (the colour wheel sends many),
+    /// since iOS shows a short notice each time the icon changes.
+    func scheduleIcon() {
+        iconTask?.cancel()
+        let name = Theme.iconName(for: hex)
+        iconTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 1_500_000_000)
+            guard !Task.isCancelled else { return }
+            let app = UIApplication.shared
+            guard app.supportsAlternateIcons, app.alternateIconName != name else { return }
+            app.setAlternateIconName(name) { _ in }
+        }
+    }
+
+    /// The icon for a colour: the preset nearest to it (nil is the main, Sloth red icon).
+    /// The icons are made by scripts/icons.py, named AppIcon-<preset name>.
+    static func iconName(for hex: UInt32) -> String? {
+        func parts(_ h: UInt32) -> (Int, Int, Int) { (Int((h >> 16) & 0xFF), Int((h >> 8) & 0xFF), Int(h & 0xFF)) }
+        func distance(_ a: UInt32, _ b: UInt32) -> Int {
+            let x = parts(a), y = parts(b)
+            return (x.0 - y.0) * (x.0 - y.0) + (x.1 - y.1) * (x.1 - y.1) + (x.2 - y.2) * (x.2 - y.2)
+        }
+        guard let best = presets.min(by: { distance($0.hex, hex) < distance($1.hex, hex) }), best.hex != slothRed else { return nil }
+        return "AppIcon-" + best.name.replacingOccurrences(of: " ", with: "")
     }
 
     /// 0: like the iPhone, 1: light, 2: dark.

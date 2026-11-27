@@ -267,6 +267,8 @@ struct FilmDetailView: View {
             if let c = store.cinema(named: p.cn), let u = c.directionsURL {
                 Link(destination: u) { Label("Directions to \(c.name)", systemImage: "arrow.triangle.turn.up.right.diamond") }
             }
+            CompanionPicker(selected: Binding(get: { store.plans[f.id]?.w ?? [] }, set: { store.setPlanCompanions(f.id, $0) }),
+                            title: "Going with")
             Button { inviting = true } label: {
                 Label("Invite someone", systemImage: "person.2.wave.2")
             }

@@ -207,6 +207,7 @@ struct AddWatchedView: View {
     @State private var title = ""
     @State private var day = Date()
     @State private var rating = 0.0
+    @State private var with: [String] = []
     @State private var cat: Cat = .D
     @State private var ready = false
     @State private var poster: String?
@@ -264,6 +265,7 @@ struct AddWatchedView: View {
                     Spacer()
                     HalfStarPicker(value: $rating, size: 20)
                 }
+                CompanionPicker(selected: $with)
             }
             .navigationTitle(editingId == nil ? String(localized: "Add a film") : String(localized: "Edit"))
             .navigationBarTitleDisplayMode(.inline)
@@ -274,9 +276,10 @@ struct AddWatchedView: View {
                         if let id = editingId {
                             store.updateCustomSeen(id, title: title, day: D.str(day), rating: Int(rating), category: cat, poster: poster,
                                                    half: rating - Double(Int(rating)) >= 0.5)
-                        } else {
-                            store.addCustomSeen(title: title, day: D.str(day), rating: Int(rating), category: cat, poster: poster,
-                                                half: rating - Double(Int(rating)) >= 0.5)
+                            store.setCompanions(id, with)
+                        } else if let id = store.addCustomSeen(title: title, day: D.str(day), rating: Int(rating), category: cat, poster: poster,
+                                                               half: rating - Double(Int(rating)) >= 0.5) {
+                            store.setCompanions(id, with)
                         }
                         dismiss()
                     }
@@ -290,6 +293,7 @@ struct AddWatchedView: View {
                     title = s.t ?? ""
                     day = D.date(s.d) ?? Date()
                     rating = s.value
+                    with = s.w ?? []
                     cat = Cat.from(s.c)
                     poster = s.p
                 }

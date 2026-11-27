@@ -68,7 +68,7 @@ struct ContentView: View {
                 .tabItem { Label("Cinemas", systemImage: "map") }
         }
         .tint(theme.color)
-        .onAppear { theme.apply() }
+        .onAppear { theme.apply(); theme.scheduleIcon() }
         .sheet(item: $model.checkIn) { c in
             CheckInView(checkIn: c).environment(store)
         }
@@ -91,6 +91,10 @@ struct ContentView: View {
         .sheet(item: $model.openCinema) { t in
             CinemaSheet(name: t.id).environment(store).tint(theme.color)
         }
+        .sheet(item: $model.receivedInvite) { i in
+            InvitationReceivedView(invite: i).environment(store).tint(theme.color)
+        }
+        .onOpenURL { store.openInvitation($0) }
     }
 }
 
