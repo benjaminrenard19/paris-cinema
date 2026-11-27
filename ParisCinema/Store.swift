@@ -254,10 +254,9 @@ final class Store {
 
     // MARK: Plans and notifications
 
-    /// When the film should be over: its running time (or 2 h 10) plus 20 minutes of trailers.
+    /// When the film should be over: trailers (about 10 to 20 minutes, by cinema) plus its running time (or 2 h 10).
     func planEnd(_ id: String, _ p: Plan) -> Date? {
-        let minutes = (index[id]?.duration ?? 130) + 20
-        return D.stamp(day: p.d, time: p.t)?.addingTimeInterval(TimeInterval(minutes * 60))
+        endOf(id, day: p.d, time: p.t, cinema: p.cn)
     }
 
     private func syncNotifications() {
@@ -276,11 +275,10 @@ final class Store {
             guard p.ok == true, seen[entry.key] == nil, let start = D.stamp(day: p.d, time: p.t) else { return nil }
             let film = index[entry.key]
             let address = p.ca ?? cinema(named: p.cn)?.address ?? ""
-            let minutes = (film?.duration ?? 130) + 20
             return CalendarItem(id: entry.key,
                                 title: "🎬 " + (p.title ?? film?.title ?? "Cinema"),
                                 start: start,
-                                end: start.addingTimeInterval(TimeInterval(minutes * 60)),
+                                end: planEnd(entry.key, p) ?? start.addingTimeInterval(150 * 60),
                                 location: address.isEmpty ? p.cn : p.cn + ", " + address,
                                 notes: [film?.dir.map { String(localized: "Directed by \($0)") }, film?.story, String(localized: "Planned in Sloth Cinema")].compactMap { $0 }.joined(separator: "\n\n"))
         }

@@ -271,7 +271,7 @@ struct FilmDetailView: View {
                         ForEach(list) { s in
                             Button { setTime(f, p, s.time) } label: {
                                 TimeChip(time: s.time, selected: s.time == p.t, version: s.version,
-                                         clash: !store.clashes(f.id, day: p.d, time: s.time).isEmpty)
+                                         clash: !store.clashes(f.id, day: p.d, time: s.time, cinema: p.cn).isEmpty)
                             }
                                 .buttonStyle(.plain)
                         }
@@ -306,8 +306,9 @@ struct FilmDetailView: View {
             Text("Plan to watch")
         } footer: {
             VStack(alignment: .leading, spacing: 4) {
-                ClashWarning(clashes: store.clashes(f.id, day: p.d, time: p.t))
+                ClashWarning(clashes: store.clashes(f.id, day: p.d, time: p.t, cinema: p.cn))
                 Text("\(D.fmt(p.d, "EEEE d MMMM")) at \(p.t), \(p.cn).")
+                ExitTimeLine(id: f.id, day: p.d, time: p.t, cinema: p.cn)
                 if p.ok == true {
                     Text(CalendarSync.shared.enabled
                          ? String(localized: "Saved to your calendar automatically. After the film you'll get a notification to say how it was.")

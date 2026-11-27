@@ -346,7 +346,7 @@ struct CinemaSheet: View {
                             clashAsk = store.requestPlan(f, day: day, time: s.time, cinemaName: name)
                         } label: {
                             TimeChip(time: s.time, selected: store.plans[f.id].map { $0.d == day && $0.t == s.time && store.sameCinema($0.cn, name) } ?? false,
-                                     version: s.version, clash: !store.clashes(f.id, day: day, time: s.time).isEmpty)
+                                     version: s.version, clash: !store.clashes(f.id, day: day, time: s.time, cinema: name).isEmpty)
                         }
                         .buttonStyle(.borderless)
                     }

@@ -70,7 +70,7 @@ struct FilmCinemasList: View {
                             ask = store.requestPlan(film, day: r.day, time: s.time, cinemaName: r.cinema)
                         } label: {
                             TimeChip(time: s.time, selected: plan?.d == r.day && plan?.t == s.time && plan?.cn == r.cinema, version: s.version,
-                                     clash: !store.clashes(film.id, day: r.day, time: s.time).isEmpty)
+                                     clash: !store.clashes(film.id, day: r.day, time: s.time, cinema: r.cinema).isEmpty)
                         }
                         .buttonStyle(.plain)
                     }

@@ -151,7 +151,9 @@ struct WeekPlanView: View {
                 if p.ok != true {
                     Text("Provisional · swipe right to confirm").font(.caption2).foregroundStyle(.orange)
                 }
-                ClashWarning(clashes: store.clashes(f.id, day: p.d, time: p.t))
+                ExitTimeLine(id: f.id, day: p.d, time: p.t, cinema: p.cn, compact: true)
+                    .font(.caption).foregroundStyle(.secondary)
+                ClashWarning(clashes: store.clashes(f.id, day: p.d, time: p.t, cinema: p.cn))
             }
         }
     }
@@ -348,7 +350,7 @@ struct AddPlanView: View {
                     ForEach(times) { s in
                         Button { time = s.time } label: {
                             TimeChip(time: s.time, selected: s.time == time, version: s.version,
-                                     clash: filmId.map { !store.clashes($0, day: day, time: s.time).isEmpty } ?? false)
+                                     clash: filmId.map { !store.clashes($0, day: day, time: s.time, cinema: cinemaName).isEmpty } ?? false)
                         }
                             .buttonStyle(.plain)
                     }
@@ -356,6 +358,13 @@ struct AddPlanView: View {
                 .padding(.vertical, 4)
             } else {
                 noSession
+            }
+            if let id = filmId, times.contains(where: { $0.time == time }) {
+                VStack(alignment: .leading, spacing: 4) {
+                    ExitTimeLine(id: id, day: day, time: time, cinema: cinemaName)
+                        .font(.subheadline)
+                    ClashWarning(clashes: store.clashes(id, day: day, time: time, cinema: cinemaName))
+                }
             }
         } header: {
             Text("2. Day and session · \(D.fmt(day, "EEEE d MMMM"))")
@@ -399,7 +408,7 @@ struct AddPlanView: View {
                                         time = s.time
                                     } label: {
                                         TimeChip(time: s.time, selected: false, version: s.version,
-                                                 clash: filmId.map { !store.clashes($0, day: day, time: s.time).isEmpty } ?? false)
+                                                 clash: filmId.map { !store.clashes($0, day: day, time: s.time, cinema: name).isEmpty } ?? false)
                                     }
                                     .buttonStyle(.plain)
                                 }
@@ -661,6 +670,11 @@ struct CheckInView: View {
                         Section {
                             DatePicker("New day and time", selection: $newStart, in: Date()..., displayedComponents: [.date, .hourAndMinute])
                                 .environment(\.timeZone, D.paris)
+                            if let f = film {
+                                let st = D.stampString(newStart)
+                                ExitTimeLine(id: f.id, day: st.day, time: st.time, cinema: cinemaName)
+                                    .font(.subheadline)
+                            }
                             NavigationLink {
                                 CinemaPickerView(film: f, selected: $cinemaName)
                             } label: {

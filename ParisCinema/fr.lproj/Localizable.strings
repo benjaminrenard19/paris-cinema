@@ -707,3 +707,5 @@
 "Films since 2015: off (Settings › Films since 2015)." = "Films depuis 2015 : désactivés (Réglages › Films depuis 2015).";
 "Films since 2015: downloading…" = "Films depuis 2015 : téléchargement…";
 "+ %lld older films, %@ to %@: in search, imports and your watched films, not in the weeks." = "+ %1$lld films plus anciens, de %2$@ à %3$@ : dans la recherche, les imports et vos films vus, pas dans les semaines.";
+"Out around %@" = "Sortie vers %@";
+"%@ film + about %lld min of trailers" = "film de %1$@ + environ %2$lld min de pubs et bandes-annonces";
