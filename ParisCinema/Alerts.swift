@@ -192,7 +192,8 @@ struct ReleasesSlideshowView: View {
     @State private var open: EditTarget?
 
     var body: some View {
-        let list = store.releases(in: week)
+        // Same order as the Films page; older films only when it shows everything.
+        let list = WeekSort.current.apply(store.releases(in: week).filter { FilmsShow.current == .all || !$0.isRepertory })
         NavigationStack {
             ZStack {
                 Color.black.ignoresSafeArea()

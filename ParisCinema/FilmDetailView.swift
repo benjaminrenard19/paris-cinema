@@ -63,6 +63,24 @@ struct FilmDetailView: View {
                 planSection(f, p)
             }
 
+            if store.seen[f.id] == nil {
+                let showing = !store.cinemaListing(f.id).isEmpty
+                if showing || !store.isFav(f.id) {
+                    Section {
+                        if !store.isFav(f.id) {
+                            Button { store.toggleFav(f) } label: {
+                                Label("Add it to One To Watch (OTW) to see when the sessions are.", systemImage: "star")
+                            }
+                        }
+                        if showing { FilmCinemasList(film: f) }
+                    } header: {
+                        if showing { Text("These cinemas have your wanted movie!") }
+                    } footer: {
+                        if showing { Text("Your cinemas in gold. Tap a time to plan it.") }
+                    }
+                }
+            }
+
             if let syn = f.syn, !syn.isEmpty {
                 Section("Story") { Text(syn) }
             }

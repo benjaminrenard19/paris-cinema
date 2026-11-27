@@ -182,12 +182,13 @@ struct ReceivedInvite: Identifiable {
 
 extension Store {
     static let inviteScheme = "slothcinema"
+    /// A small web page (docs/i.html on GitHub Pages): Messages makes https links tappable, and the
+    /// page hands the invitation straight to the app as slothcinema://invite?… with the same query.
+    static let inviteWeb = "https://benjaminrenard19.github.io/paris-cinema/i.html"
 
-    /// slothcinema://invite?f=…&t=…&d=…&h=…&c=…&a=…&v=…&n=…
+    /// https://…/i.html?f=…&t=…&d=…&h=…&c=…&a=…&v=…&n=…
     func inviteLink(_ f: Film, _ p: Plan, version: String?, from: String) -> URL? {
-        var c = URLComponents()
-        c.scheme = Store.inviteScheme
-        c.host = "invite"
+        guard var c = URLComponents(string: Store.inviteWeb) else { return nil }
         var q = [URLQueryItem(name: "f", value: f.id), URLQueryItem(name: "t", value: f.title),
                  URLQueryItem(name: "d", value: p.d), URLQueryItem(name: "h", value: p.t),
                  URLQueryItem(name: "c", value: p.cn)]
@@ -196,11 +197,15 @@ extension Store {
         let n = from.trimmingCharacters(in: .whitespaces)
         if !n.isEmpty { q.append(URLQueryItem(name: "n", value: n)) }
         c.queryItems = q
+        // "+" would read as a space on the web page
+        c.percentEncodedQuery = c.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
         return c.url
     }
 
     func openInvitation(_ url: URL) {
-        guard url.scheme?.lowercased() == Store.inviteScheme, url.host?.lowercased() == "invite",
+        let fromApp = url.scheme?.lowercased() == Store.inviteScheme && url.host?.lowercased() == "invite"
+        let fromWeb = url.absoluteString.hasPrefix(Store.inviteWeb)
+        guard fromApp || fromWeb,
               let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems else { return }
         func value(_ k: String) -> String? {
             guard let v = items.first(where: { $0.name == k })?.value?.trimmingCharacters(in: .whitespaces), !v.isEmpty else { return nil }

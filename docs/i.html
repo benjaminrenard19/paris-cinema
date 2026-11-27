@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Invitation · Sloth Cinema</title>
+<meta property="og:title" content="Invitation au cinéma · Sloth Cinema">
+<meta property="og:description" content="Touchez pour l'ouvrir dans Sloth Cinema.">
+<meta property="og:image" content="https://benjaminrenard19.github.io/paris-cinema/icon.png">
+<meta name="theme-color" content="#a3142f">
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; min-height: 100vh; background: linear-gradient(#a3142f, #3d0712 55%, #000); color: #fff;
+         font-family: -apple-system, system-ui, sans-serif; display: flex; align-items: center; justify-content: center; }
+  main { width: min(360px, 90vw); text-align: center; display: flex; flex-direction: column; gap: 14px; padding: 32px 0; }
+  img { width: 88px; height: 88px; border-radius: 20px; margin: 0 auto; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+  h1 { font-size: 24px; margin: 6px 0 0; }
+  .card { background: rgba(0,0,0,.35); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+  .film { font-family: Georgia, serif; font-weight: 700; font-size: 19px; }
+  .when { font-size: 28px; font-weight: 900; }
+  .muted { color: rgba(255,255,255,.75); font-size: 14px; }
+  a.open { display: block; background: #fff; color: #a3142f; font-weight: 700; font-size: 17px; text-decoration: none;
+           border-radius: 28px; padding: 15px; margin-top: 6px; }
+  .small { font-size: 13px; color: rgba(255,255,255,.65); line-height: 1.4; }
+</style>
+</head>
+<body>
+<main>
+  <img src="icon.png" alt="">
+  <h1 id="who">Tu viens avec moi ?</h1>
+  <div class="card">
+    <div class="film" id="film"></div>
+    <div id="day"></div>
+    <div class="when" id="time"></div>
+    <div class="muted" id="cinema"></div>
+  </div>
+  <a class="open" id="open" href="#">Ouvrir dans Sloth Cinema</a>
+  <p class="small">L'invitation s'ouvre dans l'app Sloth Cinema, si elle est installée sur ce téléphone.</p>
+</main>
+<script>
+  // The invitation is in the address (?f=…&t=…&d=…&h=…&c=…&a=…&v=…&n=…): hand it to the app.
+  const q = new URLSearchParams(location.search);
+  const app = 'slothcinema://invite' + location.search;
+  const text = (id, v) => { document.getElementById(id).textContent = v || ''; };
+  const name = q.get('n');
+  if (name) text('who', name + ' t’invite au cinéma');
+  text('film', q.get('t'));
+  const d = q.get('d');
+  if (d && /^\d{4}-\d{2}-\d{2}$/.test(d)) {
+    const date = new Date(d + 'T12:00:00');
+    const s = date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+    text('day', s.charAt(0).toUpperCase() + s.slice(1));
+  }
+  text('time', [q.get('h'), q.get('v')].filter(Boolean).join(' · '));
+  text('cinema', [q.get('c'), q.get('a')].filter(Boolean).join(', '));
+  document.getElementById('open').href = app;
+  if (q.get('d')) setTimeout(() => { location.href = app; }, 250);
+</script>
+</body>
+</html>

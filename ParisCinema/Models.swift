@@ -184,6 +184,27 @@ struct Film: Identifiable, Hashable, Codable {
 
     var year: String { String(date.prefix(4)) }
 
+    /// Every genre of the film, as lowercase keys: "Comedy-drama, thriller" gives comedy, drama, thriller.
+    var genres: [String] {
+        guard let g = genre else { return [] }
+        var out: [String] = []
+        for raw in g.components(separatedBy: CharacterSet(charactersIn: ",/")) {
+            let t = raw.trimmingCharacters(in: .whitespaces).lowercased()
+            guard !t.isEmpty else { continue }
+            var parts = [t]
+            if t == "comedy-drama" { parts = ["comedy", "drama"] }
+            else if t.hasSuffix(" drama") { parts = [String(t.dropLast(6)), "drama"] }
+            for p in parts where !out.contains(p) { out.append(p) }
+        }
+        return out
+    }
+
+    /// A genre key in the app's language, capitalised.
+    static func genreLabel(_ key: String) -> String {
+        let s = D.isFrench ? NSLocalizedString(key, tableName: "Data", value: key, comment: "Genre or country") : key
+        return s.prefix(1).uppercased() + s.dropFirst()
+    }
+
     /// Genres and countries in the app's language (the data is written in English).
     var genreText: String? { genre.map { Film.localizedList($0, lowerAfterFirst: true) } }
     var originText: String? { origin.map { Film.localizedList($0, lowerAfterFirst: false) } }

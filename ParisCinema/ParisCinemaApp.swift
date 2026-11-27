@@ -203,6 +203,17 @@ struct FilmRow: View {
                     if !film.isRepertory { Text(film.releaseSize.label).font(.caption2).foregroundStyle(.secondary) }
                     if let s = store.seen[film.id] { RatingStars(value: s.value, size: 9) }
                 }
+                if !film.genres.isEmpty {
+                    HStack(spacing: 4) {
+                        ForEach(film.genres.prefix(3), id: \.self) { g in
+                            Text(Film.genreLabel(g))
+                                .font(.caption2.weight(.medium))
+                                .padding(.horizontal, 7).padding(.vertical, 2)
+                                .background(Color.secondary.opacity(0.14), in: Capsule())
+                        }
+                    }
+                    .lineLimit(1)
+                }
                 if let facts {
                     Text(facts).font(.caption2.weight(.medium)).foregroundStyle(.secondary)
                 }

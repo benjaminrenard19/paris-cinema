@@ -48,10 +48,58 @@ enum WeekSort: String, CaseIterable, Identifiable {
     }
 }
 
+/// Which films the Films page shows (chosen at the first launch, changed with its button or in My profile).
+enum FilmsShow: String, CaseIterable, Identifiable {
+    case new, recent, classics, all
+    var id: String { rawValue }
+
+    static var current: FilmsShow { FilmsShow(rawValue: UserDefaults.standard.string(forKey: "filmsShow") ?? "") ?? .recent }
+
+    var label: String {
+        switch self {
+        case .new: return String(localized: "New this week")
+        case .recent: return String(localized: "New releases in cinemas")
+        case .classics: return String(localized: "Classics & old blockbusters")
+        case .all: return String(localized: "Everything")
+        }
+    }
+    var short: String {
+        switch self {
+        case .new: return String(localized: "New this week")
+        case .recent: return String(localized: "New releases")
+        case .classics: return String(localized: "Classics")
+        case .all: return String(localized: "Everything")
+        }
+    }
+    var hint: String {
+        switch self {
+        case .new: return String(localized: "Out since Wednesday")
+        case .recent: return String(localized: "Recent films still showing")
+        case .classics: return String(localized: "Older films back on screen")
+        case .all: return String(localized: "New and old, all showing this week")
+        }
+    }
+
+    @MainActor
+    func includes(_ f: Film, store: Store) -> Bool {
+        switch self {
+        case .new: return !f.isRepertory && f.date >= store.currentWeek && f.date <= D.addDays(store.currentWeek, 6)
+        case .recent: return !f.isRepertory
+        case .classics: return f.isRepertory
+        case .all: return true
+        }
+    }
+}
+
 struct WeeksView: View {
     @Environment(Store.self) private var store
     @State private var week = ""
     @State private var cats: Set<Cat> = []
+    @State private var genres: Set<String> = []
+    @State private var path: [String] = []
+    @State private var cinemasFor: Film?
+    @AppStorage("filmsShow") private var showRaw = FilmsShow.recent.rawValue
+    @Environment(\.openURL) private var openURL
     @State private var favOnly = false
     @State private var query = ""
     @State private var showData = false
@@ -67,9 +115,10 @@ struct WeeksView: View {
 
     /// "now": every film with sessions this week; "week": releases of one week.
     private var nowMode: Bool { modeRaw != "week" }
+    private var show: FilmsShow { FilmsShow(rawValue: showRaw) ?? .recent }
     private var source: [Film] {
         if !nowMode { return store.films(in: week) }
-        return store.nowShowing.sorted { a, b in
+        return store.nowShowing.filter { show.includes($0, store: store) }.sorted { a, b in
             let ra = a.category == .R ? 1 : 0, rb = b.category == .R ? 1 : 0
             if ra != rb { return ra < rb }
             if a.releaseSize.rank != b.releaseSize.rank { return a.releaseSize.rank < b.releaseSize.rank }
@@ -81,7 +130,7 @@ struct WeeksView: View {
     private var sort: WeekSort { WeekSort(rawValue: sortRaw) ?? .standard }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ScrollViewReader { proxy in
             List {
                 if query.isEmpty {
@@ -119,6 +168,16 @@ struct WeeksView: View {
                         ForEach(visible) { f in
                             NavigationLink(value: f.id) { FilmRow(film: f, showDate: nowMode) }
                                 .swipeActions(edge: .trailing) { favButton(f) }
+                                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                                    Button { cinemasFor = f } label: { Label("Cinemas", systemImage: "mappin.and.ellipse") }
+                                        .tint(Color.theme)
+                                    if let u = f.trailerURL {
+                                        Button { openURL(u) } label: { Label("Trailer", systemImage: "play.rectangle.fill") }
+                                            .tint(.indigo)
+                                    }
+                                    Button { path.append(f.id) } label: { Label("Info", systemImage: "info.circle") }
+                                        .tint(.gray)
+                                }
                         }
                     } header: {
                         Text((visible.count == 1 ? String(localized: "1 film") : String(localized: "\(visible.count) films")) + (sort == .standard ? "" : " · " + sort.label))
@@ -191,6 +250,7 @@ struct WeeksView: View {
                 }
             }
             .sheet(isPresented: $showData) { DataView().environment(store) }
+            .sheet(item: $cinemasFor) { f in FilmCinemasSheet(film: f).environment(store) }
             .sheet(isPresented: $showInbox) { InboxView().environment(store) }
             .fullScreenCover(isPresented: $showStats) { StoryView(period: .thisMonth).environment(store) }
             .fullScreenCover(item: $slideshow) { t in ReleasesSlideshowView(week: t.id).environment(store) }
@@ -202,7 +262,15 @@ struct WeeksView: View {
     private var visible: [Film] {
         sort.apply(source.filter { f in
             (cats.isEmpty || cats.contains(f.category)) && (!favOnly || store.isFav(f.id))
+                && (genres.isEmpty || !genres.isDisjoint(with: f.genres))
         })
+    }
+
+    /// Genres of the films on the page, most common first.
+    private var genreChoices: [(String, Int)] {
+        var count: [String: Int] = [:]
+        for f in source { for g in f.genres { count[g, default: 0] += 1 } }
+        return count.sorted { $0.value != $1.value ? $0.value > $1.value : $0.key < $1.key }.map { ($0.key, $0.value) }
     }
 
     private var nowHeader: some View {
@@ -263,6 +331,53 @@ struct WeeksView: View {
     private var filterBar: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
+                if nowMode {
+                    Menu {
+                        Picker("Show", selection: $showRaw) {
+                            ForEach(FilmsShow.allCases) { m in
+                                Text("\(m.label) (\(store.nowShowing.filter { m.includes($0, store: store) }.count))\n\(m.hint)").tag(m.rawValue)
+                            }
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(show.short).font(.subheadline.weight(.semibold))
+                            Image(systemName: "chevron.down").font(.caption2.weight(.bold))
+                        }
+                        .padding(.horizontal, 12).padding(.vertical, 7)
+                        .background(Color.theme, in: Capsule())
+                        .foregroundStyle(.white)
+                    }
+                    .accessibilityLabel(String(localized: "Films to show: \(show.label)"))
+                }
+                let choices = genreChoices
+                if choices.count > 1 {
+                    Menu {
+                        ForEach(choices, id: \.0) { item in
+                            Button {
+                                if genres.contains(item.0) { genres.remove(item.0) } else { genres.insert(item.0) }
+                            } label: {
+                                if genres.contains(item.0) {
+                                    Label("\(Film.genreLabel(item.0)) \(item.1)", systemImage: "checkmark")
+                                } else {
+                                    Text("\(Film.genreLabel(item.0)) \(item.1)")
+                                }
+                            }
+                        }
+                        if !genres.isEmpty {
+                            Divider()
+                            Button("All genres") { genres = [] }
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "theatermasks").font(.caption)
+                            Text(genres.isEmpty ? String(localized: "Genres") : genres.map { Film.genreLabel($0) }.sorted().joined(separator: ", "))
+                                .font(.subheadline.weight(.medium)).lineLimit(1)
+                        }
+                        .padding(.horizontal, 12).padding(.vertical, 7)
+                        .background(genres.isEmpty ? Color.secondary.opacity(0.12) : Color.primary, in: Capsule())
+                        .foregroundStyle(genres.isEmpty ? Color.primary : Color(.systemBackground))
+                    }
+                }
                 chip("Favourites", symbol: "star.fill", on: favOnly, color: Color(hex: 0xE0A800)) { favOnly.toggle() }
                 ForEach(Cat.allCases) { c in
                     let n = source.filter { $0.category == c }.count

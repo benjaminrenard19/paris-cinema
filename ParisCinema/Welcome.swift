@@ -166,6 +166,7 @@ struct ProfileView: View {
     @Environment(Store.self) private var store
     @AppStorage("userName") private var userName = ""
     @AppStorage("weekSort") private var sortRaw = WeekSort.standard.rawValue
+    @AppStorage("filmsShow") private var showRaw = FilmsShow.recent.rawValue
     @AppStorage("hideSeen") private var hideSeen = true
     @State private var scope = 0
     @State private var year = D.cal.component(.year, from: Date())
@@ -201,6 +202,9 @@ struct ProfileView: View {
                     CompanionsEditor().navigationTitle("People you go with")
                 } label: {
                     LabeledContent("People you go with", value: store.companions.isEmpty ? String(localized: "None yet") : "\(store.companions.count)")
+                }
+                Picker("Films page shows", selection: $showRaw) {
+                    ForEach(FilmsShow.allCases) { m in Text(m.label).tag(m.rawValue) }
                 }
                 Picker("Films page order", selection: $sortRaw) {
                     ForEach(WeekSort.allCases) { s in Text(s.label).tag(s.rawValue) }

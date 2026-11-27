@@ -598,3 +598,27 @@
 "This film isn't in the app's list on your phone yet. Refresh the Films tab and open the invitation again." = "Ce film n'est pas encore dans la liste de l'app sur votre téléphone. Actualisez l'onglet Films et rouvrez l'invitation.";
 "This session has passed: it goes into your watched films, seen with them." = "Cette séance est passée : le film va dans vos films vus, vu avec cette personne.";
 "You had planned it for %@ at %@, %@. This replaces it." = "Vous l'aviez prévu %1$@ à %2$@, %3$@. Ceci le remplace.";
+
+/* Films page: what to show, genres, swipe actions; film page cinemas */
+"%@ (%lld)\n%@" = "%1$@ (%2$lld)\n%3$@";
+"New this week" = "Nouveautés de la semaine";
+"New releases" = "Sorties récentes";
+"New releases in cinemas" = "Sorties récentes en salle";
+"Classics" = "Classiques";
+"Classics & old blockbusters" = "Classiques et vieux succès";
+"Everything" = "Tout";
+"Out since Wednesday" = "Sortis depuis mercredi";
+"Recent films still showing" = "Films récents encore à l'affiche";
+"Older films back on screen" = "Films anciens de retour en salle";
+"New and old, all showing this week" = "Nouveaux et anciens, tout ce qui passe cette semaine";
+"Films page shows" = "La page Films montre";
+"Films to show: %@" = "Films affichés : %@";
+"All genres" = "Tous les genres";
+"Info" = "Infos";
+"Tomorrow" = "Demain";
+"Add it to One To Watch (OTW) to see when the sessions are." = "Ajoutez-le à One To Watch (OTW) pour voir les séances.";
+"These cinemas have your wanted movie!" = "Ces cinémas ont votre film !";
+"Your cinemas in gold. Tap a time to plan it." = "Vos cinémas en doré. Touchez un horaire pour le prévoir.";
+"Show all %lld cinemas" = "Voir les %lld cinémas";
+"No sessions known yet" = "Pas encore de séances connues";
+"Pull down on the Films page to get the latest showtimes." = "Tirez vers le bas sur la page Films pour avoir les dernières séances.";
