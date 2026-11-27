@@ -56,12 +56,6 @@ extension Store {
         }.sorted { $0.date > $1.date }
     }
 
-    /// Sets the cinema of a watched film (nil: not set).
-    func setSeenCinema(_ id: String, _ name: String?) {
-        guard seen[id] != nil else { return }
-        seen[id]?.cn = (name?.isEmpty ?? true) ? nil : name
-        saveUser()
-    }
 }
 
 /// Settings › Film history.
