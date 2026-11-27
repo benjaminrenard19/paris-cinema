@@ -61,9 +61,9 @@ struct ContentView: View {
             WeekPlanView()
                 .tabItem { Label("My week", systemImage: "calendar") }
             MyListView()
-                .tabItem { Label("My list", systemImage: "star") }
-            WatchedView()
-                .tabItem { Label("Watched", systemImage: "checkmark.seal") }
+                .tabItem { Label("OTW", systemImage: "star") }
+            HallOfFameView()
+                .tabItem { Label("Hall of Fame", systemImage: "trophy") }
             CinemasView()
                 .tabItem { Label("Cinemas", systemImage: "map") }
         }
@@ -197,7 +197,7 @@ struct FilmRow: View {
                 HStack(spacing: 6) {
                     CatBadge(cat: film.category)
                     if !film.isRepertory { Text(film.releaseSize.label).font(.caption2).foregroundStyle(.secondary) }
-                    if let s = store.seen[film.id] { Stars(rating: s.r, size: 9) }
+                    if let s = store.seen[film.id] { RatingStars(value: s.value, size: 9) }
                 }
                 if let facts {
                     Text(facts).font(.caption2.weight(.medium)).foregroundStyle(.secondary)

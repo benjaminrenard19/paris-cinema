@@ -46,6 +46,7 @@ struct FilmDetailView: View {
                 }
                 ratingRow(f)
                 if store.seen[f.id] != nil {
+                    CompanionPicker(selected: Binding(get: { store.seen[f.id]?.w ?? [] }, set: { store.setCompanions(f.id, $0) }))
                     DatePicker("Watched on", selection: seenDate(f), in: ...Date(), displayedComponents: .date)
                         .environment(\.timeZone, D.paris)
                     Button("Remove from watched", role: .destructive) { store.removeSeen(f.id) }
@@ -182,22 +183,12 @@ struct FilmDetailView: View {
     }
 
     private func ratingRow(_ f: Film) -> some View {
-        let current = store.seen[f.id]?.r ?? 0
-        return HStack {
+        HStack {
             Text("Your rating")
             Spacer()
-            ForEach(1...5, id: \.self) { i in
-                Button {
-                    let day = store.seen[f.id]?.d ?? D.str(watchedOn)
-                    store.setSeen(f, rating: current == i ? 0 : i, on: day)
-                } label: {
-                    Image(systemName: i <= current ? "star.fill" : "star")
-                        .font(.title3)
-                        .foregroundStyle(i <= current ? Color(hex: 0xE0A800) : Color.secondary)
-                }
-                .buttonStyle(.borderless)
-                .accessibilityLabel(i == 1 ? String(localized: "1 star") : String(localized: "\(i) stars"))
-            }
+            HalfStarPicker(value: Binding(get: { store.seen[f.id]?.value ?? 0 },
+                                          set: { store.setSeen(f, value: $0, on: store.seen[f.id]?.d ?? D.str(watchedOn)) }),
+                           size: 22)
         }
     }
 

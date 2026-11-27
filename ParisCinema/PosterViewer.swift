@@ -160,7 +160,7 @@ struct PosterViewer: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(LocalizedStringKey(label)).font(.caption).foregroundStyle(.white.opacity(0.6))
                     HStack(spacing: 8) {
-                        Stars(rating: Int(v.rounded()), size: 16)
+                        RatingStars(value: v, size: 16)
                         Text(String(format: "%.1f / 5", v)).font(.headline.monospacedDigit())
                     }
                 }

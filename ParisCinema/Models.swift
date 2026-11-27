@@ -327,22 +327,30 @@ struct SeenEntry: Codable, Hashable {
     var p: String?         // poster, for films added by hand
     var cn: String?        // cinema where you saw it (from your plan)
     var tm: String?        // session time, HH:mm (from your plan)
+    var h: Bool?           // half a star more than r (3 + h = 3.5)
+    var w: [String]?       // who you went with
 
-    enum CodingKeys: String, CodingKey { case d, r, t, fd, c, dir, o, orig, p, cn, tm }
+    enum CodingKeys: String, CodingKey { case d, r, t, fd, c, dir, o, orig, p, cn, tm, h, w }
 
     init(d: String, r: Int, t: String?, fd: String?, c: String?, dir: String?, o: String?, orig: String?,
-         p: String? = nil, cn: String? = nil, tm: String? = nil) {
+         p: String? = nil, cn: String? = nil, tm: String? = nil, h: Bool? = nil, w: [String]? = nil) {
         self.d = d; self.r = r; self.t = t; self.fd = fd; self.c = c; self.dir = dir; self.o = o; self.orig = orig; self.p = p
-        self.cn = cn; self.tm = tm
+        self.cn = cn; self.tm = tm; self.h = h; self.w = w
     }
+
+    /// Your rating out of 5, in half stars.
+    var value: Double { Double(r) + (h == true && r < 5 ? 0.5 : 0) }
 
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         d = try c.decode(String.self, forKey: .d)
+        var half = false
         if let n = try? c.decode(Int.self, forKey: .r) { r = n }
-        else if let x = try? c.decode(Double.self, forKey: .r) { r = Int(x) }
+        else if let x = try? c.decode(Double.self, forKey: .r) { r = Int(x); half = x - Double(Int(x)) >= 0.5 }
         else { r = 0 }
         r = max(0, min(5, r))
+        h = (try? c.decodeIfPresent(Bool.self, forKey: .h)) ?? (half ? true : nil)
+        w = try? c.decodeIfPresent([String].self, forKey: .w)
         t = try? c.decodeIfPresent(String.self, forKey: .t)
         fd = try? c.decodeIfPresent(String.self, forKey: .fd)
         self.c = try? c.decodeIfPresent(String.self, forKey: .c)

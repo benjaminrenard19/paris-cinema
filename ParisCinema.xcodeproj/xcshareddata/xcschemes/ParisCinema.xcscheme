@@ -25,6 +25,25 @@
             </ActionContent>
          </ExecutionAction>
       </PreActions>
+      <PostActions>
+         <ExecutionAction
+            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+            <ActionContent
+               title = "Install on the other iPhones"
+               scriptText = '# Sloth Cinema: install the same build on your other iPhones too (see scripts/mac/install-others.sh).&#10;[ "${PLATFORM_NAME}" = "iphoneos" ] || exit 0&#10;cd "${PROJECT_DIR}" || exit 0&#10;nohup /bin/bash scripts/mac/install-others.sh "${CODESIGNING_FOLDER_PATH}" "${TARGET_DEVICE_IDENTIFIER}" &gt;&gt; "${HOME}/Library/Logs/SlothCinema-install.log" 2&gt;&amp;1 &amp;&#10;exit 0&#10;'
+               shellToInvoke = "/bin/zsh">
+               <EnvironmentBuildable>
+                  <BuildableReference
+                     BuildableIdentifier = "primary"
+                     BlueprintIdentifier = "A1C1E0000000000000000006"
+                     BuildableName = "ParisCinema.app"
+                     BlueprintName = "ParisCinema"
+                     ReferencedContainer = "container:ParisCinema.xcodeproj">
+                  </BuildableReference>
+               </EnvironmentBuildable>
+            </ActionContent>
+         </ExecutionAction>
+      </PostActions>
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"

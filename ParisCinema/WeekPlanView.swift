@@ -580,7 +580,8 @@ struct CheckInView: View {
     let checkIn: CheckIn
 
     @State private var watched = true
-    @State private var rating = 0
+    @State private var rating = 0.0
+    @State private var with: [String] = []
     @State private var watchedOn = Date()
     @State private var newStart = Date()
     @State private var cinemaName = ""
@@ -614,17 +615,10 @@ struct CheckInView: View {
                         Section("How was it?") {
                             HStack {
                                 Spacer()
-                                ForEach(1...5, id: \.self) { i in
-                                    Button { rating = i } label: {
-                                        Image(systemName: i <= rating ? "star.fill" : "star")
-                                            .font(.title)
-                                            .foregroundStyle(i <= rating ? Color(hex: 0xE0A800) : Color.secondary)
-                                    }
-                                    .buttonStyle(.borderless)
-                                    .accessibilityLabel(i == 1 ? String(localized: "1 star") : String(localized: "\(i) stars"))
-                                }
+                                HalfStarPicker(value: $rating, size: 32)
                                 Spacer()
                             }
+                            CompanionPicker(selected: $with)
                             DatePicker("Watched on", selection: $watchedOn, in: ...Date(), displayedComponents: .date)
                                 .environment(\.timeZone, D.paris)
                         }
@@ -677,7 +671,8 @@ struct CheckInView: View {
     private func save() {
         guard let f = film else { return }
         if watched {
-            store.setSeen(f, rating: rating, on: D.str(watchedOn))
+            store.setSeen(f, value: rating, on: D.str(watchedOn))
+            store.setCompanions(f.id, with)
         } else {
             let s = D.stampString(newStart)
             store.planFilm(f, day: s.day, time: s.time, cinemaName: cinemaName)

@@ -80,7 +80,7 @@ struct MyListView: View {
                     }
                 }
             }
-            .navigationTitle("My list")
+            .navigationTitle("One To Watch")
             .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
         }
     }
@@ -191,7 +191,7 @@ struct WatchedView: View {
                 Text(title).font(.headline).lineLimit(2)
                 Text(String(localized: "Watched \(D.fmt(s.d, "d MMM"))") + (s.cn.map { " · \($0)" } ?? s.dir.map { " · \($0)" } ?? ""))
                     .font(.subheadline).foregroundStyle(.secondary).lineLimit(1)
-                Stars(rating: s.r)
+                RatingStars(value: s.value)
             }
         }
     }
@@ -206,7 +206,7 @@ struct AddWatchedView: View {
     var editingId: String? = nil
     @State private var title = ""
     @State private var day = Date()
-    @State private var rating = 0
+    @State private var rating = 0.0
     @State private var cat: Cat = .D
     @State private var ready = false
     @State private var poster: String?
@@ -262,13 +262,7 @@ struct AddWatchedView: View {
                 HStack {
                     Text("Rating")
                     Spacer()
-                    ForEach(1...5, id: \.self) { i in
-                        Button { rating = rating == i ? 0 : i } label: {
-                            Image(systemName: i <= rating ? "star.fill" : "star")
-                                .foregroundStyle(i <= rating ? Color(hex: 0xE0A800) : Color.secondary)
-                        }
-                        .buttonStyle(.borderless)
-                    }
+                    HalfStarPicker(value: $rating, size: 20)
                 }
             }
             .navigationTitle(editingId == nil ? String(localized: "Add a film") : String(localized: "Edit"))
@@ -278,9 +272,11 @@ struct AddWatchedView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(editingId == nil ? String(localized: "Add") : String(localized: "Save")) {
                         if let id = editingId {
-                            store.updateCustomSeen(id, title: title, day: D.str(day), rating: rating, category: cat, poster: poster)
+                            store.updateCustomSeen(id, title: title, day: D.str(day), rating: Int(rating), category: cat, poster: poster,
+                                                   half: rating - Double(Int(rating)) >= 0.5)
                         } else {
-                            store.addCustomSeen(title: title, day: D.str(day), rating: rating, category: cat, poster: poster)
+                            store.addCustomSeen(title: title, day: D.str(day), rating: Int(rating), category: cat, poster: poster,
+                                                half: rating - Double(Int(rating)) >= 0.5)
                         }
                         dismiss()
                     }
@@ -293,7 +289,7 @@ struct AddWatchedView: View {
                 if let id = editingId, let s = store.seen[id] {
                     title = s.t ?? ""
                     day = D.date(s.d) ?? Date()
-                    rating = s.r
+                    rating = s.value
                     cat = Cat.from(s.c)
                     poster = s.p
                 }

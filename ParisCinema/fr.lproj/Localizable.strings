@@ -560,3 +560,25 @@
 "people in France saw it the week you did." = "spectateurs en France l'ont vu la même semaine que vous.";
 "Date" = "Date";
 "Location is off: allow it in Settings" = "Localisation désactivée : autorisez-la dans Réglages";
+
+/* Hall of Fame, One To Watch, half stars, cinema buddies */
+"Hall of Fame" = "Hall of Fame";
+"OTW" = "OTW";
+"One To Watch" = "One To Watch";
+"Top 10" = "Top 10";
+"All %@ films, by your rating" = "Tous les films de %@, selon votre note";
+"Every film, by your rating" = "Tous vos films, selon votre note";
+"Nothing watched yet" = "Aucun film vu pour l'instant";
+"Mark films as watched and rate them: your favourites climb onto the podium." = "Marquez les films vus et notez-les : vos préférés montent sur le podium.";
+"Number %lld: %@" = "Numéro %1$lld : %2$@";
+"%@ out of 5" = "%@ sur 5";
+"Seen with" = "Vu avec";
+"with %@" = "avec %@";
+"Add someone" = "Ajouter quelqu'un";
+"First name" = "Prénom";
+"People you go with" = "Vos partenaires ciné";
+"Tick them when you mark a film as seen. Your stats and year review then name your best cinema buddy." = "Cochez-les quand vous marquez un film comme vu. Vos stats et votre bilan de l'année désignent alors votre partenaire ciné n°1.";
+"Best cinema buddy" = "Partenaire ciné n°1";
+"Best cinema buddy: %@, %lld films together 🍿" = "Partenaire ciné n°1 : %1$@, %2$lld films ensemble 🍿";
+"%lld films together" = "%lld films ensemble";
+"1 film together" = "1 film ensemble";

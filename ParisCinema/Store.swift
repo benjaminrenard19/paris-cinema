@@ -28,6 +28,10 @@ final class Store {
     var seen: [String: SeenEntry] = [:]
     var plans: [String: Plan] = [:]
     var myCinemas: [String] = []
+    /// The people you usually go with, to tick when you mark a film as seen.
+    var companions: [String] = UserDefaults.standard.stringArray(forKey: "companions") ?? [] {
+        didSet { UserDefaults.standard.set(companions, forKey: "companions") }
+    }
     var extraCinemas: [Cinema] = []
 
     var checkIn: CheckIn?
@@ -420,9 +424,10 @@ final class Store {
         saveUser()
     }
 
-    func updateCustomSeen(_ id: String, title: String, day: String, rating: Int, category: Cat, poster: String? = nil) {
+    func updateCustomSeen(_ id: String, title: String, day: String, rating: Int, category: Cat, poster: String? = nil, half: Bool = false) {
         guard var s = seen[id] else { return }
         s.t = title; s.d = day; s.r = max(0, min(5, rating)); s.c = category.rawValue
+        s.h = half ? true : nil
         if let poster { s.p = poster }
         seen[id] = s
         saveUser()
@@ -508,7 +513,7 @@ final class Store {
         let old = seen[f.id]
         plans[f.id] = nil
         seen[f.id] = SeenEntry(d: day, r: max(0, min(5, rating)), t: f.title, fd: f.date, c: f.cat, dir: f.dir, o: f.origin, orig: f.orig,
-                               cn: p?.cn ?? old?.cn, tm: p?.t ?? old?.tm)
+                               cn: p?.cn ?? old?.cn, tm: p?.t ?? old?.tm, h: old?.r == rating ? old?.h : nil, w: old?.w)
         saveUser()
         updateDoneCinemas(notify: false)
     }
@@ -521,11 +526,30 @@ final class Store {
         saveUser()
     }
 
-    func addCustomSeen(title: String, day: String, rating: Int, category: Cat, poster: String? = nil) {
+    func addCustomSeen(title: String, day: String, rating: Int, category: Cat, poster: String? = nil, half: Bool = false) {
         let t = title.trimmingCharacters(in: .whitespaces)
         guard !t.isEmpty else { return }
         let id = "custom_" + slug(t) + "_" + day
-        seen[id] = SeenEntry(d: day, r: max(0, min(5, rating)), t: t, fd: nil, c: category.rawValue, dir: nil, o: nil, orig: nil, p: poster)
+        seen[id] = SeenEntry(d: day, r: max(0, min(5, rating)), t: t, fd: nil, c: category.rawValue, dir: nil, o: nil, orig: nil, p: poster,
+                             h: half ? true : nil)
+        saveUser()
+    }
+
+    /// Marks a film as seen with a rating in half stars (3.5 = three and a half).
+    func setSeen(_ f: Film, value: Double, on day: String) {
+        let v = max(0, min(5, value))
+        setSeen(f, rating: Int(v), on: day)
+        let half = v - Double(Int(v)) >= 0.5
+        if seen[f.id]?.h != (half ? true : nil) {
+            seen[f.id]?.h = half ? true : nil
+            saveUser()
+        }
+    }
+
+    /// Who you saw a film with.
+    func setCompanions(_ id: String, _ people: [String]) {
+        guard seen[id] != nil else { return }
+        seen[id]?.w = people.isEmpty ? nil : people
         saveUser()
     }
 

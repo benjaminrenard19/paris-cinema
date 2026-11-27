@@ -104,6 +104,7 @@ struct StatsSummary {
     var planned = 0
     var facts: [String] = []
     var early: EarlyBird?
+    var buddies: [(name: String, count: Int)] = []
 
     var count: Int { films.count }
     var hours: Int { Int((Double(minutes) / 60).rounded()) }
@@ -117,11 +118,11 @@ extension Store {
             .sorted { $0.entry.d < $1.entry.d }
         s.planned = plans.filter { period.contains($0.value.d) && seen[$0.key] == nil }.count
         s.minutes = s.films.compactMap { $0.duration }.reduce(0, +)
-        let rated = s.films.filter { $0.entry.r > 0 }
+        let rated = s.films.filter { $0.entry.value > 0 }
         if !rated.isEmpty {
-            s.averageRating = Double(rated.map { $0.entry.r }.reduce(0, +)) / Double(rated.count)
+            s.averageRating = rated.map { $0.entry.value }.reduce(0, +) / Double(rated.count)
             s.topRated = rated.max { a, b in
-                a.entry.r != b.entry.r ? a.entry.r < b.entry.r : (a.film?.average ?? 0) < (b.film?.average ?? 0)
+                a.entry.value != b.entry.value ? a.entry.value < b.entry.value : (a.film?.average ?? 0) < (b.film?.average ?? 0)
             }
         }
         func ranked<K: Hashable>(_ keys: [K]) -> [(K, Int)] {
@@ -132,6 +133,7 @@ extension Store {
         s.weekdays = ranked(s.films.map { D.weekday($0.entry.d) }).map { (day: $0.0, count: $0.1) }
         let monthCounts = Dictionary(s.films.compactMap { Int($0.entry.d.dropFirst(5).prefix(2)) }.map { ($0, 1) }, uniquingKeysWith: +)
         s.months = (1...12).map { (month: $0, count: monthCounts[$0] ?? 0) }
+        s.buddies = ranked(s.films.flatMap { $0.entry.w ?? [] }).map { (name: $0.0, count: $0.1) }
         s.early = earlyBird(s)
         s.facts = funFacts(s)
         if let e = s.early { s.facts.insert(e.text, at: 0) }
@@ -166,8 +168,8 @@ extension Store {
             out.append(String(localized: "\(early.count) films seen in their first week in cinemas. You don't hang around 🏃"))
         }
         let gaps: [(WatchedFilm, Double, Double)] = s.films.compactMap { w in
-            guard w.entry.r > 0, let p = w.film?.press else { return nil }
-            return (w, Double(w.entry.r), p)
+            guard w.entry.value > 0, let p = w.film?.press else { return nil }
+            return (w, w.entry.value, p)
         }
         if let rebel = gaps.max(by: { abs($0.1 - $0.2) < abs($1.1 - $1.2) }), abs(rebel.1 - rebel.2) >= 1.5 {
             let critics = String(format: "%.1f", rebel.2)
@@ -189,6 +191,9 @@ extension Store {
         let directors = Dictionary(s.films.compactMap { $0.director }.map { ($0, 1) }, uniquingKeysWith: +)
         if let fan = directors.max(by: { $0.value < $1.value }), fan.value >= 2 {
             out.append(String(localized: "Big fan of \(fan.key): \(fan.value) of their films 🎥"))
+        }
+        if let b = s.buddies.first, b.count >= 2 {
+            out.append(String(localized: "Best cinema buddy: \(b.name), \(b.count) films together 🍿"))
         }
         if s.cinemas.count >= 3 {
             out.append(String(localized: "\(s.cinemas.count) different cinemas. A true Paris explorer 🗺️"))
@@ -213,7 +218,7 @@ extension Store {
 // MARK: - Story (Instagram story format, 9:16)
 
 enum StoryPage: Hashable {
-    case intro, numbers, topFilm, earlyBird, cinemas, genres, fact(Int), months, recap
+    case intro, numbers, topFilm, earlyBird, buddy, cinemas, genres, fact(Int), months, recap
 }
 
 /// One 9:16 card of the story. Posters are passed as images so the card can be saved as a picture.
@@ -272,8 +277,7 @@ struct StoryCard: View {
                 if let top = stats.topRated {
                     poster(top, width: 190)
                     Text(top.title).font(.system(size: 24, weight: .bold, design: .serif)).multilineTextAlignment(.center)
-                    Text(String(repeating: "★", count: top.entry.r) + String(repeating: "☆", count: 5 - top.entry.r))
-                        .font(.system(size: 30)).foregroundStyle(Color(hex: 0xFFD23F))
+                    RatingStars(value: top.entry.value, size: 30)
                 } else {
                     Text("Rate the films you watch to find out 😉").multilineTextAlignment(.center)
                 }
@@ -341,6 +345,21 @@ struct StoryCard: View {
                 Spacer()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+        case .buddy:
+            VStack(spacing: 18) {
+                Spacer()
+                Text("Best cinema buddy").font(.system(size: 18, weight: .semibold)).textCase(.uppercase).tracking(3).opacity(0.85)
+                if let b = stats.buddies.first {
+                    Text(b.name).font(.system(size: 54, weight: .black, design: .rounded)).minimumScaleFactor(0.5)
+                    Text(b.count == 1 ? String(localized: "1 film together") : String(localized: "\(b.count) films together"))
+                        .font(.system(size: 22, weight: .medium))
+                    if stats.buddies.count > 1 {
+                        Text(stats.buddies.dropFirst().prefix(3).map { "\($0.name) · \($0.count)" }.joined(separator: "   "))
+                            .font(.subheadline).opacity(0.8)
+                    }
+                }
+                Spacer()
+            }
         case .fact(let i):
             VStack(spacing: 20) {
                 Spacer()
@@ -435,10 +454,11 @@ struct StoryView: View {
         if s.count > 0 {
             out.append(.topFilm)
             if s.early != nil { out.append(.earlyBird) }
+            if (s.buddies.first?.count ?? 0) >= 2 { out.append(.buddy) }
             out.append(.cinemas)
             if s.categories.count > 1 { out.append(.genres) }
             if case .month = period {} else if s.count > 2 { out.append(.months) }
-            for i in s.facts.indices.filter({ s.facts[$0] != s.early?.text }).prefix(3) { out.append(.fact(i)) }
+            for i in s.facts.indices.filter({ s.facts[$0] != s.early?.text && !s.facts[$0].contains("🍿") }).prefix(3) { out.append(.fact(i)) }
             out.append(.recap)
         }
         return out
@@ -588,6 +608,7 @@ struct StatsList: View {
                 if stats.planned > 0 { LabeledContent("Planned, still to see", value: "\(stats.planned)") }
                 if let t = stats.topRated { LabeledContent("Favourite", value: t.title) }
                 if let c = stats.cinemas.first { LabeledContent("Your cinema", value: c.name) }
+                if let b = stats.buddies.first { LabeledContent("Best cinema buddy", value: "\(b.name) · \(b.count)") }
                 if let g = stats.categories.first { LabeledContent("Favourite genre", value: g.cat.label) }
                 if let w = stats.weekdays.first, stats.count >= 3 {
                     LabeledContent("Your cinema day", value: D.fmtCap(D.addDays("2026-11-29", w.day - 1), "EEEE"))

@@ -197,6 +197,11 @@ struct ProfileView: View {
                 } label: {
                     LabeledContent("My cinemas", value: store.myCinemas.isEmpty ? String(localized: "None yet") : "\(store.myCinemas.count)")
                 }
+                NavigationLink {
+                    CompanionsEditor().navigationTitle("People you go with")
+                } label: {
+                    LabeledContent("People you go with", value: store.companions.isEmpty ? String(localized: "None yet") : "\(store.companions.count)")
+                }
                 Picker("Films page order", selection: $sortRaw) {
                     ForEach(WeekSort.allCases) { s in Text(s.label).tag(s.rawValue) }
                 }
