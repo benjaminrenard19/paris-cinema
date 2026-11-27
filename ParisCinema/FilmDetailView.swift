@@ -158,7 +158,7 @@ struct FilmDetailView: View {
                     }
                     .buttonStyle(.borderless)
                     .padding(5)
-                    .accessibilityLabel(store.isFav(f.id) ? String(localized: "Remove from favourites") : String(localized: "Add to favourites"))
+                    .accessibilityLabel(store.isFav(f.id) ? String(localized: "Remove from OTW") : String(localized: "Add to OTW (One To Watch)"))
                 }
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 6) {

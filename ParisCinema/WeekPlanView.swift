@@ -76,7 +76,7 @@ struct WeekPlanView: View {
 
                 let unplanned = store.otherFavourites.filter { store.seen[$0.id] == nil }
                 if !unplanned.isEmpty {
-                    Section("Favourites without a plan") {
+                    Section("OTW films without a plan") {
                         ForEach(unplanned) { f in
                             HStack {
                                 FilmRow(film: f, showDate: true)
@@ -432,12 +432,15 @@ struct AddPlanView: View {
         pickTime()
     }
 
-    /// The session nearest the time you usually go, in the version you prefer.
+    /// The session nearest the time you usually go, in the version you prefer,
+    /// leaving out sessions that overlap another plan when there is a free one.
     private func pickTime() {
         let all = sessionList(cinemaName, day)
         guard let f = film, !all.isEmpty, !all.contains(where: { $0.time == time }) else { return }
         let pool = store.preferredPool(all, for: f.id).map { $0.time }
-        time = Habits.closest(pool, to: usualTime) ?? pool[0]
+        let free = pool.filter { store.clashes(f.id, day: day, time: $0, cinema: cinemaName).isEmpty }
+        let choices = free.isEmpty ? pool : free
+        time = Habits.closest(choices, to: usualTime) ?? choices[0]
     }
 
     /// After choosing a cinema: its first day with a session, unless the chosen day has one.
@@ -576,7 +579,7 @@ struct FilmChooserView: View {
                     .filter { store.seen[$0.id] == nil }
                     .sorted { $0.date > $1.date }
                 if !favs.isEmpty {
-                    Section("Your favourites") { ForEach(favs) { f in choice(f) } }
+                    Section("Your OTW films") { ForEach(favs) { f in choice(f) } }
                 }
                 Section("In cinemas now") { ForEach(outNow) { f in choice(f) } }
             } else {

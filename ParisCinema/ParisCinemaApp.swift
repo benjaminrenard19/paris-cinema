@@ -246,7 +246,7 @@ struct FilmRow: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.borderless)
-            .accessibilityLabel(store.isFav(film.id) ? String(localized: "Remove from favourites") : String(localized: "Add to favourites"))
+            .accessibilityLabel(store.isFav(film.id) ? String(localized: "Remove from OTW") : String(localized: "Add to OTW (One To Watch)"))
         }
         .padding(.vertical, 2)
     }

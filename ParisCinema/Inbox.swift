@@ -116,11 +116,11 @@ struct InboxView: View {
                 section(String(localized: "Today"), items.filter { $0.kind == .today }, emoji: "🎟️")
                 section(String(localized: "To confirm"), items.filter { $0.kind == .confirm }, emoji: "✍️")
                 section(String(localized: "Coming up"), items.filter { $0.kind == .soon }, emoji: "🗓️")
-                section(String(localized: "Your favourites on today"), items.filter { $0.kind == .showing }, emoji: "🍿")
+                section(String(localized: "Your OTW films on today"), items.filter { $0.kind == .showing }, emoji: "🍿")
                 section(String(localized: "This week"), items.filter { $0.kind == .week }, emoji: "🆕")
                 if items.isEmpty {
                     ContentUnavailableView("Nothing new", systemImage: "film",
-                                           description: Text("Plans, films to rate and your favourites showing today appear here."))
+                                           description: Text("Plans, films to rate and your OTW films showing today appear here."))
                 }
                 Section {
                     Button {
@@ -138,8 +138,14 @@ struct InboxView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
                 if !store.inbox.isEmpty {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Mark all as seen") { store.markAllInboxSeen() }
+                    // At the bottom, so the title keeps its room at the top
+                    ToolbarItem(placement: .bottomBar) {
+                        Button {
+                            store.markAllInboxSeen()
+                        } label: {
+                            Label("Mark all as seen", systemImage: "checkmark.circle")
+                                .labelStyle(.titleAndIcon)
+                        }
                     }
                 }
             }

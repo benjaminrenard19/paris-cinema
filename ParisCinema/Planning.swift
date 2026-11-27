@@ -13,10 +13,10 @@ struct RowSuggestion: Identifiable {
 
 extension Store {
     /// Minutes of adverts and trailers between the session time and the film:
-    /// about 20 at UGC, Pathé and Gaumont, 15 at mk2, 10 at the independents (20 when the cinema isn't known).
+    /// about 20 at UGC, Pathé, Gaumont and CGR, 15 at mk2, 10 at the independents (20 when the cinema isn't known).
     static func trailerMinutes(_ cinema: String?) -> Int {
         guard let n = cinema?.folded, !n.isEmpty else { return 20 }
-        if n.hasPrefix("ugc") || n.hasPrefix("pathe") || n.hasPrefix("gaumont") { return 20 }
+        if n.hasPrefix("ugc") || n.hasPrefix("pathe") || n.hasPrefix("gaumont") || n.hasPrefix("cgr") { return 20 }
         if n.hasPrefix("mk2") { return 15 }
         return 10
     }
@@ -33,11 +33,12 @@ extension Store {
             ?? D.stamp(day: day, time: time)?.addingTimeInterval(TimeInterval((130 + Store.trailerMinutes(cinema)) * 60))
     }
 
-    /// Your other plans that day that would overlap a session of this film by more than 10 minutes.
+    /// Your other confirmed plans that day that would overlap a session of this film by more than 10 minutes.
+    /// Provisional plans (the day the app suggests for each OTW film) don't count: you haven't chosen them.
     func clashes(_ id: String, day: String, time: String, cinema: String? = nil) -> [(Film, Plan)] {
         guard let start = D.stamp(day: day, time: time), let end = endOf(id, day: day, time: time, cinema: cinema) else { return [] }
         return plans.compactMap { k, p -> (Film, Plan)? in
-            guard k != id, p.d == day, seen[k] == nil, let f = index[k],
+            guard k != id, p.d == day, p.ok == true, seen[k] == nil, let f = index[k],
                   let s = D.stamp(day: p.d, time: p.t), let e = endOf(k, day: p.d, time: p.t, cinema: p.cn) else { return nil }
             // Up to 10 minutes of overlap is fine: the next session starts with trailers.
             let grace: TimeInterval = 10 * 60
@@ -46,12 +47,12 @@ extension Store {
         .sorted { $0.1.t < $1.1.t }
     }
 
-    /// OTW films (not planned, not seen) showing at the same cinema just after this plan ends,
-    /// or ending just before it starts: a double bill without changing cinema.
+    /// OTW films (not confirmed, not seen) showing at the same cinema just after this plan ends,
+    /// or ending just before it starts: a double bill without changing cinema. Tapping one confirms it.
     func inARow(_ id: String, _ p: Plan) -> [RowSuggestion] {
         guard let start = D.stamp(day: p.d, time: p.t), let end = endOf(id, day: p.d, time: p.t, cinema: p.cn) else { return [] }
         var out: [RowSuggestion] = []
-        for f in favouriteFilms where f.id != id && plans[f.id] == nil && seen[f.id] == nil {
+        for f in favouriteFilms where f.id != id && plans[f.id]?.ok != true && seen[f.id] == nil {
             // The session closest to the plan, just after it or just before it
             var best: (gap: TimeInterval, s: RowSuggestion)?
             for s in sessions(f.id, at: p.cn, on: p.d) {

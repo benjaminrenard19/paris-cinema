@@ -706,6 +706,16 @@
 "%@ at %@ overlaps %@ at %@, already in your week." = "%1$@ à %2$@ chevauche %3$@ à %4$@, déjà dans votre semaine.";
 "Films since 2015: off (Settings › Films since 2015)." = "Films depuis 2015 : désactivés (Réglages › Films depuis 2015).";
 "Films since 2015: downloading…" = "Films depuis 2015 : téléchargement…";
-"+ %lld older films, %@ to %@: in search, imports and your watched films, not in the weeks." = "+ %1$lld films plus anciens, de %2$@ à %3$@ : dans la recherche, les imports et vos films vus, pas dans les semaines.";
+"+ %lld older films, released since 2015: in search, imports and your watched films, not in the weeks." = "+ %lld films plus anciens, sortis depuis 2015 : dans la recherche, les imports et vos films vus, pas dans les semaines.";
 "Out around %@" = "Sortie vers %@";
 "%@ film + about %lld min of trailers" = "film de %1$@ + environ %2$lld min de pubs et bandes-annonces";
+"Your OTW films on today" = "Vos films OTW à l’affiche aujourd’hui";
+"Plans, films to rate and your OTW films showing today appear here." = "Vos sorties, les films à noter et vos films OTW à l’affiche aujourd’hui apparaissent ici.";
+"Tap the popcorn on a film. Films you haven't seen get a provisional day to watch them, which you can send to your calendar." = "Touchez le pop-corn d’un film. Les films pas encore vus reçoivent un jour provisoire, que vous pouvez envoyer dans votre calendrier.";
+"1 in OTW." = "1 dans OTW.";
+"%lld in OTW." = "%lld dans OTW.";
+"OTW films without a plan" = "Films OTW sans sortie prévue";
+"Your OTW films" = "Vos films OTW";
+"The camera at the top right gathers films to rate, today's plans and your OTW films on today. Settings let you choose your colour." = "La caméra en haut à droite réunit les films à noter, les sorties du jour et vos films OTW à l’affiche aujourd’hui. Les réglages permettent de choisir votre couleur.";
+"Share my lists (OTW, watched, plans)" = "Partager mes listes (OTW, vus, sorties)";
+"On claude.ai, open Paris Cinema Weeks, tap Export for iPhone app, save the file to iCloud Drive and import it here. Your OTW films, watched films and plans from the page are added to the app. Nothing is deleted." = "Sur claude.ai, ouvrez Paris Cinema Weeks, touchez Export for iPhone app, enregistrez le fichier dans iCloud Drive et importez-le ici. Vos films OTW, films vus et sorties de la page sont ajoutés à l’app. Rien n’est supprimé.";

@@ -34,7 +34,7 @@ struct TutorialView: View {
         Step(icon: "📊", emoji: true, title: "Your stats, as a story",
              text: "The button at the top of Films sums up your month with fun facts, ready to share on Instagram. Swipe back through past months and years."),
         Step(icon: "🎥", emoji: true, title: "What's new",
-             text: "The camera at the top right gathers films to rate, today's plans and your favourites on today. Settings let you choose your colour."),
+             text: "The camera at the top right gathers films to rate, today's plans and your OTW films on today. Settings let you choose your colour."),
     ]
 
     var body: some View {

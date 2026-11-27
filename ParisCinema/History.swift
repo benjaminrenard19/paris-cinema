@@ -43,8 +43,7 @@ extension Store {
     var historySummary: String {
         guard Store.historyOn else { return String(localized: "Films since 2015: off (Settings › Films since 2015).") }
         guard !history.isEmpty else { return String(localized: "Films since 2015: downloading…") }
-        let years = history.map { String($0.date.prefix(4)) }.filter { $0 >= "2015" }
-        return String(localized: "+ \(history.count) older films, \(years.min() ?? "2015") to \(years.max() ?? "2025"): in search, imports and your watched films, not in the weeks.")
+        return String(localized: "+ \(history.count) older films, released since 2015: in search, imports and your watched films, not in the weeks.")
     }
 
     func dropHistory() {

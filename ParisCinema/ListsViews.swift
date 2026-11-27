@@ -63,8 +63,8 @@ struct MyListView: View {
             List {
                 let groups = yearGroups
                 if groups.isEmpty {
-                    ContentUnavailableView("No favourites yet", systemImage: "popcorn",
-                                           description: Text("Tap the star on a film. Films you haven't seen get a provisional day to watch them, which you can send to your calendar."))
+                    ContentUnavailableView("Nothing left to watch", systemImage: "popcorn",
+                                           description: Text("Tap the popcorn on a film. Films you haven't seen get a provisional day to watch them, which you can send to your calendar."))
                 }
                 ForEach(groups, id: \.year) { g in
                     let c = store.yearCounts(g.year)
@@ -124,7 +124,7 @@ struct MyListView: View {
                         .accessibilityHint(open ? String(localized: "Hides this year") : String(localized: "Shows this year"))
                     } footer: {
                         Text(String(localized: "\(c.watched) watched in \(String(g.year)), \(c.total - c.watched) more planned.") + " "
-                             + (total == 1 ? String(localized: "1 favourite.") : String(localized: "\(total) favourites.")))
+                             + (total == 1 ? String(localized: "1 in OTW.") : String(localized: "\(total) in OTW.")))
                     }
                 }
             }
@@ -555,13 +555,13 @@ struct DataView: View {
                 } header: {
                     Text("Import")
                 } footer: {
-                    Text("On claude.ai, open Paris Cinema Weeks, tap Export for iPhone app, save the file to iCloud Drive and import it here. Your favourites, watched films and plans from the page are added to the app. Nothing is deleted.")
+                    Text("On claude.ai, open Paris Cinema Weeks, tap Export for iPhone app, save the file to iCloud Drive and import it here. Your OTW films, watched films and plans from the page are added to the app. Nothing is deleted.")
                 }
 
                 // Share
                 Section {
                     if FileManager.default.fileExists(atPath: store.userURL.path) {
-                        ShareLink(item: store.userURL) { Label("Share my lists (favourites, watched, plans)", systemImage: "square.and.arrow.up") }
+                        ShareLink(item: store.userURL) { Label("Share my lists (OTW, watched, plans)", systemImage: "square.and.arrow.up") }
                     }
                     ShareLink(item: Feed.web, subject: Text("Sloth Cinema"),
                               message: Text("Sloth Cinema: every film in Paris cinemas with today's session times, VO or VF. Open it in your browser:")) {
