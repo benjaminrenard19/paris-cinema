@@ -666,6 +666,7 @@ struct CheckInView: View {
         watchedOn = min(planned, Date())
         newStart = D.stamp(day: D.saturdayAfter(D.addDays(D.today, 1)), time: p?.t ?? "20:00") ?? Date()
         cinemaName = p?.cn ?? film.map { store.defaultCinema(for: $0).name } ?? ""
+        with = p?.w ?? []
     }
 
     private func save() {

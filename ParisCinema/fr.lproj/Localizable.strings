@@ -582,3 +582,19 @@
 "Best cinema buddy: %@, %lld films together 🍿" = "Partenaire ciné n°1 : %1$@, %2$lld films ensemble 🍿";
 "%lld films together" = "%lld films ensemble";
 "1 film together" = "1 film ensemble";
+
+/* Invitations between phones, companions on plans */
+"Going with" = "Avec";
+"Who are you inviting?" = "Qui invitez-vous ?";
+"In Sloth Cinema: %@" = "Dans Sloth Cinema : %@";
+"You're invited" = "Vous êtes invité·e";
+"%@ invites you" = "%@ vous invite";
+"Not now" = "Plus tard";
+"Invited by" = "Invité·e par";
+"Added to the people you go with, and ticked for this film." = "Ajouté·e à vos partenaires ciné, et coché·e pour ce film.";
+"Add to my week" = "Ajouter à ma semaine";
+"Add to watched" = "Ajouter aux films vus";
+"A film" = "Un film";
+"This film isn't in the app's list on your phone yet. Refresh the Films tab and open the invitation again." = "Ce film n'est pas encore dans la liste de l'app sur votre téléphone. Actualisez l'onglet Films et rouvrez l'invitation.";
+"This session has passed: it goes into your watched films, seen with them." = "Cette séance est passée : le film va dans vos films vus, vu avec cette personne.";
+"You had planned it for %@ at %@, %@. This replaces it." = "Vous l'aviez prévu %1$@ à %2$@, %3$@. Ceci le remplace.";

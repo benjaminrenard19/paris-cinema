@@ -38,6 +38,8 @@ final class Store {
     /// The week's releases slideshow, and a cinema, opened from a notification.
     var releasesWeek: EditTarget?
     var openCinema: EditTarget?
+    /// An invitation opened from a slothcinema://invite link, shown as a sheet.
+    var receivedInvite: ReceivedInvite?
     var linkedFileName: String? = UserDefaults.standard.string(forKey: "linkedName")
     var message: String?
     var lastFeedCheck: Date? = UserDefaults.standard.object(forKey: "lastFeedCheck") as? Date
@@ -387,7 +389,8 @@ final class Store {
 
     func planFilm(_ f: Film, day: String, time: String, cinemaName: String) {
         favs.insert(f.id)
-        plans[f.id] = Plan(d: day, t: time, cn: cinemaName, ca: cinema(named: cinemaName)?.address, title: f.title, fd: f.date, ok: true)
+        plans[f.id] = Plan(d: day, t: time, cn: cinemaName, ca: cinema(named: cinemaName)?.address, title: f.title, fd: f.date, ok: true,
+                           w: plans[f.id]?.w)
         saveUser()
         Notifier.shared.requestPermission()
     }
@@ -513,7 +516,7 @@ final class Store {
         let old = seen[f.id]
         plans[f.id] = nil
         seen[f.id] = SeenEntry(d: day, r: max(0, min(5, rating)), t: f.title, fd: f.date, c: f.cat, dir: f.dir, o: f.origin, orig: f.orig,
-                               cn: p?.cn ?? old?.cn, tm: p?.t ?? old?.tm, h: old?.r == rating ? old?.h : nil, w: old?.w)
+                               cn: p?.cn ?? old?.cn, tm: p?.t ?? old?.tm, h: old?.r == rating ? old?.h : nil, w: old?.w ?? p?.w)
         saveUser()
         updateDoneCinemas(notify: false)
     }
@@ -526,13 +529,15 @@ final class Store {
         saveUser()
     }
 
-    func addCustomSeen(title: String, day: String, rating: Int, category: Cat, poster: String? = nil, half: Bool = false) {
+    @discardableResult
+    func addCustomSeen(title: String, day: String, rating: Int, category: Cat, poster: String? = nil, half: Bool = false) -> String? {
         let t = title.trimmingCharacters(in: .whitespaces)
-        guard !t.isEmpty else { return }
+        guard !t.isEmpty else { return nil }
         let id = "custom_" + slug(t) + "_" + day
         seen[id] = SeenEntry(d: day, r: max(0, min(5, rating)), t: t, fd: nil, c: category.rawValue, dir: nil, o: nil, orig: nil, p: poster,
                              h: half ? true : nil)
         saveUser()
+        return id
     }
 
     /// Marks a film as seen with a rating in half stars (3.5 = three and a half).
@@ -544,6 +549,20 @@ final class Store {
             seen[f.id]?.h = half ? true : nil
             saveUser()
         }
+    }
+
+    /// Who's coming to a planned film.
+    func setPlanCompanions(_ id: String, _ people: [String]) {
+        guard plans[id] != nil else { return }
+        plans[id]?.w = people.isEmpty ? nil : people
+        saveUser()
+    }
+
+    /// Adds someone to the people you usually go with.
+    func addCompanion(_ name: String) {
+        let n = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !n.isEmpty, !companions.contains(where: { $0.caseInsensitiveCompare(n) == .orderedSame }) else { return }
+        companions.append(n)
     }
 
     /// Who you saw a film with.

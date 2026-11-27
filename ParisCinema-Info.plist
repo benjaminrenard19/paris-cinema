@@ -6,6 +6,17 @@
 	<array>
 		<string>com.benjaminrenard.pariscinema.refresh</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.benjaminrenard.pariscinema.invite</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>slothcinema</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
