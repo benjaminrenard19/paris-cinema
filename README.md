@@ -50,7 +50,7 @@ With a free Apple ID, the app stops opening after 7 days. Plug the iPhone in and
 
 New versions of the app install themselves: every time you press ▶, Xcode first gets the latest version from GitHub (a pre-action in the shared "ParisCinema" scheme), keeping your signing team. If a build fails just after an update that added new files, press ▶ once more. The pre-action's log is `.git/sloth-cinema-pull.log`.
 
-When the build is for an iPhone, a post-action then installs the same build on your other connected iPhones too (the names in `SLOTH_PHONES`, by default "iPhone de Ben" and "iPhone de Camille Devisme"; log in `~/Library/Logs/SlothCinema-install.log`). Each one needs a cable, or the same Wi-Fi with **Connect via network** ticked, and must be unlocked.
+When the build is for an iPhone, a post-action then installs the same build on your other connected iPhones too (the names in `SLOTH_PHONES`, by default "iPhone de Ben" and "iPhone de Camille Devisme"; log in `.git/sloth-cinema-install.log`). Each one needs a cable, or the same Wi-Fi with **Connect via network** ticked, and must be unlocked.
 
 If the folder is on a Desktop that iCloud syncs, right-click it in Finder and choose **Keep Downloaded**. Otherwise macOS can move git's files to iCloud when the disk is nearly full, and updates fail.
 

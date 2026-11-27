@@ -1,7 +1,7 @@
 #!/bin/bash
 # Run by Xcode after each build (scheme post-action): installs the app just built on the
 # other iPhones in SLOTH_PHONES that are connected (cable or Wi-Fi), so pressing ▶ for one
-# phone updates them all. Runs in the background; log in ~/Library/Logs/SlothCinema-install.log.
+# phone updates them all. Runs in the background; log in .git/sloth-cinema-install.log.
 APP="$1"            # the .app Xcode just built
 SKIP="$2"           # the device Xcode is about to install on itself
 PHONES="${SLOTH_PHONES:-iPhone de Ben,iPhone de Camille Devisme}"
