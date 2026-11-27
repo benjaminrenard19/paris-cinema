@@ -32,14 +32,26 @@ extension Store {
         updateIconBadge()
     }
 
+    /// "Mark all as seen": empties What's new and the number on the app icon, and clears delivered notifications.
+    func markAllInboxSeen() {
+        var h = hiddenInbox
+        for item in inbox { h.insert(item.id) }
+        hiddenInbox = h
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+        updateIconBadge(0)
+        inboxVersion += 1
+    }
+
     func hideInboxItem(_ id: String) {
         var h = hiddenInbox
         h.insert(id)
         hiddenInbox = h
+        inboxVersion += 1
         updateIconBadge()
     }
 
     var inbox: [InboxItem] {
+        _ = inboxVersion
         var out: [InboxItem] = []
         let today = D.today
         let now = D.stampString(Date()).time
@@ -123,7 +135,14 @@ struct InboxView: View {
             .navigationTitle("🎥 What's new")
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
-            .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+                if !store.inbox.isEmpty {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Mark all as seen") { store.markAllInboxSeen() }
+                    }
+                }
+            }
         }
     }
 

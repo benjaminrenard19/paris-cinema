@@ -189,42 +189,24 @@ struct ReleasesSlideshowView: View {
     @Environment(Store.self) private var store
     @Environment(\.dismiss) private var dismiss
     let week: String
-    @State private var page = 0
     @State private var open: EditTarget?
-    // Autoplay: each film stays a few seconds, then the next one comes. Tap the poster to pause.
-    @State private var playing = true
-    @State private var runStart = Date()     // when the current run on this page started
-    @State private var doneBefore: TimeInterval = 0   // time already spent on `donePage` before a pause
-    @State private var donePage = -1
-    static let seconds: TimeInterval = 7
 
     /// Same order as the Films page; older films only when it shows everything.
     private var films: [Film] {
         WeekSort.current.apply(store.releases(in: week).filter { FilmsShow.current == .all || !$0.isRepertory })
     }
 
-    private var spent: TimeInterval { donePage == page ? doneBefore : 0 }
-
     var body: some View {
         let list = films
         NavigationStack {
-            ZStack(alignment: .top) {
+            ZStack {
                 Color.black.ignoresSafeArea()
                 if list.isEmpty {
                     ContentUnavailableView("No releases yet", systemImage: "film",
                                            description: Text("The films out on \(D.fmt(week, "EEEE d MMMM")) arrive on Tuesday evening."))
                         .foregroundStyle(.white)
                 } else {
-                    TabView(selection: $page) {
-                        ForEach(Array(list.enumerated()), id: \.element.id) { i, f in
-                            slide(f).tag(i)
-                        }
-                    }
-                    .tabViewStyle(.page(indexDisplayMode: .never))
-                    SlideProgress(count: list.count, page: page, playing: playing, runStart: runStart, spent: spent,
-                                  seconds: Self.seconds)
-                        .padding(.horizontal, 12)
-                        .padding(.top, 4)
+                    FilmSlides(films: list, paused: open != nil) { open = EditTarget(id: $0) }
                 }
             }
             .navigationTitle(String(localized: "Out \(D.fmt(week, "EEEE d MMMM"))"))
@@ -235,20 +217,8 @@ struct ReleasesSlideshowView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Later") { dismiss() }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    if !list.isEmpty {
-                        HStack(spacing: 10) {
-                            Text("\(min(page + 1, list.count)) / \(list.count)")
-                                .font(.subheadline.monospacedDigit()).foregroundStyle(.white.opacity(0.7))
-                            Button { togglePlay() } label: {
-                                Image(systemName: playing ? "pause.fill" : "play.fill")
-                            }
-                            .accessibilityLabel(playing ? String(localized: "Pause") : String(localized: "Play"))
-                        }
-                    }
-                }
             }
-            .sheet(item: $open, onDismiss: { }) { t in
+            .sheet(item: $open) { t in
                 NavigationStack {
                     FilmDetailView(id: t.id)
                         .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Back to the slideshow") { open = nil } } }
@@ -256,9 +226,60 @@ struct ReleasesSlideshowView: View {
                 .environment(store)
             }
         }
-        .task(id: "\(page)-\(playing)-\(open == nil)") {
+        .onAppear { UserDefaults.standard.set(week, forKey: "releasesSeenWeek") }
+    }
+}
+
+/// Films one after another, like stories: each for a few seconds, tap the poster to pause,
+/// scroll down for the story and the cinemas. Used for the week's releases and for One To Watch.
+struct FilmSlides: View {
+    @Environment(Store.self) private var store
+    let films: [Film]
+    /// Stops the show while something else is on top (a film's page).
+    var paused = false
+    let onOpen: (String) -> Void
+
+    @State private var page = 0
+    @State private var playing = true
+    @State private var runStart = Date()     // when the current run on this page started
+    @State private var doneBefore: TimeInterval = 0   // time already spent on `donePage` before a pause
+    @State private var donePage = -1
+    static let seconds: TimeInterval = 7
+
+    private var spent: TimeInterval { donePage == page ? doneBefore : 0 }
+
+    var body: some View {
+        ZStack(alignment: .top) {
+            TabView(selection: $page) {
+                ForEach(Array(films.enumerated()), id: \.element.id) { i, f in
+                    slide(f).tag(i)
+                }
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            VStack(alignment: .trailing, spacing: 6) {
+                SlideProgress(count: films.count, page: page, playing: playing && !paused, runStart: runStart, spent: spent,
+                              seconds: Self.seconds)
+                HStack(spacing: 10) {
+                    Text("\(min(page + 1, films.count)) / \(films.count)")
+                        .font(.caption.monospacedDigit()).foregroundStyle(.white.opacity(0.7))
+                    Button { togglePlay() } label: {
+                        Image(systemName: playing ? "pause.fill" : "play.fill")
+                            .font(.caption.weight(.bold))
+                            .frame(width: 30, height: 30)
+                            .background(.white.opacity(0.15), in: Circle())
+                            .foregroundStyle(.white)
+                    }
+                    .accessibilityLabel(playing ? String(localized: "Pause") : String(localized: "Play"))
+                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.top, 4)
+        }
+        .background(Color.black)
+        .onChange(of: films.count) { _, n in if page >= n { page = max(0, n - 1) } }
+        .task(id: "\(page)-\(playing)-\(paused)") {
             // Wait for the rest of this film's time, then move on.
-            guard playing, open == nil, !list.isEmpty else { return }
+            guard playing, !paused, !films.isEmpty else { return }
             runStart = Date()
             let rest = max(0.3, Self.seconds - spent)
             try? await Task.sleep(nanoseconds: UInt64(rest * 1_000_000_000))
@@ -271,7 +292,6 @@ struct ReleasesSlideshowView: View {
                 playing = false
             }
         }
-        .onAppear { UserDefaults.standard.set(week, forKey: "releasesSeenWeek") }
     }
 
     private func togglePlay() {
@@ -314,6 +334,10 @@ struct ReleasesSlideshowView: View {
                         Text(f.genres.prefix(3).map { Film.genreLabel($0) }.joined(separator: " · "))
                             .font(.subheadline.weight(.semibold)).foregroundStyle(.white.opacity(0.85))
                     }
+                    if let p = store.plans[f.id], store.seen[f.id] == nil {
+                        Label("\(D.fmtCap(p.d, "EEE d MMM")) · \(p.t) · \(p.cn)", systemImage: "calendar")
+                            .font(.subheadline.weight(.semibold)).foregroundStyle(Color(hex: 0xFFD23F))
+                    }
                     Text([D.fmtCap(f.date, "EEEE d MMMM"), f.durationText, f.dir].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " · "))
                         .font(.subheadline).foregroundStyle(.white.opacity(0.7)).multilineTextAlignment(.center)
                     HStack(spacing: 8) {
@@ -330,12 +354,12 @@ struct ReleasesSlideshowView: View {
                 .padding(.horizontal, 24)
                 HStack(spacing: 12) {
                     Button { store.toggleFav(f) } label: {
-                        Label(store.isFav(f.id) ? "In my list" : "Add to my list", systemImage: store.isFav(f.id) ? "star.fill" : "star")
+                        Label(store.isFav(f.id) ? "In OTW" : "Add to OTW", systemImage: store.isFav(f.id) ? "popcorn.fill" : "popcorn")
                             .font(.headline).frame(maxWidth: .infinity).padding(.vertical, 12)
                             .background(gold.opacity(store.isFav(f.id) ? 1 : 0.25), in: Capsule())
                             .foregroundStyle(store.isFav(f.id) ? .black : gold)
                     }
-                    Button { pause(); open = EditTarget(id: f.id) } label: {
+                    Button { pause(); onOpen(f.id) } label: {
                         Label("More", systemImage: "info.circle")
                             .font(.headline).frame(maxWidth: .infinity).padding(.vertical, 12)
                             .background(.white.opacity(0.15), in: Capsule())
@@ -346,7 +370,7 @@ struct ReleasesSlideshowView: View {
                 .padding(.horizontal, 24)
                 // Below: the story and where it's on, your cinemas in bold gold.
                 VStack(alignment: .leading, spacing: 14) {
-                    if let syn = f.syn, !syn.isEmpty {
+                    if let syn = f.story, !syn.isEmpty {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Story").font(.caption.weight(.semibold)).textCase(.uppercase).foregroundStyle(.white.opacity(0.5))
                             Text(syn).font(.callout).foregroundStyle(.white.opacity(0.9))

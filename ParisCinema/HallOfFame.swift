@@ -46,14 +46,31 @@ struct CompanionPicker: View {
     var title: LocalizedStringKey = "Seen with"
     @State private var adding = false
     @State private var newName = ""
+    @AppStorage("companionSort") private var sort = "often"
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title).font(.subheadline).foregroundStyle(.secondary)
+            HStack {
+                Text(title).font(.subheadline).foregroundStyle(.secondary)
+                Spacer()
+                // The same setting as in My profile › Companions
+                Menu {
+                    Picker("Order", selection: $sort) {
+                        Text("Most often first").tag("often")
+                        Text("By name").tag("name")
+                        Text("My order").tag("mine")
+                    }
+                } label: {
+                    Label(sort == "name" ? String(localized: "By name") : sort == "mine" ? String(localized: "My order") : String(localized: "Most often first"),
+                          systemImage: "arrow.up.arrow.down")
+                        .font(.caption)
+                }
+                .accessibilityLabel("Order")
+            }
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     // Your usual people, then anyone ticked who isn't in that list (from an invitation, say)
-                    ForEach(store.companions + selected.filter { !store.companions.contains($0) }, id: \.self) { name in
+                    ForEach(store.companionsSorted + selected.filter { !store.companions.contains($0) }, id: \.self) { name in
                         let on = selected.contains(name)
                         Button {
                             if on { selected.removeAll { $0 == name } } else { selected.append(name) }
@@ -93,11 +110,22 @@ struct CompanionPicker: View {
 /// The people you usually go with (first launch and My profile).
 struct CompanionsEditor: View {
     @Environment(Store.self) private var store
+    @AppStorage("companionSort") private var sort = "often"
     @State private var newName = ""
 
     var body: some View {
         @Bindable var model = store
         List {
+            Section {
+                Picker("Order", selection: $sort) {
+                    Text("Most often first").tag("often")
+                    Text("By name").tag("name")
+                    Text("My order").tag("mine")
+                }
+            } footer: {
+                Text(sort == "mine" ? String(localized: "Drag the names below into the order you like.")
+                                    : String(localized: "The order of the names when you tick who you went with."))
+            }
             Section {
                 ForEach(store.companions, id: \.self) { Text($0) }
                     .onDelete { model.companions.remove(atOffsets: $0) }
@@ -187,7 +215,7 @@ struct HallOfFameView: View {
                     }
                 }
             }
-            .navigationTitle("Hall of Fame")
+            .navigationTitle("🏆 Hall of Fame")
             .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
             .toolbar {
                 if hasTies {
@@ -374,6 +402,31 @@ struct HallTiesView: View {
             .navigationTitle(year.map { String(localized: "Same ratings · \(String($0))") } ?? String(localized: "Same ratings · All time"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
+        }
+    }
+}
+
+extension Store {
+    /// How many films you've seen with each person.
+    var companionCounts: [String: Int] {
+        var out: [String: Int] = [:]
+        for e in seen.values { for n in e.w ?? [] { out[n, default: 0] += 1 } }
+        return out
+    }
+
+    /// The people you go with, in the order chosen in My profile: most often first (default), by name, or your own order.
+    var companionsSorted: [String] {
+        switch UserDefaults.standard.string(forKey: "companionSort") ?? "often" {
+        case "name":
+            return companions.sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
+        case "mine":
+            return companions
+        default:
+            let counts = companionCounts
+            return companions.enumerated().sorted { a, b in
+                let ca = counts[a.element] ?? 0, cb = counts[b.element] ?? 0
+                return ca != cb ? ca > cb : a.offset < b.offset
+            }.map(\.element)
         }
     }
 }

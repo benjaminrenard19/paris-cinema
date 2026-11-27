@@ -35,6 +35,7 @@ struct FilmCinemasList: View {
     @Environment(Store.self) private var store
     let film: Film
     var compact = true
+    @Binding var ask: ClashQuestion?
     @State private var showAll = false
 
     var body: some View {
@@ -66,9 +67,10 @@ struct FilmCinemasList: View {
                 HStack(spacing: 6) {
                     ForEach(r.sessions) { s in
                         Button {
-                            store.planFilm(film, day: r.day, time: s.time, cinemaName: r.cinema)
+                            ask = store.requestPlan(film, day: r.day, time: s.time, cinemaName: r.cinema)
                         } label: {
-                            TimeChip(time: s.time, selected: plan?.d == r.day && plan?.t == s.time && plan?.cn == r.cinema, version: s.version)
+                            TimeChip(time: s.time, selected: plan?.d == r.day && plan?.t == s.time && plan?.cn == r.cinema, version: s.version,
+                                     clash: !store.clashes(film.id, day: r.day, time: s.time).isEmpty)
                         }
                         .buttonStyle(.plain)
                     }
@@ -90,6 +92,7 @@ struct FilmCinemasSheet: View {
     @Environment(Store.self) private var store
     @Environment(\.dismiss) private var dismiss
     let film: Film
+    @State private var clashAsk: ClashQuestion?
 
     var body: some View {
         NavigationStack {
@@ -99,7 +102,7 @@ struct FilmCinemasSheet: View {
                                            description: Text("Pull down on the Films page to get the latest showtimes."))
                 } else {
                     Section {
-                        FilmCinemasList(film: film, compact: false)
+                        FilmCinemasList(film: film, compact: false, ask: $clashAsk)
                     } header: {
                         Text("These cinemas have your wanted movie!")
                     } footer: {
@@ -110,6 +113,7 @@ struct FilmCinemasSheet: View {
             .navigationTitle(film.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
+            .clashQuestion($clashAsk)
         }
     }
 }

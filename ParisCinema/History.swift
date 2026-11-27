@@ -20,7 +20,7 @@ extension Store {
     func isOld(_ id: String) -> Bool { !currentIds.contains(id) && historyIds.contains(id) }
 
     /// The copy on this iPhone at launch, then a fresh one from GitHub once a week.
-    func loadHistory() async {
+    func loadHistory(force: Bool = false) async {
         guard Store.historyOn else { return }
         let url = historyURL
         if history.isEmpty, let data = try? Data(contentsOf: url),
@@ -28,7 +28,7 @@ extension Store {
             setHistory(file.films)
         }
         let last = UserDefaults.standard.double(forKey: "historyCheckedAt")
-        guard history.isEmpty || Date().timeIntervalSince1970 - last > 7 * 86_400 else { return }
+        guard force || history.isEmpty || Date().timeIntervalSince1970 - last > 7 * 86_400 else { return }
         guard let result = try? await URLSession.shared.data(from: Store.historyRemote) else { return }
         let (data, response) = result
         guard (response as? HTTPURLResponse)?.statusCode == 200,
@@ -37,6 +37,14 @@ extension Store {
         try? data.write(to: url, options: .atomic)
         UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "historyCheckedAt")
         setHistory(file.films)
+    }
+
+    /// The older films line in Settings › Refresh.
+    var historySummary: String {
+        guard Store.historyOn else { return String(localized: "Films since 2015: off (Settings › Films since 2015).") }
+        guard !history.isEmpty else { return String(localized: "Films since 2015: downloading…") }
+        let years = history.map { String($0.date.prefix(4)) }.filter { $0 >= "2015" }
+        return String(localized: "+ \(history.count) older films, \(years.min() ?? "2015") to \(years.max() ?? "2025"): in search, imports and your watched films, not in the weeks.")
     }
 
     func dropHistory() {

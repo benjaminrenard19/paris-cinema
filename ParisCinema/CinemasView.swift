@@ -38,7 +38,7 @@ struct CinemasView: View {
                 else if showList { list } else { map }
             }
             .searchable(text: $query, prompt: "Find a cinema to add to My cinemas")
-            .navigationTitle("Cinemas")
+            .navigationTitle("📍 Cinemas")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -234,6 +234,7 @@ struct CinemaSheet: View {
     let name: String
     @AppStorage("weekSort") private var sortRaw = WeekSort.standard.rawValue
     @AppStorage("hideSeen") private var hideSeen = true
+    @State private var clashAsk: ClashQuestion?
 
     private var cinema: Cinema? { store.cinema(named: name) }
 
@@ -314,6 +315,7 @@ struct CinemaSheet: View {
             .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
         }
+        .clashQuestion($clashAsk)
     }
 
     /// Poster, title and the day's sessions; tap a time to plan it.
@@ -341,10 +343,10 @@ struct CinemaSheet: View {
                 HStack(spacing: 6) {
                     ForEach(list) { s in
                         Button {
-                            store.planFilm(f, day: day, time: s.time, cinemaName: name)
+                            clashAsk = store.requestPlan(f, day: day, time: s.time, cinemaName: name)
                         } label: {
                             TimeChip(time: s.time, selected: store.plans[f.id].map { $0.d == day && $0.t == s.time && store.sameCinema($0.cn, name) } ?? false,
-                                     version: s.version)
+                                     version: s.version, clash: !store.clashes(f.id, day: day, time: s.time).isEmpty)
                         }
                         .buttonStyle(.borderless)
                     }

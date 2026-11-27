@@ -79,7 +79,7 @@ struct ContentView: View {
             WeekPlanView()
                 .tabItem { Label("My week", systemImage: "calendar") }
             MyListView()
-                .tabItem { Label("OTW", systemImage: "star") }
+                .tabItem { Label("OTW", systemImage: "popcorn") }
             HallOfFameView()
                 .tabItem { Label("Hall of Fame", systemImage: "trophy") }
             CinemasView()
@@ -239,7 +239,7 @@ struct FilmRow: View {
             }
             Spacer(minLength: 0)
             Button { store.toggleFav(film) } label: {
-                Image(systemName: store.isFav(film.id) ? "star.fill" : "star")
+                Image(systemName: store.isFav(film.id) ? "popcorn.fill" : "popcorn")
                     .font(.title3)
                     .foregroundStyle(store.isFav(film.id) ? Color(hex: 0xE0A800) : Color.secondary.opacity(0.6))
                     .frame(width: 34, height: 34)

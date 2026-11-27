@@ -131,6 +131,7 @@ struct Film: Identifiable, Hashable, Codable {
     var orig: String?
     var note: String?
     var syn: String?
+    var synFr: String?      // the synopsis in French, when written
     var prod: String?
     var poster: String?
     var press: Double?      // AlloCiné press rating out of 5
@@ -141,9 +142,16 @@ struct Film: Identifiable, Hashable, Codable {
 
     enum CodingKeys: String, CodingKey {
         case id, week, date, title, cat, genre, origin, size, dir, cast, orig, note, syn, prod, poster, press, spect, duration, ac, rep
+        case synFr = "synfr"
     }
 
     var isRepertory: Bool { rep == true }
+
+    /// The synopsis in the app's language: French when the phone is in French and one is written.
+    var story: String? {
+        if D.isFrench, let fr = synFr, !fr.isEmpty { return fr }
+        return syn
+    }
 
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
@@ -162,6 +170,7 @@ struct Film: Identifiable, Hashable, Codable {
         orig = try c.decodeIfPresent(String.self, forKey: .orig)
         note = try c.decodeIfPresent(String.self, forKey: .note)
         syn = try c.decodeIfPresent(String.self, forKey: .syn)
+        synFr = try? c.decodeIfPresent(String.self, forKey: .synFr)
         prod = try c.decodeIfPresent(String.self, forKey: .prod)
         poster = try? c.decodeIfPresent(String.self, forKey: .poster)
         press = try? c.decodeIfPresent(Double.self, forKey: .press)

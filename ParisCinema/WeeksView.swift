@@ -391,7 +391,7 @@ struct WeeksView: View {
                         .foregroundStyle(genres.isEmpty ? Color.primary : Color(.systemBackground))
                     }
                 }
-                chip("Favourites", symbol: "star.fill", on: favOnly, color: Color(hex: 0xE0A800)) { favOnly.toggle() }
+                chip("OTW", symbol: "popcorn.fill", on: favOnly, color: Color(hex: 0xE0A800)) { favOnly.toggle() }
                 ForEach(Cat.allCases) { c in
                     let n = source.filter { $0.category == c }.count
                     if n > 0 {
@@ -421,7 +421,7 @@ struct WeeksView: View {
 
     private func favButton(_ f: Film) -> some View {
         Button { store.toggleFav(f) } label: {
-            Label(store.isFav(f.id) ? "Unfavourite" : "Favourite", systemImage: store.isFav(f.id) ? "star.slash" : "star")
+            Label(store.isFav(f.id) ? "Remove from OTW" : "Add to OTW", systemImage: store.isFav(f.id) ? "xmark.circle" : "popcorn")
         }
         .tint(Color(hex: 0xE0A800))
     }

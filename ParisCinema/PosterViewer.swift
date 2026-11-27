@@ -127,7 +127,7 @@ struct PosterViewer: View {
 
     private var story: some View {
         infoPage("Story") {
-            Text(film.syn ?? String(localized: "No synopsis yet. The Tuesday update adds one."))
+            Text(film.story ?? String(localized: "No synopsis yet. The Tuesday update adds one."))
                 .font(.title3)
                 .lineSpacing(4)
             if let o = film.orig, !o.isEmpty { fact(film.category == .R ? "Year" : "Original title", o, symbol: "character.book.closed") }

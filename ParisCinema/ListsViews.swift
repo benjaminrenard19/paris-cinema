@@ -8,14 +8,62 @@ struct MyListView: View {
     @Environment(Store.self) private var store
     @State private var expanded: Set<Int> = [Calendar.current.component(.year, from: Date())]
     @State private var showAll: Set<Int> = []
+    @State private var path: [String] = []
+    /// One To Watch as a slideshow (like the week's releases) or as a list.
+    @AppStorage("otwSlides") private var slides = true
     private static let preview = 6
 
+    /// Films still to see: planned ones first by date, then the others by release date.
+    private var toWatch: [Film] {
+        let list = store.favs.compactMap { store.index[$0] }.filter { store.seen[$0.id] == nil }
+        return list.sorted { a, b in
+            let pa = store.plans[a.id], pb = store.plans[b.id]
+            if (pa != nil) != (pb != nil) { return pa != nil }
+            if let pa, let pb { return (pa.d + pa.t) < (pb.d + pb.t) }
+            return a.date > b.date
+        }
+    }
+
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
+            Group {
+                if slides {
+                    let films = toWatch
+                    ZStack {
+                        Color.black.ignoresSafeArea()
+                        if films.isEmpty {
+                            ContentUnavailableView("Nothing left to watch", systemImage: "popcorn",
+                                                   description: Text("Tap the popcorn on a film to add it to One To Watch."))
+                                .foregroundStyle(.white)
+                        } else {
+                            FilmSlides(films: films, paused: !path.isEmpty) { path.append($0) }
+                        }
+                    }
+                    .toolbarBackground(.black, for: .navigationBar)
+                    .toolbarColorScheme(.dark, for: .navigationBar)
+                } else {
+                    listBody
+                }
+            }
+            .navigationTitle("🍿 One To Watch")
+            .navigationBarTitleDisplayMode(slides ? .inline : .large)
+            .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { withAnimation { slides.toggle() } } label: {
+                        Image(systemName: slides ? "list.bullet" : "play.rectangle.on.rectangle")
+                    }
+                    .accessibilityLabel(slides ? String(localized: "Show as a list") : String(localized: "Show as a slideshow"))
+                }
+            }
+        }
+    }
+
+    private var listBody: some View {
             List {
                 let groups = yearGroups
                 if groups.isEmpty {
-                    ContentUnavailableView("No favourites yet", systemImage: "star",
+                    ContentUnavailableView("No favourites yet", systemImage: "popcorn",
                                            description: Text("Tap the star on a film. Films you haven't seen get a provisional day to watch them, which you can send to your calendar."))
                 }
                 ForEach(groups, id: \.year) { g in
@@ -80,9 +128,6 @@ struct MyListView: View {
                     }
                 }
             }
-            .navigationTitle("One To Watch")
-            .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
-        }
     }
 
     private struct YearGroup {
@@ -114,7 +159,7 @@ struct MyListView: View {
     }
 
     private func unfav(_ f: Film) -> some View {
-        Button(role: .destructive) { store.toggleFav(f) } label: { Label("Remove", systemImage: "star.slash") }
+        Button(role: .destructive) { store.toggleFav(f) } label: { Label("Remove", systemImage: "xmark.circle") }
     }
 }
 
@@ -386,7 +431,10 @@ struct DataView: View {
                 // Manual refreshing
                 Section {
                     Button {
-                        Task { await store.refreshFromFeed(force: true) }
+                        Task {
+                            await store.refreshFromFeed(force: true)
+                            await store.loadHistory(force: true)
+                        }
                     } label: {
                         Label("Check for new films and times now", systemImage: "arrow.clockwise")
                     }
@@ -395,6 +443,7 @@ struct DataView: View {
                     }
                     if let m = store.feedStatus { Text(m).font(.footnote).foregroundStyle(.secondary) }
                     Text(store.dataSummary)
+                    Text(store.historySummary).font(.footnote).foregroundStyle(.secondary)
                     if let e = D.when(store.exportedAt) { LabeledContent("Last change", value: e) }
                 } header: {
                     Text("Refresh")

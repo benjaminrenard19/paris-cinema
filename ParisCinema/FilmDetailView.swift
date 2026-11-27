@@ -14,6 +14,8 @@ struct FilmDetailView: View {
     @State private var showCalendar = false
     @State private var inviting = false
 
+    @State private var clashAsk: ClashQuestion?
+
     var body: some View {
         if let f = store.index[id] {
             content(f)
@@ -41,8 +43,8 @@ struct FilmDetailView: View {
 
             Section("Your film") {
                 Button { store.toggleFav(f) } label: {
-                    Label(store.isFav(f.id) ? String(localized: "In your favourites") : String(localized: "Add to favourites"),
-                          systemImage: store.isFav(f.id) ? "star.fill" : "star")
+                    Label(store.isFav(f.id) ? String(localized: "In your OTW (One To Watch)") : String(localized: "Add to OTW (One To Watch)"),
+                          systemImage: store.isFav(f.id) ? "popcorn.fill" : "popcorn")
                 }
                 ratingRow(f)
                 if store.seen[f.id] != nil {
@@ -75,10 +77,10 @@ struct FilmDetailView: View {
                     Section {
                         if !store.isFav(f.id) {
                             Button { store.toggleFav(f) } label: {
-                                Label("Add it to One To Watch (OTW) to see when the sessions are.", systemImage: "star")
+                                Label("Add it to One To Watch (OTW) to see when the sessions are.", systemImage: "popcorn")
                             }
                         }
-                        if showing { FilmCinemasList(film: f) }
+                        if showing { FilmCinemasList(film: f, ask: $clashAsk) }
                     } header: {
                         if showing { Text("These cinemas have your wanted movie!") }
                     } footer: {
@@ -87,7 +89,7 @@ struct FilmDetailView: View {
                 }
             }
 
-            if let syn = f.syn, !syn.isEmpty {
+            if let syn = f.story, !syn.isEmpty {
                 Section("Story") { Text(syn) }
             }
 
@@ -116,12 +118,13 @@ struct FilmDetailView: View {
         }
         .navigationTitle(f.title)
         .navigationBarTitleDisplayMode(.inline)
+        .clashQuestion($clashAsk)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button { store.toggleFav(f) } label: {
-                    Image(systemName: store.isFav(f.id) ? "star.fill" : "star")
+                    Image(systemName: store.isFav(f.id) ? "popcorn.fill" : "popcorn")
                 }
-                .accessibilityLabel(store.isFav(f.id) ? String(localized: "Remove from favourites") : String(localized: "Add to favourites"))
+                .accessibilityLabel(store.isFav(f.id) ? String(localized: "Remove from OTW") : String(localized: "Add to OTW (One To Watch)"))
             }
         }
         .fullScreenCover(item: $viewer) { film in
@@ -147,7 +150,7 @@ struct FilmDetailView: View {
                 .accessibilityLabel("Show the poster full screen")
                 .overlay(alignment: .topTrailing) {
                     Button { store.toggleFav(f) } label: {
-                        Image(systemName: store.isFav(f.id) ? "star.fill" : "star")
+                        Image(systemName: store.isFav(f.id) ? "popcorn.fill" : "popcorn")
                             .font(.title3.weight(.semibold))
                             .foregroundStyle(store.isFav(f.id) ? Color(hex: 0xFFD23F) : Color.white)
                             .padding(7)
@@ -266,7 +269,10 @@ struct FilmDetailView: View {
                 if !list.isEmpty {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 66), spacing: 8)], alignment: .leading, spacing: 8) {
                         ForEach(list) { s in
-                            Button { setTime(f, p, s.time) } label: { TimeChip(time: s.time, selected: s.time == p.t, version: s.version) }
+                            Button { setTime(f, p, s.time) } label: {
+                                TimeChip(time: s.time, selected: s.time == p.t, version: s.version,
+                                         clash: !store.clashes(f.id, day: p.d, time: s.time).isEmpty)
+                            }
                                 .buttonStyle(.plain)
                         }
                     }
@@ -300,6 +306,7 @@ struct FilmDetailView: View {
             Text("Plan to watch")
         } footer: {
             VStack(alignment: .leading, spacing: 4) {
+                ClashWarning(clashes: store.clashes(f.id, day: p.d, time: p.t))
                 Text("\(D.fmt(p.d, "EEEE d MMMM")) at \(p.t), \(p.cn).")
                 if p.ok == true {
                     Text(CalendarSync.shared.enabled
@@ -458,7 +465,7 @@ struct FilmDetailView: View {
     private func notes(_ f: Film) -> String {
         var lines: [String] = []
         if let d = f.dir, !d.isEmpty { lines.append(String(localized: "Directed by \(d)")) }
-        if let s = f.syn, !s.isEmpty { lines.append(s) }
+        if let s = f.story, !s.isEmpty { lines.append(s) }
         if let u = f.showtimesSearchURL { lines.append(String(localized: "Showtimes: \(u.absoluteString)")) }
         return lines.joined(separator: "\n\n")
     }

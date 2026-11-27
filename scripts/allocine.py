@@ -221,7 +221,10 @@ def english_terms():
         out.setdefault(v.lower(), k)
     out.update({"u.s.a.": "usa", "etats-unis": "usa", "états-unis": "usa", "royaume-uni": "uk",
                 "allemagne de l'ouest": "west germany", "u.r.s.s.": "ussr", "science fiction": "sci-fi",
-                "epouvante-horreur": "horror", "épouvante-horreur": "horror", "comédie dramatique": "comedy-drama"})
+                "epouvante-horreur": "horror", "épouvante-horreur": "horror", "comédie dramatique": "comedy-drama",
+                "évènement sportif": "sports event", "erotique": "erotic", "spectacle": "show", "péplum": "peplum",
+                "web séries": "web series", "judiciaire": "courtroom", "classique": "classic", "dessin animé": "animation",
+                "egypte": "egypt", "tchécoslovaquie": "czechoslovakia", "grande-bretagne": "uk", "bénin": "benin"})
     return out
 
 

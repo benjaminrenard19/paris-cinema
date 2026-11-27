@@ -15,8 +15,8 @@ struct TutorialView: View {
     private static let steps: [Step] = [
         Step(icon: "🦥", emoji: true, title: "Welcome to Sloth Cinema",
              text: "Every film released in Paris cinemas this year, week by week. New films, posters and showtimes arrive by themselves."),
-        Step(icon: "star.fill", emoji: false, title: "Star what you want to see",
-             text: "Tap the star at the top right of any film. A starred film gets a provisional day to go, which you can change."),
+        Step(icon: "popcorn.fill", emoji: false, title: "Add what you want to see to OTW",
+             text: "Tap the popcorn at the top right of any film to add it to One To Watch. It gets a provisional day to go, which you can change."),
         Step(icon: "photo.on.rectangle.angled", emoji: false, title: "Posters and details",
              text: "Tap a poster to see it full screen. Tap or swipe for the running time, critics and audience ratings, the story and the cast."),
         Step(icon: "arrow.up.arrow.down", emoji: false, title: "Sort each week",

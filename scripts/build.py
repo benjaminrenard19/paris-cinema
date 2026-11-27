@@ -2,7 +2,7 @@
 """Builds data/paris-cinema.json (the feed the iPhone app downloads) from:
 
   data/weeks/<Wednesday>.json   one file per French cinema week (Wednesday to Tuesday)
-  data/details.json             {film id: {"synopsis", "producers", "cast", "checkedAt"}}
+  data/details.json             {film id: {"synopsis", "synopsisFr", "producers", "cast", "checkedAt"}}
   data/showtimes.json           {film id: {"week", "updatedAt", "cinemas": [{"name", "address", "times": {"YYYY-MM-DD": ["HH:MM"]}}]}}
   data/cinemas.json             the Paris cinemas shown on the map
   data/posters.json             {film id: official poster image URL (AlloCiné)}
@@ -102,6 +102,8 @@ def main():
             }
             d = details.get(fid) or {}
             f["syn"] = f["syn"] or text(d.get("synopsis"))
+            if f["syn"] and text(d.get("synopsisFr")):
+                f["synfr"] = text(d.get("synopsisFr"))
             f["prod"] = f["prod"] or text(d.get("producers"))
             cast = text(d.get("cast"))
             if cast and len(cast) > len(f["cast"] or ""):
@@ -132,6 +134,8 @@ def main():
              "genre": text(e.get("genre")), "origin": text(e.get("origin")), "size": "L",
              "dir": text(e.get("dir")), "cast": text(e.get("cast")), "orig": text(e.get("year")),
              "syn": text((details.get(fid) or {}).get("synopsis")), "rep": True}
+        if f["syn"] and text((details.get(fid) or {}).get("synopsisFr")):
+            f["synfr"] = text(details[fid]["synopsisFr"])
         if text(e.get("poster")) and "empty" not in e["poster"]:
             f["poster"] = e["poster"]
         for key in ("press", "spect"):

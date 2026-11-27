@@ -62,6 +62,7 @@ struct WeekPlanView: View {
                                 .contextMenu {
                                     Button { inviting = EditTarget(id: item.0.id) } label: { Label("Invite someone", systemImage: "person.2.wave.2") }
                                 }
+                            if day >= D.today { InARowRow(film: item.0, plan: item.1) }
                         }
                         if day >= D.today {
                             Button { target = PlanTarget(day: day, filmId: nil) } label: {
@@ -89,7 +90,7 @@ struct WeekPlanView: View {
                     }
                 }
             }
-            .navigationTitle(weekTitle)
+            .navigationTitle("🗓️ " + weekTitle)
             .navigationDestination(for: String.self) { id in FilmDetailView(id: id) }
             .sheet(item: $target) { t in AddPlanView(target: t).environment(store) }
             .sheet(item: $inviting) { t in InviteSheet(filmId: t.id).environment(store) }
@@ -150,6 +151,7 @@ struct WeekPlanView: View {
                 if p.ok != true {
                     Text("Provisional · swipe right to confirm").font(.caption2).foregroundStyle(.orange)
                 }
+                ClashWarning(clashes: store.clashes(f.id, day: p.d, time: p.t))
             }
         }
     }
@@ -175,6 +177,7 @@ struct AddPlanView: View {
     @State private var cinemaName = ""
     @State private var showCalendar = false
     @State private var ready = false
+    @State private var clashAsk: ClashQuestion?
 
     private var film: Film? { filmId.flatMap { store.index[$0] } }
     private var days: [String] { (0..<14).map { D.addDays(D.today, $0) } }
@@ -270,6 +273,7 @@ struct AddPlanView: View {
             }
             .onChange(of: cinemaName) { _, _ in pickTime() }
         }
+        .clashQuestion($clashAsk) { dismiss() }
     }
 
     // MARK: Cinema
@@ -342,7 +346,10 @@ struct AddPlanView: View {
             if !times.isEmpty {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 66), spacing: 8)], alignment: .leading, spacing: 8) {
                     ForEach(times) { s in
-                        Button { time = s.time } label: { TimeChip(time: s.time, selected: s.time == time, version: s.version) }
+                        Button { time = s.time } label: {
+                            TimeChip(time: s.time, selected: s.time == time, version: s.version,
+                                     clash: filmId.map { !store.clashes($0, day: day, time: s.time).isEmpty } ?? false)
+                        }
                             .buttonStyle(.plain)
                     }
                 }
@@ -390,7 +397,10 @@ struct AddPlanView: View {
                                     Button {
                                         cinemaName = name
                                         time = s.time
-                                    } label: { TimeChip(time: s.time, selected: false, version: s.version) }
+                                    } label: {
+                                        TimeChip(time: s.time, selected: false, version: s.version,
+                                                 clash: filmId.map { !store.clashes($0, day: day, time: s.time).isEmpty } ?? false)
+                                    }
                                     .buttonStyle(.plain)
                                 }
                             }
@@ -462,8 +472,11 @@ struct AddPlanView: View {
 
     private func save() {
         guard let f = film else { return }
-        store.planFilm(f, day: day, time: time, cinemaName: cinemaName)
-        dismiss()
+        if let q = store.requestPlan(f, day: day, time: time, cinemaName: cinemaName) {
+            clashAsk = q
+        } else {
+            dismiss()
+        }
     }
 }
 
@@ -515,6 +528,8 @@ struct TimeChip: View {
     let time: String
     let selected: Bool
     var version: String? = nil
+    /// Overlaps another of your plans that day (shown in orange).
+    var clash = false
 
     var body: some View {
         VStack(spacing: 1) {
@@ -526,9 +541,14 @@ struct TimeChip: View {
         }
             .frame(minWidth: 58)
             .padding(.horizontal, 8).padding(.vertical, version == nil ? 8 : 4)
-            .background(selected ? Color.theme : Color.theme.opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
-            .foregroundStyle(selected ? Color.white : Color.theme)
+            .background(selected ? (clash ? Color.orange : Color.theme) : (clash ? Color.orange.opacity(0.12) : Color.theme.opacity(0.12)),
+                        in: RoundedRectangle(cornerRadius: 10))
+            .overlay(alignment: .topTrailing) {
+                if clash { Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 9)).offset(x: 3, y: -3) }
+            }
+            .foregroundStyle(selected ? Color.white : (clash ? Color.orange : Color.theme))
             .accessibilityAddTraits(selected ? .isSelected : [])
+            .accessibilityHint(clash ? String(localized: "Overlaps another of your plans") : "")
     }
 }
 
@@ -600,6 +620,7 @@ struct CheckInView: View {
     @State private var newStart = Date()
     @State private var cinemaName = ""
     @State private var ready = false
+    @State private var clashAsk: ClashQuestion?
 
     private var film: Film? { store.index[checkIn.id] }
 
@@ -669,6 +690,7 @@ struct CheckInView: View {
             }
             .onAppear(perform: setUp)
         }
+        .clashQuestion($clashAsk) { dismiss() }
     }
 
     private func setUp() {
@@ -690,7 +712,10 @@ struct CheckInView: View {
             store.setCompanions(f.id, with)
         } else {
             let s = D.stampString(newStart)
-            store.planFilm(f, day: s.day, time: s.time, cinemaName: cinemaName)
+            if let q = store.requestPlan(f, day: s.day, time: s.time, cinemaName: cinemaName) {
+                clashAsk = q
+                return
+            }
         }
         dismiss()
     }

@@ -46,6 +46,8 @@ final class Store {
     /// The week's releases slideshow, and a cinema, opened from a notification.
     var releasesWeek: EditTarget?
     var openCinema: EditTarget?
+    /// Bumped when What's new items are hidden, so the list and the badge refresh.
+    var inboxVersion = 0
     /// An invitation opened from a slothcinema://invite link, shown as a sheet.
     var receivedInvite: ReceivedInvite?
     var linkedFileName: String? = UserDefaults.standard.string(forKey: "linkedName")
@@ -280,7 +282,7 @@ final class Store {
                                 start: start,
                                 end: start.addingTimeInterval(TimeInterval(minutes * 60)),
                                 location: address.isEmpty ? p.cn : p.cn + ", " + address,
-                                notes: [film?.dir.map { String(localized: "Directed by \($0)") }, film?.syn, String(localized: "Planned in Sloth Cinema")].compactMap { $0 }.joined(separator: "\n\n"))
+                                notes: [film?.dir.map { String(localized: "Directed by \($0)") }, film?.story, String(localized: "Planned in Sloth Cinema")].compactMap { $0 }.joined(separator: "\n\n"))
         }
         CalendarSync.shared.sync(items)
     }
