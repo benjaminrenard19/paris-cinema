@@ -8,7 +8,9 @@ struct WelcomeView: View {
 
     @AppStorage("userName") private var userName = ""
     @AppStorage("weekSort") private var sortRaw = WeekSort.standard.rawValue
+    @AppStorage("filmsShow") private var showRaw = FilmsShow.recent.rawValue
     @State private var step = 0
+    private let lastStep = 4
     @State private var name = ""
     @FocusState private var typing: Bool
 
@@ -17,14 +19,22 @@ struct WelcomeView: View {
             VStack(spacing: 0) {
                 switch step {
                 case 0: nameStep
-                case 1: FavouriteCinemasList(intro: String(localized: "Star the cinemas you go to. They come first everywhere, with their session times."))
-                case 2: List { VersionQuestions() }
+                case 1: Form {
+                    AnimalAndBirthdayFields()
+                    Section {
+                        CompanionPicker(selected: .constant([]), title: "Who do you usually go with?")
+                    } footer: {
+                        Text("Tick them when you mark a film as seen. Your stats and year review then name your best cinema buddy.")
+                    }
+                }
+                case 2: FavouriteCinemasList(intro: String(localized: "Star the cinemas you go to. They come first everywhere, with their session times."))
+                case 3: List { VersionQuestions() }
                 default: sortStep
                 }
                 Button {
                     next()
                 } label: {
-                    Text(step < 3 ? String(localized: "Next") : String(localized: "Start"))
+                    Text(step < lastStep ? String(localized: "Next") : String(localized: "Start"))
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
@@ -53,8 +63,9 @@ struct WelcomeView: View {
     private var title: String {
         switch step {
         case 0: return String(localized: "Welcome")
-        case 1: return String(localized: "Your cinemas")
-        case 2: return String(localized: "VO or VF?")
+        case 1: return String(localized: "About you")
+        case 2: return String(localized: "Your cinemas")
+        case 3: return String(localized: "VO or VF?")
         default: return String(localized: "Your Films page")
         }
     }
@@ -86,6 +97,21 @@ struct WelcomeView: View {
     private var sortStep: some View {
         List {
             Section {
+                ForEach(FilmsShow.allCases) { m in
+                    Button { showRaw = m.rawValue } label: {
+                        HStack {
+                            Text(m.label).foregroundStyle(.primary)
+                            Spacer()
+                            if showRaw == m.rawValue { Image(systemName: "checkmark").foregroundStyle(Color.theme) }
+                        }
+                    }
+                }
+            } header: {
+                Text("Films page shows")
+            } footer: {
+                Text("Also used for the weekly releases slideshow. One tap on Films changes it.")
+            }
+            Section {
                 ForEach(WeekSort.allCases) { s in
                     Button { sortRaw = s.rawValue } label: {
                         HStack {
@@ -105,7 +131,7 @@ struct WelcomeView: View {
 
     private func next() {
         if step == 0 { userName = name.trimmingCharacters(in: .whitespaces) }
-        if step < 3 { withAnimation { step += 1 } } else { finish() }
+        if step < lastStep { withAnimation { step += 1 } } else { finish() }
     }
 
     private func finish() {
@@ -168,7 +194,11 @@ struct ProfileView: View {
     @AppStorage("weekSort") private var sortRaw = WeekSort.standard.rawValue
     @AppStorage("filmsShow") private var showRaw = FilmsShow.recent.rawValue
     @AppStorage("hideSeen") private var hideSeen = true
+    @AppStorage("animal") private var animal = Animal.sloth
+    @AppStorage("birthday") private var birthday = ""
     @State private var scope = 0
+
+    private var birthdayLabel: String { D.fmt("2024-" + birthday, "d MMMM") }
     @State private var year = D.cal.component(.year, from: Date())
     @State private var month = D.cal.component(.month, from: Date())
     @State private var story: StatsPeriod?
@@ -197,6 +227,11 @@ struct ProfileView: View {
                         .navigationTitle("My cinemas")
                 } label: {
                     LabeledContent("My cinemas", value: store.myCinemas.isEmpty ? String(localized: "None yet") : "\(store.myCinemas.count)")
+                }
+                NavigationLink {
+                    Form { AnimalAndBirthdayFields() }.navigationTitle("Your animal and birthday")
+                } label: {
+                    LabeledContent("Your animal and birthday", value: animal + (birthday.isEmpty ? "" : "  🎂 " + birthdayLabel))
                 }
                 NavigationLink {
                     CompanionsEditor().navigationTitle("People you go with")

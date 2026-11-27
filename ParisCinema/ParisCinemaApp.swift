@@ -6,8 +6,12 @@ struct ParisCinemaApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
-        URLCache.shared = URLCache(memoryCapacity: 50_000_000, diskCapacity: 300_000_000)
+        // Posters stay on disk; only a little is kept in memory, so iOS doesn't close the app in the background.
+        URLCache.shared = URLCache(memoryCapacity: 16_000_000, diskCapacity: 300_000_000)
         Notifier.shared.setUp()
+        NotificationCenter.default.addObserver(forName: UIApplication.didReceiveMemoryWarningNotification, object: nil, queue: .main) { _ in
+            MainActor.assumeIsolated { ParisCinemaApp.trimMemory() }
+        }
     }
 
     var body: some Scene {
@@ -21,7 +25,10 @@ struct ParisCinemaApp: App {
                 }
         }
         .onChange(of: scenePhase, initial: true) { _, phase in
-            if phase == .background { store.scheduleBackgroundRefresh() }
+            if phase == .background {
+                store.scheduleBackgroundRefresh()
+                ParisCinemaApp.trimMemory()
+            }
             guard phase == .active else { return }
             Theme.shared.apply()
             store.refreshFromLinkedFile()
@@ -30,6 +37,14 @@ struct ParisCinemaApp: App {
         .backgroundTask(.appRefresh(AlertPrefs.refreshTask)) {
             await store.backgroundRefresh()
         }
+    }
+
+    /// Empties the in-memory poster cache (the copies on disk stay).
+    static func trimMemory() {
+        let cache = URLCache.shared
+        let capacity = cache.memoryCapacity
+        cache.memoryCapacity = 0
+        cache.memoryCapacity = capacity
     }
 }
 

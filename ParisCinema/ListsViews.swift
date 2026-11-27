@@ -322,6 +322,7 @@ struct DataView: View {
     @AppStorage("tutorialSeen") private var tutorialSeen = true
     @AppStorage("welcomeDone") private var welcomeDone = true
     @AppStorage("userName") private var userName = ""
+    @AppStorage("animal") private var animal = Animal.sloth
     @AppStorage("versionPref") private var versionPref = "any"
     @AppStorage("versionMust") private var versionMust = false
     @AppStorage("hideSeen") private var hideSeen = true
@@ -353,7 +354,7 @@ struct DataView: View {
                         ProfileView()
                     } label: {
                         HStack(spacing: 12) {
-                            Text("🦥").font(.largeTitle)
+                            Text(animal).font(.largeTitle)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(userName.isEmpty ? String(localized: "My profile") : userName).font(.headline)
                                 Text("Name, cinemas, habits and all-time stats").font(.caption).foregroundStyle(.secondary)

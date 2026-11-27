@@ -631,3 +631,24 @@
 "Back to my week" = "Revenir à ma semaine";
 "Mark as seen" = "Marquer comme vu";
 "Hide" = "Masquer";
+
+/* Releases autoplay, seasons, birthday, your animal */
+"Pause" = "Pause";
+"Play" = "Lecture";
+"Tap the poster to pause · scroll for cinemas and story" = "Touchez l'affiche pour mettre en pause · faites défiler pour les cinémas et l'histoire";
+"Paused · tap the poster to play" = "En pause · touchez l'affiche pour reprendre";
+"No sessions known yet. They usually arrive the day before release." = "Pas encore de séances connues. Elles arrivent souvent la veille de la sortie.";
+"and %lld more" = "et %lld autres";
+"About you" = "Vous";
+"Also used for the weekly releases slideshow. One tap on Films changes it." = "Sert aussi pour le diaporama des sorties de la semaine. Un geste sur Films suffit pour changer.";
+"Hang it from the curtain rod instead of the sloth" = "L'accrocher à la tringle à la place du paresseux";
+"Happy birthday!" = "Joyeux anniversaire !";
+"Happy birthday, %@!" = "Joyeux anniversaire, %@ !";
+"It's your profile picture, and it can take the sloth's place on the stage of the Films page." = "C'est votre photo de profil, et il peut prendre la place du paresseux sur la scène de la page Films.";
+"Tell Sloth Cinema my birthday" = "Donner ma date d'anniversaire";
+"That day, the stage throws you a party. No year needed." = "Ce jour-là, la scène vous fait la fête. Pas besoin de l'année.";
+"Who do you usually go with?" = "Avec qui allez-vous d'habitude au cinéma ?";
+"Your animal" = "Votre animal";
+"Your animal and birthday" = "Votre animal et votre anniversaire";
+"Your birthday" = "Votre anniversaire";
+"🎂 Sloth Cinema 🎈" = "🎂 Sloth Cinema 🎈";

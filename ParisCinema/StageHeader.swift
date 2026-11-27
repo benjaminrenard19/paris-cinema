@@ -4,8 +4,16 @@ import SwiftUI
 /// a sloth hanging from the curtain rod, and your name.
 struct StageHeader: View {
     let name: String
+    @AppStorage("animal") private var animal = Animal.sloth
+    @AppStorage("animalOnStage") private var animalOnStage = true
+    @AppStorage("birthday") private var birthday = ""
+
+    private var mood: StageMood { StageMood.now(birthday: birthday) }
 
     private var greeting: String {
+        if mood == .birthday {
+            return name.isEmpty ? String(localized: "Happy birthday!") : String(localized: "Happy birthday, \(name)!")
+        }
         let hour = D.cal.component(.hour, from: Date())
         let base: String
         switch hour {
@@ -55,9 +63,17 @@ struct StageHeader: View {
                 ForEach([w * 0.17, w * 0.83], id: \.self) { x in
                     Circle().fill(Color(hex: 0xE8B931)).frame(width: 9, height: 9).position(x: x, y: h * 0.205)
                 }
-                HangingSloth()
-                    .frame(width: 54, height: 64)
-                    .position(x: w / 2, y: h * 0.205 - 3 + 32)
+                if animal != Animal.sloth && animalOnStage {
+                    HangingAnimal(emoji: animal)
+                        .frame(width: 54, height: 64)
+                        .position(x: w / 2, y: h * 0.205 - 1 + 30)
+                } else {
+                    HangingSloth()
+                        .frame(width: 54, height: 64)
+                        .position(x: w / 2, y: h * 0.205 - 3 + 32)
+                }
+                // The season (or your birthday) on stage.
+                StageEffects(mood: mood, lights: StageMood.isDecember && mood != .birthday)
                 // On stage.
                 VStack(spacing: 2) {
                     Text(greeting)
@@ -65,7 +81,7 @@ struct StageHeader: View {
                         .foregroundStyle(.white)
                         .lineLimit(1).minimumScaleFactor(0.6)
                         .padding(.horizontal, w * 0.25)
-                    Text("Sloth Cinema")
+                    Text(mood == .birthday ? "🎂 Sloth Cinema 🎈" : "Sloth Cinema")
                         .font(.caption2.weight(.semibold)).textCase(.uppercase).tracking(2.5)
                         .foregroundStyle(Color(hex: 0xE8B931))
                 }
