@@ -11,7 +11,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Get the latest version from GitHub"
-               scriptText = '# Sloth Cinema: get the latest version from GitHub before each build.&#10;# Your own changes (like the signing team) are kept with --autostash.&#10;cd "${PROJECT_DIR}" || exit 0&#10;if /usr/bin/git rev-parse --is-inside-work-tree &gt;/dev/null 2&gt;&amp;1; then&#10;  /usr/bin/git pull --rebase --autostash --quiet origin main &gt;&gt; "${TMPDIR:-/tmp}/sloth-cinema-pull.log" 2&gt;&amp;1 || true&#10;fi&#10;exit 0&#10;'
+               scriptText = "# Sloth Cinema: get the latest version from GitHub before each build.&#10;# Your own changes (like the signing team) are kept with --autostash.&#10;cd &quot;${PROJECT_DIR}&quot; || exit 0&#10;/usr/bin/git rev-parse --is-inside-work-tree &gt;/dev/null 2&gt;&amp;1 || exit 0&#10;LOG=&quot;${PROJECT_DIR}/.git/sloth-cinema-pull.log&quot;&#10;echo &quot;== $(date '+%Y-%m-%d %H:%M:%S') pull before build&quot; &gt;&gt; &quot;$LOG&quot;&#10;# A pull that was cut off leaves its stash in MERGE_AUTOSTASH, which blocks the next pull: keep it in the stash list.&#10;if [ -f .git/MERGE_AUTOSTASH ] &amp;&amp; [ ! -f .git/index.lock ]; then&#10;  /usr/bin/git stash store -m &quot;autostash kept after an interrupted pull&quot; &quot;$(cat .git/MERGE_AUTOSTASH)&quot; &gt;&gt; &quot;$LOG&quot; 2&gt;&amp;1&#10;  rm -f .git/MERGE_AUTOSTASH&#10;fi&#10;for try in 1 2 3; do&#10;  /usr/bin/git -c user.name=&quot;Sloth Cinema&quot; -c user.email=sloth@localhost pull --rebase --autostash origin main &gt;&gt; &quot;$LOG&quot; 2&gt;&amp;1 &amp;&amp; break&#10;  echo &quot;pull failed (try $try)&quot; &gt;&gt; &quot;$LOG&quot;&#10;  sleep 2&#10;done&#10;exit 0&#10;"
                shellToInvoke = "/bin/zsh">
                <EnvironmentBuildable>
                   <BuildableReference
@@ -30,7 +30,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Install on the other iPhones"
-               scriptText = '# Sloth Cinema: install the same build on your other iPhones too (see scripts/mac/install-others.sh).&#10;[ "${PLATFORM_NAME}" = "iphoneos" ] || exit 0&#10;cd "${PROJECT_DIR}" || exit 0&#10;nohup /bin/bash scripts/mac/install-others.sh "${CODESIGNING_FOLDER_PATH}" "${TARGET_DEVICE_IDENTIFIER}" &gt;&gt; "${HOME}/Library/Logs/SlothCinema-install.log" 2&gt;&amp;1 &amp;&#10;exit 0&#10;'
+               scriptText = "# Sloth Cinema: install the same build on your other iPhones too (see scripts/mac/install-others.sh).&#10;[ &quot;${PLATFORM_NAME}&quot; = &quot;iphoneos&quot; ] || exit 0&#10;cd &quot;${PROJECT_DIR}&quot; || exit 0&#10;nohup /bin/bash scripts/mac/install-others.sh &quot;${CODESIGNING_FOLDER_PATH}&quot; &quot;${TARGET_DEVICE_IDENTIFIER}&quot; &gt;&gt; &quot;${HOME}/Library/Logs/SlothCinema-install.log&quot; 2&gt;&amp;1 &amp;&#10;exit 0&#10;"
                shellToInvoke = "/bin/zsh">
                <EnvironmentBuildable>
                   <BuildableReference
@@ -52,12 +52,12 @@
             buildForArchiving = "YES"
             buildForAnalyzing = "YES">
             <BuildableReference
-                     BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "A1C1E0000000000000000006"
-                     BuildableName = "ParisCinema.app"
-                     BlueprintName = "ParisCinema"
-                     ReferencedContainer = "container:ParisCinema.xcodeproj">
-                  </BuildableReference>
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A1C1E0000000000000000006"
+               BuildableName = "ParisCinema.app"
+               BlueprintName = "ParisCinema"
+               ReferencedContainer = "container:ParisCinema.xcodeproj">
+            </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
@@ -81,12 +81,12 @@
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
-                     BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "A1C1E0000000000000000006"
-                     BuildableName = "ParisCinema.app"
-                     BlueprintName = "ParisCinema"
-                     ReferencedContainer = "container:ParisCinema.xcodeproj">
-                  </BuildableReference>
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A1C1E0000000000000000006"
+            BuildableName = "ParisCinema.app"
+            BlueprintName = "ParisCinema"
+            ReferencedContainer = "container:ParisCinema.xcodeproj">
+         </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
@@ -98,12 +98,12 @@
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
-                     BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "A1C1E0000000000000000006"
-                     BuildableName = "ParisCinema.app"
-                     BlueprintName = "ParisCinema"
-                     ReferencedContainer = "container:ParisCinema.xcodeproj">
-                  </BuildableReference>
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A1C1E0000000000000000006"
+            BuildableName = "ParisCinema.app"
+            BlueprintName = "ParisCinema"
+            ReferencedContainer = "container:ParisCinema.xcodeproj">
+         </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction

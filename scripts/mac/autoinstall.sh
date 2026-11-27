@@ -21,7 +21,12 @@ say() { echo "$(date '+%Y-%m-%d %H:%M') $*"; }
 notify() { /usr/bin/osascript -e "display notification \"$1\" with title \"Sloth Cinema\"" >/dev/null 2>&1 || true; }
 
 cd "$REPO" || exit 1
-git pull --rebase --autostash --quiet || say "git pull failed, building what is here"
+# A pull that was cut off leaves its stash in MERGE_AUTOSTASH, which blocks the next pull: keep it in the stash list.
+if [ -f .git/MERGE_AUTOSTASH ] && [ ! -f .git/index.lock ]; then
+  git stash store -m "autostash kept after an interrupted pull" "$(cat .git/MERGE_AUTOSTASH)" && rm -f .git/MERGE_AUTOSTASH
+fi
+git -c user.name="Sloth Cinema" -c user.email=sloth@localhost pull --rebase --autostash --quiet \
+  || say "git pull failed, building what is here"
 HEAD_NOW="$(git rev-parse HEAD)"
 LAST="$(cat "$STAMP" 2>/dev/null || echo none)"
 
