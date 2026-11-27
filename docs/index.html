@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sloth Cinema · Paris cinemas this week</title>
+<meta name="description" content="Every film in Paris cinemas this week, with session times, VO or VF.">
+<meta name="theme-color" content="#0b0b0c">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦥</text></svg>">
+<style>
+:root{--bg:#0b0b0c;--card:#17171a;--line:#2a2a2e;--text:#f4f4f5;--dim:#9a9aa2;--red:#a3142f;--deep:#5c0b1b;--gold:#e8b931;--soft:#ff6b81}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+a{color:var(--soft)}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px 48px}
+.stage{position:relative;height:200px;border-radius:0 0 24px 24px;overflow:hidden;background:linear-gradient(#050505,#1a1a1a);margin:0 -16px 18px}
+.stage .cur{position:absolute;top:0;bottom:0;width:24%;background:repeating-linear-gradient(90deg,var(--deep) 0 14px,var(--red) 14px 26px)}
+.stage .l{left:0}.stage .r{right:0}
+.stage .val{position:absolute;left:0;right:0;top:0;height:26px;background:var(--red);border-bottom:2px solid var(--gold)}
+.stage .rod{position:absolute;left:17%;right:17%;top:38px;height:4px;border-radius:2px;background:linear-gradient(#f6d46b,#b8871a)}
+.stage svg{position:absolute;left:50%;top:34px;margin-left:-27px;animation:sway 2.6s ease-in-out infinite alternate;transform-origin:50% 4px}
+@keyframes sway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+@media (prefers-reduced-motion:reduce){.stage svg{animation:none}}
+.stage h1{position:absolute;left:0;right:0;bottom:34px;margin:0;text-align:center;font:700 26px Georgia,serif}
+.stage p{position:absolute;left:0;right:0;bottom:12px;margin:0;text-align:center;font-size:11px;letter-spacing:3px;color:var(--gold);font-weight:600;text-transform:uppercase}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.seg{display:flex;background:var(--card);border-radius:10px;padding:3px;gap:3px}
+.seg button{border:0;background:none;border-radius:8px;padding:8px 12px;font-size:14px;font-weight:600;min-height:38px}
+.seg button[aria-pressed=true]{background:var(--red)}
+input[type=search],select{background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 12px;font-size:15px;min-height:40px}
+input[type=search]{flex:1;min-width:200px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{border:0;border-radius:16px;padding:7px 12px;font-size:13px;font-weight:600;white-space:nowrap;background:#24242a;min-height:34px}
+.chip[aria-pressed=true]{background:var(--soft);color:#000}
+.count{color:var(--dim);font-size:13px;margin:6px 2px 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+.film{background:var(--card);border:0;border-radius:14px;padding:0;text-align:left;overflow:hidden;display:flex;flex-direction:column}
+.film .po{aspect-ratio:2/3;width:100%;object-fit:cover;background:#2a2a30;display:block}
+.film .ph{aspect-ratio:2/3;display:flex;align-items:flex-end;padding:8px;font-weight:800;font-size:13px;background:linear-gradient(135deg,var(--red),var(--deep))}
+.film .tx{padding:8px 10px 10px}
+.film b{display:block;font-size:14px;line-height:1.25}
+.film small{display:block;color:var(--dim);font-size:12px;margin-top:3px}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:9px;background:rgba(255,107,129,.16);color:var(--soft);margin:4px 4px 0 0}
+dialog{border:0;padding:0;background:var(--bg);color:var(--text);width:min(720px,100vw);max-height:92vh;border-radius:18px}
+dialog::backdrop{background:rgba(0,0,0,.7)}
+.sheet{padding:18px}
+.top{display:flex;gap:16px}
+.top img,.top .ph{width:130px;flex-shrink:0;border-radius:12px;aspect-ratio:2/3;object-fit:cover}
+.top h2{margin:0 0 4px;font-size:22px}
+.meta{color:var(--dim);font-size:14px}
+.x{position:sticky;top:0;float:right;border:0;background:#2a2a30;border-radius:18px;width:36px;height:36px;font-size:18px}
+h3{font-size:13px;text-transform:uppercase;color:var(--dim);margin:18px 0 8px;letter-spacing:.5px}
+.days{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.days::-webkit-scrollbar{display:none}
+.days button{border:0;background:var(--card);border-radius:10px;padding:8px 12px;font-size:13px;font-weight:600;white-space:nowrap;min-height:38px}
+.days button[aria-pressed=true]{background:var(--red)}
+.cin{background:var(--card);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.cin .n{font-weight:700}.cin .n.fav{color:var(--gold)}
+.cin .a{color:var(--dim);font-size:12px}
+.times{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.t{background:#24242a;border-radius:8px;padding:5px 9px;font-size:14px;font-weight:600;text-align:center;min-width:56px}
+.t i{display:block;font-style:normal;font-size:10px;color:var(--soft)}
+.star{border:0;background:none;color:var(--dim);font-size:18px;float:right;min-width:36px;min-height:36px}
+.star[aria-pressed=true]{color:var(--gold)}
+.note{background:var(--card);border-radius:12px;padding:14px;margin:22px 0 0;color:var(--dim);font-size:13px}
+.empty{color:var(--dim);padding:30px 4px}
+@media (max-width:520px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.top img,.top .ph{width:100px}.stage{height:180px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="stage" aria-label="Sloth Cinema">
+    <div class="cur l"></div><div class="cur r"></div><div class="val"></div><div class="rod"></div>
+    <svg width="54" height="64" viewBox="0 0 54 64" aria-hidden="true">
+      <ellipse cx="20" cy="56" rx="4" ry="5.4" fill="#8a6a4f"/><ellipse cx="34" cy="56" rx="4" ry="5.4" fill="#8a6a4f"/>
+      <ellipse cx="27" cy="44" rx="14" ry="14" fill="#8a6a4f"/><ellipse cx="27" cy="47" rx="8" ry="9" fill="#ad8b6d"/>
+      <path d="M20 35 Q11 20 14.5 4 M34 35 Q43 20 39.5 4" stroke="#8a6a4f" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <ellipse cx="27" cy="27" rx="13" ry="11" fill="#ad8b6d"/><ellipse cx="27" cy="28.6" rx="10" ry="7.3" fill="#ede0ca"/>
+      <ellipse cx="22" cy="27.8" rx="4" ry="2" fill="#38281d" transform="rotate(-20 22 27.8)"/><ellipse cx="32" cy="27.8" rx="4" ry="2" fill="#38281d" transform="rotate(20 32 27.8)"/>
+      <circle cx="23" cy="27.4" r="1.2" fill="#000"/><circle cx="31" cy="27.4" r="1.2" fill="#000"/><ellipse cx="27" cy="31" rx="2" ry="1.3" fill="#38281d"/>
+    </svg>
+    <h1 data-t="hello">Sloth Cinema</h1>
+    <p data-t="tagline">Every film in Paris cinemas</p>
+  </header>
+
+  <div class="bar">
+    <div class="seg" role="group" aria-label="Show">
+      <button data-mode="now" aria-pressed="true" data-t="now">Showing this week</button>
+      <button data-mode="new" aria-pressed="false" data-t="new">New this week</button>
+      <button data-mode="classics" aria-pressed="false" data-t="classics">Classics</button>
+    </div>
+    <input type="search" id="q" aria-label="Search" data-tp="search" placeholder="Title, director, actor">
+    <select id="cinema" aria-label="Cinema"></select>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="count" id="count"></div>
+  <main class="grid" id="grid"><p class="empty" data-t="loading">Loading the films…</p></main>
+  <p class="note"><span data-t="about">Session times come from the cinemas' websites and AlloCiné, refreshed every morning. Films, posters and ratings: AlloCiné. Star a cinema to put it first. The iPhone app is coming to the App Store.</span> <a href="https://github.com/benjaminrenard19/paris-cinema">GitHub</a></p>
+</div>
+
+<dialog id="sheet"><div class="sheet" id="sheetBody"></div></dialog>
+
+<script>
+const DATA = 'https://raw.githubusercontent.com/benjaminrenard19/paris-cinema/main/data/paris-cinema.json';
+const FR = navigator.language.toLowerCase().startsWith('fr');
+const TERMS = {"action": "action", "adventure": "aventure", "algeria": "Algérie", "animation": "animation", "argentina": "Argentine", "art": "art", "australia": "Australie", "austria": "Autriche", "azerbaijan": "Azerbaïdjan", "ballet": "ballet", "belgium": "Belgique", "biopic": "biopic", "bolivia": "Bolivie", "brazil": "Brésil", "bulgaria": "Bulgarie", "canada": "Canada", "central african republic": "République centrafricaine", "chad": "Tchad", "chile": "Chili", "china": "Chine", "colombia": "Colombie", "comedy": "comédie", "comedy show": "spectacle comique", "comedy-drama": "comédie dramatique", "concert": "concert", "crime": "policier", "croatia": "Croatie", "cuba": "Cuba", "cyprus": "Chypre", "czech republic": "République tchèque", "denmark": "Danemark", "documentary": "documentaire", "drama": "drame", "e-sports": "e-sport", "egypt": "Égypte", "estonia": "Estonie", "experimental": "expérimental", "family": "famille", "fantasy": "fantastique", "finland": "Finlande", "france": "France", "georgia": "Géorgie", "germany": "Allemagne", "greece": "Grèce", "haiti": "Haïti", "historical": "historique", "historical drama": "drame historique", "history": "histoire", "hong kong": "Hong Kong", "horror": "horreur", "horror comedy": "comédie horrifique", "hungary": "Hongrie", "iceland": "Islande", "india": "Inde", "indian film": "film indien", "indonesia": "Indonésie", "iran": "Iran", "iraq": "Irak", "ireland": "Irlande", "israel": "Israël", "italy": "Italie", "japan": "Japon", "jordan": "Jordanie", "kazakhstan": "Kazakhstan", "kids": "jeunesse", "latvia": "Lettonie", "lebanon": "Liban", "legal drama": "drame judiciaire", "lithuania": "Lituanie", "live event": "événement en direct", "luxembourg": "Luxembourg", "malta": "Malte", "martial arts": "arts martiaux", "mexico": "Mexique", "miscellaneous": "divers", "morocco": "Maroc", "music": "musique", "musical": "comédie musicale", "musical comedy": "comédie musicale", "musical drama": "drame musical", "musical theatre": "théâtre musical", "mystery": "mystère", "nepal": "Népal", "netherlands": "Pays-Bas", "new zealand": "Nouvelle-Zélande", "nigeria": "Nigeria", "north macedonia": "Macédoine du Nord", "norway": "Norvège", "opera": "opéra", "palestine": "Palestine", "paraguay": "Paraguay", "peru": "Pérou", "philippines": "Philippines", "poland": "Pologne", "portugal": "Portugal", "qatar": "Qatar", "romance": "romance", "romania": "Roumanie", "russia": "Russie", "saudi arabia": "Arabie saoudite", "sci-fi": "science-fiction", "senegal": "Sénégal", "serbia": "Serbie", "shorts": "courts métrages", "singapore": "Singapour", "slovakia": "Slovaquie", "slovenia": "Slovénie", "south africa": "Afrique du Sud", "south korea": "Corée du Sud", "spain": "Espagne", "special screening": "séance spéciale", "sport": "sport", "spy": "espionnage", "spy thriller": "thriller d’espionnage", "sri lanka": "Sri Lanka", "sudan": "Soudan", "sweden": "Suède", "switzerland": "Suisse", "syria": "Syrie", "taiwan": "Taïwan", "thailand": "Thaïlande", "theatre": "théâtre", "thriller": "thriller", "travel": "voyage", "tunisia": "Tunisie", "turkey": "Turquie", "uk": "Royaume-Uni", "ukraine": "Ukraine", "uruguay": "Uruguay", "usa": "États-Unis", "ussr": "URSS", "venezuela": "Venezuela", "vietnam": "Viêt Nam", "war": "guerre", "war drama": "drame de guerre", "western": "western"};
+const T = {
+  hello: ['Sloth Cinema', 'Sloth Cinema'], tagline: ['Every film in Paris cinemas', 'Tous les films des cinémas parisiens'],
+  now: ['Showing this week', 'À l’affiche'], new: ['New this week', 'Sorties de la semaine'], classics: ['Classics', 'Classiques'],
+  search: ['Title, director, actor', 'Titre, réalisation, acteur'], loading: ['Loading the films…', 'Chargement des films…'],
+  all: ['All cinemas', 'Tous les cinémas'], allGenres: ['All genres', 'Tous les genres'],
+  films: ['films', 'films'], film: ['film', 'film'], none: ['No film matches.', 'Aucun film ne correspond.'],
+  story: ['Story', 'Histoire'], sessions: ['Sessions', 'Séances'], nosessions: ['No sessions known for this day.', 'Pas de séance connue ce jour-là.'],
+  today: ['Today', 'Aujourd’hui'], tomorrow: ['Tomorrow', 'Demain'], critics: ['Critics', 'Presse'], audience: ['Audience', 'Spectateurs'],
+  dir: ['Director', 'Réalisation'], cast: ['Cast', 'Distribution'], trailer: ['Trailer', 'Bande-annonce'], out: ['Out', 'Sortie le'],
+  classic: ['Classic', 'Classique'], fav: ['My cinema', 'Mon cinéma'], close: ['Close', 'Fermer'], error: ['The films couldn’t be loaded. Try again later.', 'Impossible de charger les films. Réessayez plus tard.'],
+  about: ['Session times come from the cinemas’ websites and AlloCiné, refreshed every morning. Films, posters and ratings: AlloCiné. Star a cinema to put it first. The iPhone app is coming to the App Store.',
+          'Les séances viennent des sites des cinémas et d’AlloCiné, mises à jour chaque matin. Films, affiches et notes : AlloCiné. Mettez une étoile à un cinéma pour le voir en premier. L’app iPhone arrive bientôt sur l’App Store.']
+};
+const t = (k) => (T[k] || [k, k])[FR ? 1 : 0];
+document.documentElement.lang = FR ? 'fr' : 'en';
+document.querySelectorAll('[data-t]').forEach((e) => { e.textContent = t(e.dataset.t); });
+document.querySelectorAll('[data-tp]').forEach((e) => { e.placeholder = t(e.dataset.tp); });
+
+const CATS = { B: ['Blockbuster', 'Blockbuster'], A: ['Animation', 'Animation'], C: ['Comedy', 'Comédie'], D: ['Drama', 'Drame'], T: ['Thriller / action', 'Thriller / action'],
+  V: ['Documentary', 'Documentaire'], M: ['Biopic & music', 'Biopic & musique'], E: ['Event', 'Événement'], R: ['Classic', 'Classique'], O: ['Other', 'Autre'] };
+const SIZE = { W: 0, M: 1, L: 2, X: 3 };
+const fold = (s) => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+const term = (s) => cap(FR ? (TERMS[s.trim().toLowerCase()] || s.trim()) : s.trim());
+const genres = (f) => (f.genre || '').split(',').map((g) => g.trim()).filter(Boolean);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+function parisNow() {
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })
+    .formatToParts(new Date()).map((x) => [x.type, x.value]));
+  return { day: `${p.year}-${p.month}-${p.day}`, time: `${p.hour === '24' ? '00' : p.hour}:${p.minute}` };
+}
+const addDays = (d, n) => { const x = new Date(d + 'T12:00:00Z'); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); };
+const fmtDay = (d, opts) => new Date(d + 'T12:00:00Z').toLocaleDateString(FR ? 'fr-FR' : 'en-GB', { timeZone: 'UTC', ...opts });
+
+let feed = null, mode = 'now', genre = '', favs = [];
+try { favs = JSON.parse(localStorage.getItem('favCinemas') || '[]'); } catch (e) { favs = []; }
+const saveFavs = () => { try { localStorage.setItem('favCinemas', JSON.stringify(favs)); } catch (e) {} };
+
+async function load() {
+  try {
+    const r = await fetch(DATA, { cache: 'no-cache' });
+    feed = await r.json();
+  } catch (e) {
+    document.getElementById('grid').innerHTML = `<p class="empty">${esc(t('error'))}</p>`;
+    return;
+  }
+  const names = [...new Set(Object.values(feed.showtimes || {}).flatMap((s) => (s.cinemas || []).map((c) => c.name)))].sort((a, b) => a.localeCompare(b));
+  const sel = document.getElementById('cinema');
+  sel.innerHTML = `<option value="">${esc(t('all'))}</option>` + names.map((n) => `<option>${esc(n)}</option>`).join('');
+  sel.onchange = render;
+  render();
+  const m = location.hash.match(/^#film=(.+)$/);
+  if (m) open(decodeURIComponent(m[1]));
+}
+
+function showing(f, from, to, cinema) {
+  const s = feed.showtimes[f.id];
+  if (!s) return false;
+  return (s.cinemas || []).some((c) => (!cinema || c.name === cinema) && Object.keys(c.times || {}).some((d) => d >= from && d <= to));
+}
+
+function list() {
+  const now = parisNow(), end = addDays(now.day, 6), cinema = document.getElementById('cinema').value, q = fold(document.getElementById('q').value);
+  const week = (() => { const d = new Date(now.day + 'T12:00:00Z'); const back = (d.getUTCDay() + 4) % 7; return addDays(now.day, -back); })();
+  let out = feed.films.filter((f) => f.cat !== 'E');
+  if (q) out = out.filter((f) => fold([f.title, f.orig, f.dir, f.cast].join(' ')).includes(q));
+  if (mode === 'now') out = out.filter((f) => showing(f, now.day, end, cinema));
+  if (mode === 'new') out = out.filter((f) => f.week === week && !f.rep && (!cinema || showing(f, now.day, end, cinema)));
+  if (mode === 'classics') out = out.filter((f) => (f.rep || f.cat === 'R') && showing(f, now.day, end, cinema));
+  if (genre) out = out.filter((f) => genres(f).some((g) => g.toLowerCase() === genre));
+  const old = (f) => (f.rep || f.cat === 'R') ? 2 : f.date > now.day ? 1 : 0;   // new releases, then coming soon, then classics
+  return out.sort((a, b) => old(a) - old(b) || (SIZE[a.size] ?? 2) - (SIZE[b.size] ?? 2) || (b.date > a.date ? 1 : b.date < a.date ? -1 : 0));
+}
+
+function render() {
+  const all = list();
+  const counts = {};
+  all.forEach((f) => genres(f).forEach((g) => { const k = g.toLowerCase(); counts[k] = (counts[k] || 0) + 1; }));
+  const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 14);
+  document.getElementById('chips').innerHTML = `<button class="chip" data-g="" aria-pressed="${!genre}">${esc(t('allGenres'))}</button>` +
+    top.map(([g, n]) => `<button class="chip" data-g="${esc(g)}" aria-pressed="${genre === g}">${esc(term(g))} ${n}</button>`).join('');
+  document.querySelectorAll('.chip').forEach((b) => { b.onclick = () => { genre = b.dataset.g; render(); }; });
+  const shown = all;
+  document.getElementById('count').textContent = `${shown.length} ${shown.length === 1 ? t('film') : t('films')}`;
+  const grid = document.getElementById('grid');
+  if (!shown.length) { grid.innerHTML = `<p class="empty">${esc(t('none'))}</p>`; return; }
+  grid.innerHTML = shown.slice(0, 400).map((f) => `
+    <button class="film" data-id="${esc(f.id)}">
+      ${f.poster ? `<img class="po" loading="lazy" alt="" src="${esc(f.poster)}">` : `<div class="ph">${esc(f.title)}</div>`}
+      <span class="tx"><b>${esc(f.title)}</b>
+      <small>${esc([f.rep || f.cat === 'R' ? (f.orig || t('classic')) : fmtDay(f.date, { day: 'numeric', month: 'short' }), f.duration ? Math.floor(f.duration / 60) + 'h' + String(f.duration % 60).padStart(2, '0') : ''].filter(Boolean).join(' · '))}</small>
+      ${genres(f).slice(0, 3).map((g) => `<span class="tag">${esc(term(g))}</span>`).join('')}</span>
+    </button>`).join('');
+  grid.querySelectorAll('.film').forEach((b) => { b.onclick = () => open(b.dataset.id); });
+}
+
+function open(id, day) {
+  const f = feed.films.find((x) => x.id === id);
+  if (!f) return;
+  const now = parisNow(), s = feed.showtimes[id] || { cinemas: [] };
+  const days = [...new Set((s.cinemas || []).flatMap((c) => Object.keys(c.times || {})))].filter((d) => d >= now.day).sort().slice(0, 10);
+  day = day || days[0];
+  const label = (d) => d === now.day ? t('today') : d === addDays(now.day, 1) ? t('tomorrow') : fmtDay(d, { weekday: 'short', day: 'numeric', month: 'short' });
+  const rows = (s.cinemas || []).map((c) => {
+    const times = (c.times?.[day] || []).filter((x) => day > now.day || x >= now.time);
+    return { c, times, fav: favs.includes(c.name) };
+  }).filter((r) => r.times.length).sort((a, b) => (b.fav - a.fav) || a.c.name.localeCompare(b.c.name));
+  const ratings = [f.press ? `${t('critics')} ${f.press.toFixed(1)}` : '', f.spect ? `${t('audience')} ${f.spect.toFixed(1)}` : ''].filter(Boolean).join(' · ');
+  const body = document.getElementById('sheetBody');
+  body.innerHTML = `
+    <button class="x" aria-label="${esc(t('close'))}">✕</button>
+    <div class="top">
+      ${f.poster ? `<img alt="" src="${esc(f.poster)}">` : `<div class="ph">${esc(f.title)}</div>`}
+      <div>
+        <h2>${esc(f.title)}</h2>
+        <div class="meta">${esc([f.rep || f.cat === 'R' ? (f.orig || t('classic')) : `${t('out')} ${fmtDay(f.date, { day: 'numeric', month: 'long', year: 'numeric' })}`,
+          f.duration ? Math.floor(f.duration / 60) + 'h' + String(f.duration % 60).padStart(2, '0') : ''].filter(Boolean).join(' · '))}</div>
+        <div>${genres(f).map((g) => `<span class="tag">${esc(term(g))}</span>`).join('')}</div>
+        ${ratings ? `<div class="meta" style="margin-top:6px">${esc(ratings)}</div>` : ''}
+        ${f.dir ? `<div class="meta" style="margin-top:6px">${esc(t('dir'))}: ${esc(f.dir)}</div>` : ''}
+        ${f.cast ? `<div class="meta">${esc(t('cast'))}: ${esc(f.cast)}</div>` : ''}
+        <div style="margin-top:8px"><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(f.title + (FR ? ' bande annonce' : ' trailer'))}">${esc(t('trailer'))}</a>
+        ${f.ac ? ` · <a target="_blank" rel="noopener" href="https://www.allocine.fr/film/fichefilm_gen_cfilm=${f.ac}.html">AlloCiné</a>` : ''}</div>
+      </div>
+    </div>
+    ${f.syn ? `<h3>${esc(t('story'))}</h3><p style="margin:0">${esc(f.syn)}</p>` : ''}
+    <h3>${esc(t('sessions'))}</h3>
+    <div class="days">${days.map((d) => `<button data-d="${d}" aria-pressed="${d === day}">${esc(label(d))}</button>`).join('')}</div>
+    <div style="margin-top:10px">${rows.length ? rows.map((r) => `
+      <div class="cin">
+        <button class="star" data-c="${esc(r.c.name)}" aria-pressed="${r.fav}" aria-label="${esc(t('fav'))}">★</button>
+        <div class="n ${r.fav ? 'fav' : ''}">${esc(r.c.name)}</div><div class="a">${esc(r.c.address || '')}</div>
+        <div class="times">${r.times.map((x) => `<span class="t">${esc(x)}${r.c.ver?.[day]?.[x] ? `<i>${esc(r.c.ver[day][x])}</i>` : ''}</span>`).join('')}</div>
+      </div>`).join('') : `<p class="meta">${esc(t('nosessions'))}</p>`}</div>`;
+  body.querySelector('.x').onclick = () => document.getElementById('sheet').close();
+  body.querySelectorAll('.days button').forEach((b) => { b.onclick = () => open(id, b.dataset.d); });
+  body.querySelectorAll('.star').forEach((b) => { b.onclick = () => {
+    const n = b.dataset.c; favs = favs.includes(n) ? favs.filter((x) => x !== n) : [...favs, n]; saveFavs(); open(id, day);
+  }; });
+  const dlg = document.getElementById('sheet');
+  history.replaceState(null, '', '#film=' + encodeURIComponent(id));
+  if (!dlg.open) dlg.showModal();
+}
+
+document.querySelectorAll('[data-mode]').forEach((b) => { b.onclick = () => {
+  mode = b.dataset.mode; genre = '';
+  document.querySelectorAll('[data-mode]').forEach((x) => x.setAttribute('aria-pressed', x === b));
+  render();
+}; });
+let timer; document.getElementById('q').oninput = () => { clearTimeout(timer); timer = setTimeout(render, 150); };
+document.getElementById('sheet').addEventListener('click', (e) => { if (e.target.id === 'sheet') e.target.close(); });
+document.getElementById('sheet').addEventListener('close', () => history.replaceState(null, '', location.pathname));
+load();
+</script>
+</body>
+</html>
