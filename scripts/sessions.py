@@ -7,6 +7,7 @@
   python3 scripts/sessions.py balzac        # Le Balzac (cinemabalzac.com)
   python3 scripts/sessions.py grandrex      # Le Grand Rex (legrandrex.com)
   python3 scripts/sessions.py studio28      # Studio 28 (cinema-studio28.fr)
+  python3 scripts/sessions.py cineastes     # Le Cinéma des Cinéastes (cinema-des-cineastes.fr)
   python3 scripts/sessions.py webedia       # Max Linder, Luminor, Le Louxor, Les 7 Parnassiens,
                                             # Elysées Lincoln: their pages fill in the times in the
                                             # browser, so they are opened in headless Chrome
@@ -504,6 +505,74 @@ def studio28(col):
     print(f"{name}: {n} sessions over {len(days)} days")
 
 
+# ---------------------------------------------------------------- Le Cinéma des Cinéastes
+
+def cineastes_sessions(page, start):
+    """(title, [(date, "HH:MM", version)]) from one film page of cinema-des-cineastes.fr."""
+    title = re.search(r"<title>[^<]*?-\s*(.*?)</title>", page, re.S)
+    days = {}
+    for num, label in re.findall(r'class="day-trigger" id-day="(\d+)">(.*?)</button>', page, re.S):
+        m = re.search(r"(\d{1,2})\s+([a-zéû]+)", text(label).lower())
+        if not m:
+            continue
+        month = next((i + 1 for i, name in enumerate(MONTHS) if name.startswith(m.group(2).rstrip("."))), None)
+        if not month:
+            continue
+        year = start.year + (1 if month < start.month - 6 else 0)
+        try:
+            days[num] = datetime.date(year, month, int(m.group(1)))
+        except ValueError:
+            continue
+    out = []
+    for num, block in re.findall(r'<ul class="film-tickets-hours" id-day="(\d+)">(.*?)</ul>', page, re.S):
+        if num not in days:
+            continue
+        for hh, mm, lang in re.findall(r"\b([01]\d|2[0-3]):([0-5]\d)\s*(?:\(([^)]*)\))?", text(block)):
+            out.append((days[num], f"{hh}:{mm}", version(lang) if lang else None))
+    return (html.unescape(text(title.group(1))) if title else None), out
+
+
+def cineastes(col):
+    name, base = "Le Cinéma des Cinéastes", "https://cinema-des-cineastes.fr"
+    try:
+        page, _ = get(f"{base}/movies/index")
+    except Exception as ex:
+        print(f"{name}: {ex}", file=sys.stderr)
+        return
+    time.sleep(PAUSE)
+    start = today()
+    # The day menu lists every day the programme covers (Wednesday to Tuesday, or further)
+    covered = set()
+    menu = re.search(r'<select name="day">(.*?)</select>', page, re.S)
+    for label in re.findall(r'<option value="\d+">(.*?)</option>', menu.group(1) if menu else ""):
+        m = re.search(r"(\d{1,2})", label)
+        if m:
+            for k in range(0, 10):
+                d = start + datetime.timedelta(days=k)
+                if d.day == int(m.group(1)):
+                    covered.add(d)
+                    break
+    n = 0
+    for mid in dict.fromkeys(re.findall(r"/movies/show/(\d+)", page)):
+        try:
+            film, _ = get(f"{base}/movies/show/{mid}")
+        except Exception as ex:
+            print(f"{name} film {mid}: {ex}", file=sys.stderr)
+            time.sleep(PAUSE)
+            continue
+        time.sleep(PAUSE)
+        title, sessions = cineastes_sessions(film, start)
+        for day, hhmm, ver in sessions:
+            if day < start:
+                continue
+            col.add(name, day.isoformat(), hhmm, title=title, ver=ver)
+            covered.add(day)
+            n += 1
+    for d in covered:
+        col.covered.add((name, d.isoformat()))
+    print(f"{name}: {n} sessions over {len(covered)} days")
+
+
 # ---------------------------------------------------------------- Webedia sites (headless Chrome)
 
 MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août",
@@ -621,7 +690,7 @@ def webedia(col, days=8):
 # ----------------------------------------------------------------
 
 SOURCES = {"ugc": ugc, "grandaction": grandaction, "balzac": balzac, "grandrex": grandrex, "studio28": studio28,
-           "webedia": webedia}
+           "cineastes": cineastes, "webedia": webedia}
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""
